@@ -159,8 +159,6 @@ class Listener extends EventEmitter {
                 if (decodedData.length == 0)
                     return;
                 const parsed = JSON.parse(decodedData);
-                const decodedEvent = this.cipherKey ? await utils.decodeEventData(parsed, this.cipherKey) : null;
-                console.log(decodedEvent, version, cmd, subCmd);
                 if (version == 1 && cmd == 1 && subCmd == 1 && parsed.hasOwnProperty("key")) {
                     this.cipherKey = parsed.key;
                     this.emit("cipher_key", parsed.key);
@@ -220,6 +218,7 @@ class Listener extends EventEmitter {
                 if (version == 1 && cmd == 601 && subCmd == 0) {
                     const parsedData = (await utils.decodeEventData(parsed, this.cipherKey)).data;
                     const { controls } = parsedData;
+                    console.log("Controls:", controls);
                     for (const control of controls) {
                         if (control.content.act_type == "file_done") {
                             const data = {
