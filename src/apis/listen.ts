@@ -240,7 +240,8 @@ export class Listener extends EventEmitter<ListenerEvents> {
                 console.log(decodedData, version, cmd, subCmd);
 
                 const parsed = JSON.parse(decodedData);
-
+                const parsedData = (await decodeEventData(parsed, this.cipherKey)).data;
+                console.log(parsedData, version, cmd, subCmd);
                 if (version == 1 && cmd == 1 && subCmd == 1 && parsed.hasOwnProperty("key")) {
                     this.cipherKey = parsed.key;
                     this.emit("cipher_key", parsed.key);
@@ -359,9 +360,8 @@ export class Listener extends EventEmitter<ListenerEvents> {
                             );
                             if (friendEvent.isSelf && !this.selfListen) continue;
                             this.emit("friend_event", friendEvent);
-                        }
-                        else if(control.content.act_type == "alias") {
-                            this.emit("alias_friends")
+                        } else if (control.content.act_type == "alias") {
+                            this.emit("alias_friends");
                         }
                     }
                 }
