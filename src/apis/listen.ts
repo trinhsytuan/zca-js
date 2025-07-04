@@ -57,6 +57,7 @@ interface ListenerEvents {
     group_event: [data: GroupEvent];
     cipher_key: [key: string];
     alias_friends: [];
+    update_profile: [];
 }
 
 export class Listener extends EventEmitter<ListenerEvents> {
@@ -297,7 +298,6 @@ export class Listener extends EventEmitter<ListenerEvents> {
                 if (version == 1 && cmd == 601 && subCmd == 0) {
                     const parsedData = (await decodeEventData(parsed, this.cipherKey)).data;
                     const { controls } = parsedData;
-                    console.log("Controls:", controls);
                     for (const control of controls) {
                         if (control.content.act_type == "file_done") {
                             const data = {
@@ -360,6 +360,8 @@ export class Listener extends EventEmitter<ListenerEvents> {
                             this.emit("friend_event", friendEvent);
                         } else if (control.content.act_type == "alias") {
                             this.emit("alias_friends");
+                        } else if (control.content.act_type == "profile" && control.content.act == "update") {
+                            this.emit("update_profile");
                         }
                     }
                 }

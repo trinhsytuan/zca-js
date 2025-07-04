@@ -218,7 +218,6 @@ class Listener extends EventEmitter {
                 if (version == 1 && cmd == 601 && subCmd == 0) {
                     const parsedData = (await utils.decodeEventData(parsed, this.cipherKey)).data;
                     const { controls } = parsedData;
-                    console.log("Controls:", controls);
                     for (const control of controls) {
                         if (control.content.act_type == "file_done") {
                             const data = {
@@ -268,6 +267,9 @@ class Listener extends EventEmitter {
                         }
                         else if (control.content.act_type == "alias") {
                             this.emit("alias_friends");
+                        }
+                        else if (control.content.act_type == "profile" && control.content.act == "update") {
+                            this.emit("update_profile");
                         }
                     }
                 }
