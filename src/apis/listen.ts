@@ -237,7 +237,6 @@ export class Listener extends EventEmitter<ListenerEvents> {
                 const dataToDecode = data.subarray(4);
                 const decodedData = new TextDecoder("utf-8").decode(dataToDecode);
                 if (decodedData.length == 0) return;
-                console.log(decodedData, version, cmd, subCmd);
 
                 const parsed = JSON.parse(decodedData);
                 const parsedData = parsed && parsed.key && (await decodeEventData(parsed, parsed.key)).data;
