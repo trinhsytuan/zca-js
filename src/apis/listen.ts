@@ -239,7 +239,8 @@ export class Listener extends EventEmitter<ListenerEvents> {
                 if (decodedData.length == 0) return;
 
                 const parsed = JSON.parse(decodedData);
-                const parsedData = parsed && parsed.key && (await decodeEventData(parsed, parsed.key)).data;
+                const decodedEvent = parsed && parsed.key ? await decodeEventData(parsed, parsed.key) : null;
+                const parsedData = decodedEvent ? decodedEvent.data : null;
                 parsed && parsedData && parsed.key && console.log(parsedData, version, cmd, subCmd);
                 if (version == 1 && cmd == 1 && subCmd == 1 && parsed.hasOwnProperty("key")) {
                     this.cipherKey = parsed.key;
