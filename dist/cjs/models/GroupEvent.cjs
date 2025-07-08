@@ -27,6 +27,7 @@ exports.GroupEventType = void 0;
     GroupEventType[GroupEventType["UNKNOWN"] = 22] = "UNKNOWN";
 })(exports.GroupEventType || (exports.GroupEventType = {}));
 function initializeGroupEvent(uid, data, type) {
+    var _a;
     const threadId = "group_id" in data ? data.group_id : data.groupId;
     if (type == exports.GroupEventType.JOIN_REQUEST) {
         return { type, data: data, threadId, isSelf: false };
@@ -79,7 +80,7 @@ function initializeGroupEvent(uid, data, type) {
             type,
             data: baseData,
             threadId,
-            isSelf: baseData.updateMembers.some((member) => member.id == uid) || baseData.sourceId == uid,
+            isSelf: ((_a = baseData.updateMembers) === null || _a === void 0 ? void 0 : _a.some((member) => member.id == uid)) || baseData.sourceId == uid,
         };
     }
 }
