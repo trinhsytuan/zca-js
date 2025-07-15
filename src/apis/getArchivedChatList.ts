@@ -2,7 +2,7 @@ import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
 
 export type GetArchivedChatListResponse = {
-    items: any[]; // TODO: check type
+    items: any[]; // @TODO: check type
     version: number;
 };
 
@@ -13,7 +13,6 @@ export const getArchivedChatListFactory = apiFactory<GetArchivedChatListResponse
      * Get arcnived chat list
      *
      * @throws ZaloApiError
-     *
      */
     return async function getArchivedChatList() {
         const params = {
