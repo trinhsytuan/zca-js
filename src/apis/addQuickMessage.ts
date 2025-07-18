@@ -1,20 +1,12 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
+import type { QuickMessage } from "../models/QuickMessage.js";
 import { apiFactory } from "../utils.js";
 
-export type Message = {
-    title: string;
-    params: string | null;
-};
-
-export type QuickMessage = {
-    id: number;
+export type AddQuickMessagePayload = {
     keyword: string;
-    type: number;
-    createdTime: number;
-    lastModified: number;
-    message: Message;
-    media: null;
-};
+    title: string;
+    // media?: null; @TODO: implement media handling
+}
 
 export type AddQuickMessageResponse = {
     items: QuickMessage[];
@@ -27,18 +19,17 @@ export const addQuickMessageFactory = apiFactory<AddQuickMessageResponse>()((api
     /**
      * Add quick message
      *
-     * @param keyword - The keyword of the quick message
-     * @param title - The title of the quick message
-     *
-     * @notes còn bản có thể up ảnh mà nhiều case quá huhu (dùng tạm bản không có nhé)
+     * @param addPayload - The payload containing data to add the quick message
+     * 
+     * @note Zalo might throw an error with code 821 if you have reached the limit of quick messages.
      *
      * @throws ZaloApiError
      */
-    return async function addQuickMessage(keyword: string, title: string) {
+    return async function addQuickMessage(addPayload: AddQuickMessagePayload) {
         const params = {
-            keyword: keyword,
+            keyword: addPayload.keyword,
             message: {
-                title: title,
+                title: addPayload.title,
                 params: "",
             },
             type: 0,

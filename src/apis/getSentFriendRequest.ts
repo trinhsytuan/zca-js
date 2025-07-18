@@ -1,8 +1,8 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
 
-export type GetFriendRequestResponse = {
-    [key: string]: {
+export type GetSentFriendRequestResponse = {
+    [userId: string]: {
         userId: string;
         zaloName: string;
         displayName: string;
@@ -19,15 +19,17 @@ export type GetFriendRequestResponse = {
     };
 };
 
-export const getFriendRequestFactory = apiFactory<GetFriendRequestResponse>()((api, ctx, utils) => {
+export const getSentFriendRequestFactory = apiFactory<GetSentFriendRequestResponse>()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.friend[0]}/api/friend/requested/list`);
 
     /**
      * Get friend requested
+     * 
+     * @note Zalo might throw an error with code 112 if you have no friend requests.
      *
      * @throws ZaloApiError
      */
-    return async function getFriendRequest() {
+    return async function getSentFriendRequest() {
         const params = {
             imei: ctx.imei,
         };
