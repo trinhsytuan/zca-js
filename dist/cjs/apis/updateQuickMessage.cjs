@@ -7,20 +7,20 @@ const updateQuickMessageFactory = utils.apiFactory()((api, _ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.quick_message[0]}/api/quickmessage/update`);
     /**
      * Update quick message
-     * @notes còn bản có thể up ảnh mà nhiều case quá huhu (dùng tạm bản không có nhé)
      *
-     * @param keyword - The keyword of the quick message
-     * @param title - The title of the quick message
+     * @param updatePayload - The payload containing data to update the quick message
      * @param itemId - The id of the quick message to update
+     *
+     * @note Zalo might throw an error with code 212 if the itemId does not exist.
      *
      * @throws ZaloApiError
      */
-    return async function updateQuickMessage(keyword, title, itemId) {
+    return async function updateQuickMessage(updatePayload, itemId) {
         const params = {
             itemId: itemId,
-            keyword: keyword,
+            keyword: updatePayload.keyword,
             message: {
-                title: title,
+                title: updatePayload.title,
                 params: "",
             },
             media: null,

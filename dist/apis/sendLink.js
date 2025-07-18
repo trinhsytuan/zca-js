@@ -13,35 +13,41 @@ export const sendLinkFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Send link
      *
-     * @param params Link and ttl parameters
+     * @param options Link and ttl
      * @param threadId Thread ID
      * @param type Thread type
      *
      * @throws ZaloApiError
      */
-    return async function sendLink(params, threadId, type = ThreadType.User) {
+    return async function sendLink(options, threadId, type = ThreadType.User) {
         var _a;
-        const res = await api.parseLink(params.link);
-        const requestParams = {
+        const res = await api.parseLink(options.link);
+        const params = {
+            msg: options.msg && options.msg.trim()
+                ? options.msg.includes(options.link)
+                    ? options.msg
+                    : options.msg + " " + options.link
+                : options.link,
             href: res.data.href,
             src: res.data.src,
             title: res.data.title,
             desc: res.data.desc,
             thumb: res.data.thumb,
-            type: 0,
+            type: 2, // 0
             media: JSON.stringify(res.data.media),
-            ttl: (_a = params.ttl) !== null && _a !== void 0 ? _a : 0,
+            ttl: (_a = options.ttl) !== null && _a !== void 0 ? _a : 0,
             clientId: Date.now(),
         };
         if (type == ThreadType.Group) {
-            requestParams.grid = threadId;
-            requestParams.imei = ctx.imei;
+            params.grid = threadId;
+            params.imei = ctx.imei;
+            // params.mentionInfo = "[]"; @TODO: implement this
         }
         else {
-            requestParams.toId = threadId;
-            requestParams.mentionInfo = "";
+            params.toId = threadId;
+            params.mentionInfo = "";
         }
-        const encryptedParams = utils.encodeAES(JSON.stringify(requestParams));
+        const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)
             throw new ZaloApiError("Failed to encrypt params");
         const response = await utils.request(serviceURL[type], {

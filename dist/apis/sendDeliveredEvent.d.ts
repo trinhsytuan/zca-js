@@ -2,7 +2,7 @@ import { ThreadType } from "../models/index.js";
 export type SendDeliveredEventResponse = "" | {
     status: number;
 };
-export type DeliveredEventMessageParams = {
+export type SendDeliveredEventMessageParams = {
     msgId: string;
     cliMsgId: string;
     uidFrom: string;
@@ -13,4 +13,4 @@ export type DeliveredEventMessageParams = {
     cmd: number;
     ts: string | number;
 };
-export declare const sendDeliveredEventFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (type: ThreadType, messages: DeliveredEventMessageParams[], isSeen?: boolean) => Promise<SendDeliveredEventResponse>;
+export declare const sendDeliveredEventFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (isSeen: boolean, messages: SendDeliveredEventMessageParams | SendDeliveredEventMessageParams[], type?: ThreadType) => Promise<SendDeliveredEventResponse>;

@@ -8,18 +8,17 @@ const addQuickMessageFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Add quick message
      *
-     * @param keyword - The keyword of the quick message
-     * @param title - The title of the quick message
+     * @param addPayload - The payload containing data to add the quick message
      *
-     * @notes còn bản có thể up ảnh mà nhiều case quá huhu (dùng tạm bản không có nhé)
+     * @note Zalo might throw an error with code 821 if you have reached the limit of quick messages.
      *
      * @throws ZaloApiError
      */
-    return async function addQuickMessage(keyword, title) {
+    return async function addQuickMessage(addPayload) {
         const params = {
-            keyword: keyword,
+            keyword: addPayload.keyword,
             message: {
-                title: title,
+                title: addPayload.title,
                 params: "",
             },
             type: 0,

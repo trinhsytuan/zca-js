@@ -15,21 +15,21 @@ const removeReminderFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Remove a reminder in a (user/group)
      *
-     * @param topicId (Reminder/Topic) ID to remove reminder from
+     * @param reminderId Reminder ID to remove reminder from
      * @param threadId (User/Group) ID to remove reminder from
      * @param type Thread type (User or Group)
      *
      * @throws ZaloApiError
      */
-    return async function removeReminder(topicId, threadId, type = Enum.ThreadType.User) {
+    return async function removeReminder(reminderId, threadId, type = Enum.ThreadType.User) {
         const params = type === Enum.ThreadType.User
             ? {
                 uid: threadId,
-                reminderId: topicId,
+                reminderId: reminderId,
             }
             : {
                 grid: threadId,
-                topicId: topicId,
+                topicId: reminderId,
                 imei: ctx.imei,
             };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));

@@ -15,10 +15,6 @@ export type CreatePollOptions = {
      */
     expiredTime?: number;
     /**
-     * Pin action to pin the poll.
-     */
-    pinAct?: boolean;
-    /**
      * Allows multiple choices in the poll.
      */
     allowMultiChoices?: boolean;
@@ -38,7 +34,13 @@ export type CreatePollOptions = {
 export type CreatePollResponse = {
     creator: string;
     question: string;
-    options: string[];
+    options: {
+        content: string;
+        votes: number;
+        voted: boolean;
+        voters: string[];
+        option_id: number;
+    }[];
     joined: boolean;
     closed: boolean;
     poll_id: string;
@@ -48,7 +50,7 @@ export type CreatePollResponse = {
     poll_type: number;
     created_time: number;
     updated_time: number;
-    expiried_time: number;
+    expired_time: number;
     is_hide_vote_preview: boolean;
     num_vote: number;
 };

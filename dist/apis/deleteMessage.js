@@ -9,28 +9,31 @@ export const deleteMessageFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Delete a message
      *
-     * @param options Delete target data
+     * @param dest Delete target
      * @param onlyMe Delete message for only you
      *
      * @throws ZaloApiError
      */
-    return async function deleteMessage(options, threadId, type = ThreadType.User) {
+    return async function deleteMessage(dest, onlyMe = false) {
+        const { threadId, type = ThreadType.User, data } = dest;
         const isGroup = type === ThreadType.Group;
-        const isSelf = ctx.uid == options.uidFrom;
-        if (isSelf && options.onlyMe === false)
+        const isSelf = ctx.uid == data.uidFrom;
+        if (isSelf && onlyMe === false)
             throw new ZaloApiError("To delete your message for everyone, use undo api instead");
+        if (!isGroup && onlyMe === false)
+            throw new ZaloApiError("Can't delete message for everyone in a private chat");
         const params = {
             [isGroup ? "grid" : "toid"]: threadId,
             cliMsgId: Date.now(),
             msgs: [
                 {
-                    cliMsgId: options.cliMsgId,
-                    globalMsgId: options.msgId,
-                    ownerId: options.uidFrom,
+                    cliMsgId: data.cliMsgId,
+                    globalMsgId: data.msgId,
+                    ownerId: data.uidFrom,
                     destId: threadId,
                 },
             ],
-            onlyMe: options.onlyMe ? 1 : 0,
+            onlyMe: onlyMe ? 1 : 0,
         };
         if (!isGroup) {
             params.imei = ctx.imei;

@@ -7,12 +7,10 @@ var utils = require('./utils.cjs');
 var toughCookie = require('tough-cookie');
 var acceptFriendRequest = require('./apis/acceptFriendRequest.cjs');
 var addGroupDeputy = require('./apis/addGroupDeputy.cjs');
-var addHiddenConversPin = require('./apis/addHiddenConversPin.cjs');
 var addQuickMessage = require('./apis/addQuickMessage.cjs');
 var addReaction = require('./apis/addReaction.cjs');
 var addUnreadMark = require('./apis/addUnreadMark.cjs');
 var addUserToGroup = require('./apis/addUserToGroup.cjs');
-var autoDeleteChat = require('./apis/autoDeleteChat.cjs');
 var blockUser = require('./apis/blockUser.cjs');
 var blockViewFeed = require('./apis/blockViewFeed.cjs');
 var changeAccountAvatar = require('./apis/changeAccountAvatar.cjs');
@@ -24,7 +22,7 @@ var createGroup = require('./apis/createGroup.cjs');
 var createNoteGroup = require('./apis/createNoteGroup.cjs');
 var createPoll = require('./apis/createPoll.cjs');
 var createReminder = require('./apis/createReminder.cjs');
-var deleteAvatarList = require('./apis/deleteAvatarList.cjs');
+var deleteAvatar = require('./apis/deleteAvatar.cjs');
 var deleteChat = require('./apis/deleteChat.cjs');
 var deleteMessage = require('./apis/deleteMessage.cjs');
 var disableGroupLink = require('./apis/disableGroupLink.cjs');
@@ -45,13 +43,13 @@ var getBizAccount = require('./apis/getBizAccount.cjs');
 var getContext = require('./apis/getContext.cjs');
 var getCookie = require('./apis/getCookie.cjs');
 var getFriendBoardList = require('./apis/getFriendBoardList.cjs');
-var getFriendRequest = require('./apis/getFriendRequest.cjs');
 var getRecommendRequest = require('./apis/getRecommendRequest.cjs');
 var getGroupInfo = require('./apis/getGroupInfo.cjs');
+var getGroupLinkInfo = require('./apis/getGroupLinkInfo.cjs');
 var getGroupMembersInfo = require('./apis/getGroupMembersInfo.cjs');
-var getHiddenConversPin = require('./apis/getHiddenConversPin.cjs');
+var getHiddenConversations = require('./apis/getHiddenConversations.cjs');
 var getLabels = require('./apis/getLabels.cjs');
-var getListPoll = require('./apis/getListPoll.cjs');
+var getListBoard = require('./apis/getListBoard.cjs');
 var getListReminder = require('./apis/getListReminder.cjs');
 var getMute = require('./apis/getMute.cjs');
 var getOwnId = require('./apis/getOwnId.cjs');
@@ -59,9 +57,10 @@ var getPinConversations = require('./apis/getPinConversations.cjs');
 var getPollDetail = require('./apis/getPollDetail.cjs');
 var getQR = require('./apis/getQR.cjs');
 var getQuickMessage = require('./apis/getQuickMessage.cjs');
-var getRecvFriendRequest = require('./apis/getRecvFriendRequest.cjs');
+var getReceivedFriendRequests = require('./apis/getReceivedFriendRequests.cjs');
 var getReminder = require('./apis/getReminder.cjs');
-var getReminderEvent = require('./apis/getReminderEvent.cjs');
+var getReminderResponses = require('./apis/getReminderResponses.cjs');
+var getSentFriendRequest = require('./apis/getSentFriendRequest.cjs');
 var getStickers = require('./apis/getStickers.cjs');
 var getStickersDetail = require('./apis/getStickersDetail.cjs');
 var getUnreadMark = require('./apis/getUnreadMark.cjs');
@@ -71,15 +70,12 @@ var joinGroup = require('./apis/joinGroup.cjs');
 var keepAlive = require('./apis/keepAlive.cjs');
 var lastOnline = require('./apis/lastOnline.cjs');
 var leaveGroup = require('./apis/leaveGroup.cjs');
-var linkGroupInfo = require('./apis/linkGroupInfo.cjs');
 var lockPoll = require('./apis/lockPoll.cjs');
 var loginQR = require('./apis/loginQR.cjs');
 var parseLink = require('./apis/parseLink.cjs');
-var pinConversations = require('./apis/pinConversations.cjs');
 var removeFriend = require('./apis/removeFriend.cjs');
 var removeFriendAlias = require('./apis/removeFriendAlias.cjs');
 var removeGroupDeputy = require('./apis/removeGroupDeputy.cjs');
-var removeHiddenConversPin = require('./apis/removeHiddenConversPin.cjs');
 var removeQuickMessage = require('./apis/removeQuickMessage.cjs');
 var removeReminder = require('./apis/removeReminder.cjs');
 var removeUnreadMark = require('./apis/removeUnreadMark.cjs');
@@ -97,7 +93,9 @@ var sendSticker = require('./apis/sendSticker.cjs');
 var sendTypingEvent = require('./apis/sendTypingEvent.cjs');
 var sendVideo = require('./apis/sendVideo.cjs');
 var sendVoice = require('./apis/sendVoice.cjs');
+var setHiddenConversations = require('./apis/setHiddenConversations.cjs');
 var setMute = require('./apis/setMute.cjs');
+var setPinnedConversations = require('./apis/setPinnedConversations.cjs');
 var unblockUser = require('./apis/unblockUser.cjs');
 var undo = require('./apis/undo.cjs');
 var undoFriendRequest = require('./apis/undoFriendRequest.cjs');
@@ -137,7 +135,7 @@ class Zalo {
     }
     validateParams(credentials) {
         if (!credentials.imei || !credentials.cookie || !credentials.userAgent) {
-            throw new Error("Missing required params");
+            throw new ZaloApiError.ZaloApiError("Missing required params");
         }
     }
     async login(credentials) {
@@ -155,7 +153,7 @@ class Zalo {
         const loginData = await login.login(ctx, this.enableEncryptParam);
         const serverInfo = await login.getServerInfo(ctx, this.enableEncryptParam);
         if (!loginData || !serverInfo)
-            throw new Error("Đăng nhập thất bại");
+            throw new ZaloApiError.ZaloApiError("Đăng nhập thất bại");
         ctx.secretKey = loginData.data.zpw_enk;
         ctx.uid = loginData.data.uid;
         // Zalo currently responds with setttings instead of settings
@@ -163,7 +161,7 @@ class Zalo {
         ctx.settings = serverInfo.setttings || serverInfo.settings;
         ctx.extraVer = serverInfo.extra_ver;
         if (!context.isContextSession(ctx))
-            throw new Error("Khởi tạo ngữ cảnh thát bại.");
+            throw new ZaloApiError.ZaloApiError("Khởi tạo ngữ cảnh thất bại.");
         utils.logger(ctx).info("Logged in as", loginData.data.uid);
         return new API(ctx, loginData.data.zpw_service_map_v3, loginData.data.zpw_ws);
     }
@@ -206,12 +204,10 @@ class API {
         this.listener = new listen.Listener(ctx, wsUrls);
         this.acceptFriendRequest = acceptFriendRequest.acceptFriendRequestFactory(ctx, this);
         this.addGroupDeputy = addGroupDeputy.addGroupDeputyFactory(ctx, this);
-        this.addHiddenConversPin = addHiddenConversPin.addHiddenConversPinFactory(ctx, this);
         this.addQuickMessage = addQuickMessage.addQuickMessageFactory(ctx, this);
         this.addReaction = addReaction.addReactionFactory(ctx, this);
         this.addUnreadMark = addUnreadMark.addUnreadMarkFactory(ctx, this);
         this.addUserToGroup = addUserToGroup.addUserToGroupFactory(ctx, this);
-        this.autoDeleteChat = autoDeleteChat.autoDeleteChatFactory(ctx, this);
         this.blockUser = blockUser.blockUserFactory(ctx, this);
         this.blockViewFeed = blockViewFeed.blockViewFeedFactory(ctx, this);
         this.changeAccountAvatar = changeAccountAvatar.changeAccountAvatarFactory(ctx, this);
@@ -223,7 +219,7 @@ class API {
         this.createNoteGroup = createNoteGroup.createNoteGroupFactory(ctx, this);
         this.createPoll = createPoll.createPollFactory(ctx, this);
         this.createReminder = createReminder.createReminderFactory(ctx, this);
-        this.deleteAvatarList = deleteAvatarList.deleteAvatarListFactory(ctx, this);
+        this.deleteAvatarList = deleteAvatar.deleteAvatarFactory(ctx, this);
         this.deleteChat = deleteChat.deleteChatFactory(ctx, this);
         this.deleteMessage = deleteMessage.deleteMessageFactory(ctx, this);
         this.disableGroupLink = disableGroupLink.disableGroupLinkFactory(ctx, this);
@@ -244,13 +240,13 @@ class API {
         this.getContext = getContext.getContextFactory(ctx, this);
         this.getCookie = getCookie.getCookieFactory(ctx, this);
         this.getFriendBoardList = getFriendBoardList.getFriendBoardListFactory(ctx, this);
-        this.getFriendRequest = getFriendRequest.getFriendRequestFactory(ctx, this);
         this.getRecommendRequest = getRecommendRequest.getRecommendRequestFactory(ctx, this);
         this.getGroupInfo = getGroupInfo.getGroupInfoFactory(ctx, this);
+        this.getGroupLinkInfo = getGroupLinkInfo.getGroupLinkInfoFactory(ctx, this);
         this.getGroupMembersInfo = getGroupMembersInfo.getGroupMembersInfoFactory(ctx, this);
-        this.getHiddenConversPin = getHiddenConversPin.getHiddenConversPinFactory(ctx, this);
+        this.getHiddenConversations = getHiddenConversations.getHiddenConversationsFactory(ctx, this);
         this.getLabels = getLabels.getLabelsFactory(ctx, this);
-        this.getListPoll = getListPoll.getListPollFactory(ctx, this);
+        this.getListBoard = getListBoard.getListBoardFactory(ctx, this);
         this.getListReminder = getListReminder.getListReminderFactory(ctx, this);
         this.getMute = getMute.getMuteFactory(ctx, this);
         this.getOwnId = getOwnId.getOwnIdFactory(ctx, this);
@@ -258,9 +254,10 @@ class API {
         this.getPollDetail = getPollDetail.getPollDetailFactory(ctx, this);
         this.getQR = getQR.getQRFactory(ctx, this);
         this.getQuickMessage = getQuickMessage.getQuickMessageFactory(ctx, this);
-        this.getRecvFriendRequest = getRecvFriendRequest.getRecvFriendRequestFactory(ctx, this);
+        this.getReceivedFriendRequests = getReceivedFriendRequests.getReceivedFriendRequestsFactory(ctx, this);
         this.getReminder = getReminder.getReminderFactory(ctx, this);
-        this.getReminderEvent = getReminderEvent.getReminderEventFactory(ctx, this);
+        this.getReminderResponses = getReminderResponses.getReminderResponsesFactory(ctx, this);
+        this.getSentFriendRequest = getSentFriendRequest.getSentFriendRequestFactory(ctx, this);
         this.getStickers = getStickers.getStickersFactory(ctx, this);
         this.getStickersDetail = getStickersDetail.getStickersDetailFactory(ctx, this);
         this.getUnreadMark = getUnreadMark.getUnreadMarkFactory(ctx, this);
@@ -270,14 +267,11 @@ class API {
         this.keepAlive = keepAlive.keepAliveFactory(ctx, this);
         this.lastOnline = lastOnline.lastOnlineFactory(ctx, this);
         this.leaveGroup = leaveGroup.leaveGroupFactory(ctx, this);
-        this.linkGroupInfo = linkGroupInfo.linkGroupInfoFactory(ctx, this);
         this.lockPoll = lockPoll.lockPollFactory(ctx, this);
         this.parseLink = parseLink.parseLinkFactory(ctx, this);
-        this.pinConversations = pinConversations.pinConversationsFactory(ctx, this);
         this.removeFriend = removeFriend.removeFriendFactory(ctx, this);
         this.removeFriendAlias = removeFriendAlias.removeFriendAliasFactory(ctx, this);
         this.removeGroupDeputy = removeGroupDeputy.removeGroupDeputyFactory(ctx, this);
-        this.removeHiddenConversPin = removeHiddenConversPin.removeHiddenConversPinFactory(ctx, this);
         this.removeQuickMessage = removeQuickMessage.removeQuickMessageFactory(ctx, this);
         this.removeReminder = removeReminder.removeReminderFactory(ctx, this);
         this.removeUnreadMark = removeUnreadMark.removeUnreadMarkFactory(ctx, this);
@@ -295,7 +289,9 @@ class API {
         this.sendTypingEvent = sendTypingEvent.sendTypingEventFactory(ctx, this);
         this.sendVideo = sendVideo.sendVideoFactory(ctx, this);
         this.sendVoice = sendVoice.sendVoiceFactory(ctx, this);
+        this.setHiddenConversations = setHiddenConversations.setHiddenConversationsFactory(ctx, this);
         this.setMute = setMute.setMuteFactory(ctx, this);
+        this.setPinnedConversations = setPinnedConversations.setPinnedConversationsFactory(ctx, this);
         this.unblockUser = unblockUser.unblockUserFactory(ctx, this);
         this.undo = undo.undoFactory(ctx, this);
         this.undoFriendRequest = undoFriendRequest.undoFriendRequestFactory(ctx, this);

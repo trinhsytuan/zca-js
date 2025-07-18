@@ -7,23 +7,30 @@ require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
 var utils = require('../utils.cjs');
 
+exports.ChatTTL = void 0;
+(function (ChatTTL) {
+    ChatTTL[ChatTTL["NO_DELETE"] = 0] = "NO_DELETE";
+    ChatTTL[ChatTTL["ONE_DAY"] = 86400000] = "ONE_DAY";
+    ChatTTL[ChatTTL["SEVEN_DAYS"] = 604800000] = "SEVEN_DAYS";
+    ChatTTL[ChatTTL["FOURTEEN_DAYS"] = 1209600000] = "FOURTEEN_DAYS";
+})(exports.ChatTTL || (exports.ChatTTL = {}));
 const updateAutoDeleteChatFactory = utils.apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.conversation[0]}/api/conv/autodelete/updateConvers`);
     /**
-     * Update auto delete chat
+     * Auto delete chat
      *
-     * @param ttl - The time to live for the autoDeleteMessage of API
-     * @param threadId - The ID of the thread to update
-     * @param isGroup - Whether the thread is a group
+     * @param ttl The time to live of the chat
+     * @param threadId The thread ID to auto delete chat
+     * @param type Type of thread (User or Group)
      *
      * @throws ZaloApiError
      */
-    return async function updateAutoDeleteChat(ttl = 0, threadId, isGroup = Enum.ThreadType.Group) {
+    return async function updateAutoDeleteChat(ttl, threadId, type = Enum.ThreadType.User) {
         const params = {
-            "threadId": threadId,
-            "isGroup": isGroup === Enum.ThreadType.Group ? 1 : 0,
-            "ttl": ttl, // time update autoDeleteMessage
-            "clientLang": ctx.language
+            threadId: threadId,
+            isGroup: type === Enum.ThreadType.Group ? 1 : 0,
+            ttl: ttl,
+            clientLang: ctx.language,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)

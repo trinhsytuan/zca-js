@@ -10,6 +10,8 @@ const removeQuickMessageFactory = utils.apiFactory()((api, _ctx, utils) => {
      *
      * @param itemIds - The id(s) of the quick message(s) to remove (number or number[])
      *
+     * @note Zalo might throw an error with code 212 if the item does not exist
+     *
      * @throws ZaloApiError
      */
     return async function removeQuickMessage(itemIds) {

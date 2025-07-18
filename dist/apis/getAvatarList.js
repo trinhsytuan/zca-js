@@ -5,16 +5,16 @@ export const getAvatarListFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Get avatar list
      *
-     * @param options options
+     * @param count The number of avatars to fetch (default: 50)
+     * @param page The page number to fetch (default: 1)
      *
      * @throws ZaloApiError
      */
-    return async function getAvatarList(options) {
-        var _a, _b;
+    return async function getAvatarList(count = 50, page = 1) {
         const params = {
-            page: (_a = options.page) !== null && _a !== void 0 ? _a : 1,
+            page,
             albumId: "0",
-            count: (_b = options.count) !== null && _b !== void 0 ? _b : 50,
+            count,
             imei: ctx.imei,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));

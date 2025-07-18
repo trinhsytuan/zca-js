@@ -5,7 +5,7 @@ export const reuseAvatarFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Reuse avatar
      *
-     * @param photoId photo id
+     * @param photoId photo id from getAvatarList api
      *
      * @throws ZaloApiError
      */

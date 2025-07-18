@@ -1,26 +1,21 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import { apiFactory, hexToNegativeColor } from "../utils.js";
+import { apiFactory } from "../utils.js";
 export const editNoteGroupFactory = apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group_board[0]}/api/board/topic/updatev2`);
     /**
      * Edit an existing note in a group
      *
-     * @param options.title note title
-     * @param options.topicId Topic ID to edit note from
-     * @param options.color note color
-     * @param options.emoji note emoji
-     * @param options.pinAct pin action (pin note)
+     * @param options Options for editing the note
      * @param groupId Group ID to create note from
      *
      * @throws ZaloApiError
      */
     return async function editNoteGroup(options, groupId) {
-        var _a;
         const params = {
             grid: groupId,
             type: 0,
-            color: options.color && options.color.trim() ? hexToNegativeColor(options.color) : -16777216,
-            emoji: (_a = options.emoji) !== null && _a !== void 0 ? _a : "",
+            color: -16777216,
+            emoji: "",
             startTime: -1,
             duration: -1,
             params: JSON.stringify({

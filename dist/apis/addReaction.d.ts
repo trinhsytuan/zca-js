@@ -1,7 +1,7 @@
 import { ThreadType } from "../models/index.js";
 import { Reactions } from "../models/Reaction.js";
 export type AddReactionResponse = {
-    msgIds: string;
+    msgIds: number[];
 };
 export type CustomReaction = {
     rType: number;

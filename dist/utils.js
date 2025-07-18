@@ -562,7 +562,7 @@ export async function handleZaloResponse(ctx, response, isEncrypted = true) {
         result.data = decodedData.data;
     }
     catch (error) {
-        console.error(error);
+        logger(ctx).error("Failed to parse response data:", error);
         result.error = {
             message: "Failed to parse response data",
         };
@@ -609,8 +609,7 @@ export function generateZaloUUID(userAgent) {
  * @returns 32-character hex string
  */
 export function encryptPin(pin) {
-    const pinStr = pin.toString().padStart(4, "0");
-    return crypto.createHash("md5").update(pinStr).digest("hex");
+    return crypto.createHash("md5").update(pin).digest("hex");
 }
 /**
  * Decrypts a 32-character hex string back to 4-digit PIN
@@ -620,18 +619,14 @@ export function encryptPin(pin) {
  * @returns true if the PIN matches the hash
  *
  * @example
- * const encryptedPin = api.getHiddenConversPin().pin;
+ * const encryptedPin = (await api.getHiddenConversations()).pin;
  * checking pin created..
- * const isValid = decryptPin(encryptedPin, 1234); // true if pin created is 1234
- * const isInvalid = decryptPin(encryptedPin, 5678); // false if not pin created is 5678
+ * const isValid = validatePin(encryptedPin, "1234"); // true if pin created is 1234
+ * const isInvalid = validatePin(encryptedPin, "5678"); // false if not pin created is 5678
  */
-export function decryptPin(encryptedPin, pin) {
-    if (pin !== undefined) {
-        const pinStr = pin.toString().padStart(4, "0");
-        const hash = crypto.createHash("md5").update(pinStr).digest("hex");
-        return hash === encryptedPin;
-    }
-    return false;
+export function validatePin(encryptedPin, pin) {
+    const hash = crypto.createHash("md5").update(pin).digest("hex");
+    return hash === encryptedPin;
 }
 /**
  * Converts a hex color code to a negative color number used by Zalo API

@@ -1,3 +1,4 @@
+import { Gender } from "../models/Enum.js";
 export type FetchAccountInfoResponse = {
     userId: string;
     username: string;
@@ -6,7 +7,7 @@ export type FetchAccountInfoResponse = {
     avatar: string;
     bgavatar: string;
     cover: string;
-    gender: number;
+    gender: Gender;
     dob: number;
     sdob: string;
     status: string;

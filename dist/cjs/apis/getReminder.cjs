@@ -6,17 +6,15 @@ var utils = require('../utils.cjs');
 const getReminderFactory = utils.apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group_board[0]}/api/board/topic/getReminder`);
     /**
-     * Get reminder
+     * Get reminder details from a group
      *
-     * @param eventId Event ID to get reminder from
-     * @param groupId Group ID to get reminder from
+     * @param reminderId Reminder ID
      *
      * @throws ZaloApiError
-     *
      */
-    return async function getReminder(eventId, groupId) {
+    return async function getReminder(reminderId) {
         const params = {
-            eventId: eventId,
+            eventId: reminderId,
             imei: ctx.imei,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));

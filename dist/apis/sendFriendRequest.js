@@ -8,6 +8,10 @@ export const sendFriendRequestFactory = apiFactory()((api, ctx, utils) => {
      * @param msg message sent with friend request
      * @param userId User ID to send friend request to
      *
+     * @note Zalo might throw an error with code 225 if the user is already friends with you,
+     *          215 if the user might have blocked you,
+     *          222 if user has already sent you a friend request, your request will be treated as acceptance instead.
+     *
      * @throws ZaloApiError
      */
     return async function sendFriendRequest(msg, userId) {

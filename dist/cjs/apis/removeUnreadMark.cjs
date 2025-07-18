@@ -19,26 +19,18 @@ const removeUnreadMarkFactory = utils.apiFactory()((api, ctx, utils) => {
      */
     return async function removeUnreadMark(threadId, type = Enum.ThreadType.User) {
         const timestamp = Date.now();
+        const isGroup = type === Enum.ThreadType.Group;
         const requestParams = {
             param: JSON.stringify({
-                convsGroup: type === Enum.ThreadType.Group ? [threadId] : [],
-                convsUser: type === Enum.ThreadType.User ? [threadId] : [],
-                convsGroupData: type === Enum.ThreadType.Group
-                    ? [
-                        {
-                            id: threadId,
-                            ts: timestamp,
-                        },
-                    ]
-                    : [],
-                convsUserData: type === Enum.ThreadType.User
-                    ? [
-                        {
-                            id: threadId,
-                            ts: timestamp,
-                        },
-                    ]
-                    : [],
+                [isGroup ? "convsGroup" : "convsUser"]: [threadId],
+                [isGroup ? "convsUser" : "convsGroup"]: [],
+                [isGroup ? "convsGroupData" : "convsUserData"]: [
+                    {
+                        id: threadId,
+                        ts: timestamp,
+                    },
+                ],
+                [isGroup ? "convsUserData" : "convsGroupData"]: [],
             }),
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(requestParams));
@@ -50,7 +42,16 @@ const removeUnreadMarkFactory = utils.apiFactory()((api, ctx, utils) => {
                 params: encryptedParams,
             }),
         });
-        return utils.resolve(response);
+        return utils.resolve(response, (result) => {
+            const data = result.data;
+            if (typeof data.data === "string") {
+                return {
+                    data: JSON.parse(data.data),
+                    status: data.status,
+                };
+            }
+            return result.data;
+        });
     };
 });
 

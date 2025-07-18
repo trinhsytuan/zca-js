@@ -10,7 +10,7 @@ const changeGroupOwnerFactory = utils.apiFactory()((api, ctx, utils) => {
      *
      * @param memberId User Id of new group owner
      * @param groupId Group Id
-     * @notes Be careful when changing the key, as it will result in losing group admin rights
+     * @note Be careful when changing the key, as it will result in losing group admin rights
      *
      * @throws ZaloApiError
      *

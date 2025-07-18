@@ -15,17 +15,17 @@ const undoFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Undo a message
      *
-     * @param options Undo options
+     * @param payload Undo payload containing message ID and client message ID
      * @param threadId group or user id
-     * @param type Message type (User or GroupMessage)
+     * @param type Message type (User or Group), default is User
      *
      * @throws ZaloApiError
      */
-    return async function undo(options, threadId, type) {
+    return async function undo(payload, threadId, type = Enum.ThreadType.User) {
         const params = {
-            msgId: options.msgId,
+            msgId: payload.msgId,
             clientId: Date.now(),
-            cliMsgIdUndo: options.cliMsgId,
+            cliMsgIdUndo: payload.cliMsgId,
         };
         if (type == Enum.ThreadType.Group) {
             params["grid"] = threadId;

@@ -154,7 +154,7 @@ const sendMessageFactory = utils.apiFactory()((api, ctx, utils$1) => {
                     styles: styles.map((e) => {
                         var _a;
                         const styleFinal = Object.assign(Object.assign({}, e), { indentSize: undefined, st: e.st == exports.TextStyle.Indent
-                                ? exports.TextStyle.Indent.replace("$", `${(_a = e.indentSize) !== null && _a !== void 0 ? _a : 1}0`)
+                                ? exports.TextStyle.Indent.replace(/\$/g, `${(_a = e.indentSize) !== null && _a !== void 0 ? _a : 1}0`)
                                 : e.st });
                         utils.removeUndefinedKeys(styleFinal);
                         return styleFinal;
@@ -234,7 +234,11 @@ const sendMessageFactory = utils.apiFactory()((api, ctx, utils$1) => {
         };
     }
     async function handleAttachment({ msg, attachments, mentions, quote, ttl, urgency }, threadId, type) {
-        if (!attachments || attachments.length == 0)
+        if (!attachments)
+            throw new ZaloApiError.ZaloApiError("Missing attachments");
+        if (!Array.isArray(attachments))
+            attachments = [attachments];
+        if (attachments.length == 0)
             throw new ZaloApiError.ZaloApiError("Missing attachments");
         const firstSource = attachments[0];
         const isFilePath = typeof firstSource == "string";
@@ -416,6 +420,9 @@ const sendMessageFactory = utils.apiFactory()((api, ctx, utils$1) => {
         if (typeof message == "string")
             message = { msg: message };
         let { msg, quote, attachments, mentions, ttl, styles, urgency } = message;
+        if (attachments && !Array.isArray(attachments)) {
+            attachments = [attachments];
+        }
         if (!msg && (!attachments || (attachments && attachments.length == 0)))
             throw new ZaloApiError.ZaloApiError("Missing message content");
         if (attachments && isExceedMaxFile(attachments.length))

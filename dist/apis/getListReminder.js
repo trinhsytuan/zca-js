@@ -9,29 +9,28 @@ export const getListReminderFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Get list reminder
      *
-     * @param params - The parameters for the request
+     * @param options - The options for the request
      * @param threadId - The ID of the thread
      * @param type - The type of the thread (User or Group)
      *
      * @throws ZaloApiError
-     *
      */
-    return async function getListReminder(params, threadId, type = ThreadType.User) {
-        var _a, _b, _c, _d, _e;
+    return async function getListReminder(options, threadId, type = ThreadType.User) {
+        var _a, _b, _c, _d;
         const requestParams = Object.assign({ objectData: JSON.stringify(type === ThreadType.User
                 ? {
                     uid: threadId,
                     board_type: 1,
-                    page: (_a = params.page) !== null && _a !== void 0 ? _a : 1,
-                    count: (_b = params.count) !== null && _b !== void 0 ? _b : 20,
+                    page: (_a = options.page) !== null && _a !== void 0 ? _a : 1,
+                    count: (_b = options.count) !== null && _b !== void 0 ? _b : 20,
                     last_id: 0,
                     last_type: 0,
                 }
                 : {
                     group_id: threadId,
-                    board_type: (_c = params.board_type) !== null && _c !== void 0 ? _c : 1,
-                    page: (_d = params.page) !== null && _d !== void 0 ? _d : 1,
-                    count: (_e = params.count) !== null && _e !== void 0 ? _e : 20,
+                    board_type: 1,
+                    page: (_c = options.page) !== null && _c !== void 0 ? _c : 1,
+                    count: (_d = options.count) !== null && _d !== void 0 ? _d : 20,
                     last_id: 0,
                     last_type: 0,
                 }) }, (type === ThreadType.Group && { imei: ctx.imei }));
@@ -41,6 +40,8 @@ export const getListReminderFactory = apiFactory()((api, ctx, utils) => {
         const response = await utils.request(utils.makeURL(serviceURL[type], { params: encryptedParams }), {
             method: "GET",
         });
-        return utils.resolve(response);
+        return utils.resolve(response, (result) => {
+            return JSON.parse(result.data);
+        });
     };
 });

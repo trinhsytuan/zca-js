@@ -12,7 +12,7 @@ export const parseLinkFactory = apiFactory()((api, ctx, utils) => {
      */
     return async function parseLink(link) {
         const params = {
-            link: link,
+            link,
             version: 1, // version 0 is not available errorMaps || version 1 is errorMaps (for response)
             imei: ctx.imei,
         };

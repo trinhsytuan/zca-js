@@ -6,7 +6,7 @@ var utils = require('../utils.cjs');
 const enableGroupLinkFactory = utils.apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group[0]}/api/group/link/new`);
     /**
-     * Enable group link
+     * Enable and create new group link
      *
      * @param groupId The group id
      *

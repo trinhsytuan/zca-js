@@ -29,15 +29,19 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
     /**
      * Upload an attachment to a thread
      *
-     * @param filePaths Path to the file
+     * @param sources path to files or attachment sources
      * @param threadId Group or User ID
      * @param type Message type (User or Group)
      *
      * @throws ZaloApiError
      */
     return async function uploadAttachment(sources, threadId, type = Enum.ThreadType.User) {
-        if (!sources || sources.length == 0)
-            throw new ZaloApiError.ZaloApiError("Missing filePaths");
+        if (!sources)
+            throw new ZaloApiError.ZaloApiError("Missing sources");
+        if (!Array.isArray(sources))
+            sources = [sources];
+        if (sources.length == 0)
+            throw new ZaloApiError.ZaloApiError("Missing sources");
         if (isExceedMaxFile(sources.length))
             throw new ZaloApiError.ZaloApiError("Exceed maximum file of " + sharefile.max_file);
         if (!threadId)

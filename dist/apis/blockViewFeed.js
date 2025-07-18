@@ -5,12 +5,12 @@ export const blockViewFeedFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Block/Unblock friend view feed by ID
      *
-     * @param userId User ID to block/unblock view feed
      * @param isBlockFeed Boolean to block/unblock view feed
+     * @param userId User ID to block/unblock view feed
      *
      * @throws ZaloApiError
      */
-    return async function blockViewFeed(userId, isBlockFeed = true) {
+    return async function blockViewFeed(isBlockFeed, userId) {
         const params = {
             fid: userId,
             isBlockFeed: isBlockFeed ? 1 : 0,

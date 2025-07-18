@@ -2,10 +2,13 @@ import { ThreadType } from "../models/index.js";
 export type DeleteMessageResponse = {
     status: number;
 };
-export type DeleteMessageOptions = {
-    cliMsgId: string;
-    msgId: string;
-    uidFrom: string;
-    onlyMe?: boolean;
+export type DeleteMessageDestination = {
+    data: {
+        cliMsgId: string;
+        msgId: string;
+        uidFrom: string;
+    };
+    threadId: string;
+    type?: ThreadType;
 };
-export declare const deleteMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: DeleteMessageOptions, threadId: string, type?: ThreadType) => Promise<DeleteMessageResponse>;
+export declare const deleteMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (dest: DeleteMessageDestination, onlyMe?: boolean) => Promise<DeleteMessageResponse>;

@@ -1,3 +1,4 @@
+import { Gender } from "../models/Enum.js";
 export type ProfileInfo = {
     userId: string;
     username: string;
@@ -6,7 +7,7 @@ export type ProfileInfo = {
     avatar: string;
     bgavatar: string;
     cover: string;
-    gender: number;
+    gender: Gender;
     dob: number;
     sdob: string;
     status: string;

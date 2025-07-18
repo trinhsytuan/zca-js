@@ -1,8 +1,15 @@
 export type EditNoteGroupOptions = {
+    /**
+     * New note title
+     */
     title: string;
+    /**
+     * Topic ID to edit note from
+     */
     topicId: string;
-    color?: string;
-    emoji?: string;
+    /**
+     * Should the note be pinned?
+     */
     pinAct?: boolean;
 };
 export type EditNoteGroupResponse = {

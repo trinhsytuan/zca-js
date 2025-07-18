@@ -19,26 +19,26 @@ const deleteChatFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Delete chat
      *
-     * @param converInfo Conversation info containing ownerId and globalMsgId
-     * @param threadId Thread ID (toid for User, grid for Group)
+     * @param lastMessage Last message info
+     * @param threadId Thread ID
      * @param type Thread type
      *
      * @throws ZaloApiError
      */
-    return async function deleteChat(converInfo, threadId, type = Enum.ThreadType.User) {
+    return async function deleteChat(lastMessage, threadId, type = Enum.ThreadType.User) {
         const timestampString = Date.now().toString();
         const params = type === Enum.ThreadType.User
             ? {
                 toid: threadId,
                 cliMsgId: timestampString,
-                conver: Object.assign(Object.assign({}, converInfo), { cliMsgId: timestampString }),
+                conver: lastMessage,
                 onlyMe: 1,
                 imei: ctx.imei,
             }
             : {
                 grid: threadId,
                 cliMsgId: timestampString,
-                conver: Object.assign(Object.assign({}, converInfo), { cliMsgId: timestampString }),
+                conver: lastMessage,
                 onlyMe: 1,
                 imei: ctx.imei,
             };

@@ -88,7 +88,7 @@ export type MessageContent = {
     /**
      * Attachments in the message (optional)
      */
-    attachments?: AttachmentSource[];
+    attachments?: AttachmentSource | AttachmentSource[];
     /**
      * Time to live in milisecond
      */

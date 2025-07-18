@@ -13,29 +13,19 @@ export const addUnreadMarkFactory = apiFactory()((api, ctx, utils) => {
      */
     return async function addUnreadMark(threadId, type = ThreadType.User) {
         const timestamp = Date.now();
-        const timestampString = Date.now().toString();
+        const timestampString = timestamp.toString();
+        const isGroup = type === ThreadType.Group;
         const requestParams = {
             param: JSON.stringify({
-                convsGroup: type === ThreadType.Group
-                    ? [
-                        {
-                            id: threadId,
-                            cliMsgId: timestampString,
-                            fromUid: "0",
-                            ts: timestamp,
-                        },
-                    ]
-                    : [],
-                convsUser: type === ThreadType.User
-                    ? [
-                        {
-                            id: threadId,
-                            cliMsgId: timestampString,
-                            fromUid: "0",
-                            ts: timestamp,
-                        },
-                    ]
-                    : [],
+                [isGroup ? "convsGroup" : "convsUser"]: [
+                    {
+                        id: threadId,
+                        cliMsgId: timestampString,
+                        fromUid: "0",
+                        ts: timestamp,
+                    },
+                ],
+                [isGroup ? "convsUser" : "convsGroup"]: [],
                 imei: ctx.imei,
             }),
         };
@@ -48,6 +38,15 @@ export const addUnreadMarkFactory = apiFactory()((api, ctx, utils) => {
                 params: encryptedParams,
             }),
         });
-        return utils.resolve(response);
+        return utils.resolve(response, (result) => {
+            const data = result.data;
+            if (typeof data.data === "string") {
+                return {
+                    data: JSON.parse(data.data),
+                    status: data.status,
+                };
+            }
+            return result.data;
+        });
     };
 });

@@ -2,10 +2,9 @@ import type { GroupSetting } from "../models/GroupEvent.js";
 export type GroupInfoResponse = {
     removedsGroup: string[];
     unchangedsGroup: string[];
-    gridInfoMap: GridInfoMap;
-};
-export type GridInfoMap = {
-    [groupId: string]: GroupInfo;
+    gridInfoMap: {
+        [groupId: string]: GroupInfo;
+    };
 };
 export type GroupInfo = {
     groupId: string;
@@ -31,14 +30,14 @@ export type GroupInfo = {
     visibility: number;
     globalId: string;
     e2ee: number;
-    pendingApprove: PendingApprove;
-    extraInfo: ExtraInfo;
+    pendingApprove: GroupInfoPendingApprove;
+    extraInfo: GroupInfoExtra;
 };
-export type PendingApprove = {
+export type GroupInfoPendingApprove = {
     time: number;
     uids: null | string[];
 };
-export type ExtraInfo = {
+export type GroupInfoExtra = {
     enable_media_store: number;
 };
 export declare const getGroupInfoFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (groupId: string | string[]) => Promise<GroupInfoResponse>;

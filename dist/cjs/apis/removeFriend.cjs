@@ -8,13 +8,13 @@ const removeFriendFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Remove friend
      *
-     * @param options Friend ID
+     * @param friendId - ID of the friend to remove
      *
      * @throws ZaloApiError
      */
-    return async function removeFriend(options) {
+    return async function removeFriend(friendId) {
         const params = {
-            fid: options.fid,
+            fid: friendId,
             imei: ctx.imei,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));

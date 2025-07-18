@@ -1,7 +1,3 @@
-export type AvatarListOptions = {
-    page?: number;
-    count?: number;
-};
 export type GetAvatarListResponse = {
     albumId: string;
     nextPhotoId: string;
@@ -13,4 +9,4 @@ export type GetAvatarListResponse = {
         bkUrl: string;
     }[];
 };
-export declare const getAvatarListFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: AvatarListOptions) => Promise<GetAvatarListResponse>;
+export declare const getAvatarListFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (count?: number, page?: number) => Promise<GetAvatarListResponse>;

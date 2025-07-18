@@ -565,7 +565,7 @@ async function handleZaloResponse(ctx, response, isEncrypted = true) {
         result.data = decodedData.data;
     }
     catch (error) {
-        console.error(error);
+        logger(ctx).error("Failed to parse response data:", error);
         result.error = {
             message: "Failed to parse response data",
         };
@@ -611,31 +611,7 @@ function generateZaloUUID(userAgent) {
  * @returns 32-character hex string
  */
 function encryptPin(pin) {
-    const pinStr = pin.toString().padStart(4, "0");
-    return crypto.createHash("md5").update(pinStr).digest("hex");
-}
-/**
- * Converts a hex color code to a negative color number used by Zalo API
- * @param hex Hex color code (e.g. '#00FF00' or '00FF00')
- * @returns Negative color number (e.g. -16711936)
- *
- * @example
- * const negativeColor = hexToNegativeColor('#00FF00'); // Result: -16711936
- */
-function hexToNegativeColor(hex) {
-    if (!hex.startsWith("#")) {
-        hex = "#" + hex;
-    }
-    // rgb no alpha
-    // const decimal = parseInt(hex.slice(1), 16);
-    // return decimal - 4294967296;
-    // rgb with alpha
-    let hexValue = hex.slice(1);
-    if (hexValue.length === 6) {
-        hexValue = "FF" + hexValue;
-    }
-    const decimal = parseInt(hexValue, 16);
-    return decimal > 0x7fffffff ? decimal - 4294967296 : decimal;
+    return crypto.createHash("md5").update(pin).digest("hex");
 }
 
 exports.ParamsEncryptor = ParamsEncryptor;
@@ -662,7 +638,6 @@ exports.getImageMetaData = getImageMetaData;
 exports.getMd5LargeFileObject = getMd5LargeFileObject;
 exports.getSignKey = getSignKey;
 exports.handleZaloResponse = handleZaloResponse;
-exports.hexToNegativeColor = hexToNegativeColor;
 exports.isBun = isBun;
 exports.logger = logger;
 exports.makeURL = makeURL;

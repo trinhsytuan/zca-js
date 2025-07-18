@@ -4,15 +4,15 @@ var EventEmitter = require('events');
 var WebSocket = require('ws');
 var GroupEvent = require('../models/GroupEvent.cjs');
 var FriendEvent = require('../models/FriendEvent.cjs');
+var DeliveredMessage = require('../models/DeliveredMessage.cjs');
 var Enum = require('../models/Enum.cjs');
 var Message = require('../models/Message.cjs');
 var Reaction = require('../models/Reaction.cjs');
+var SeenMessage = require('../models/SeenMessage.cjs');
 var Typing = require('../models/Typing.cjs');
 var Undo = require('../models/Undo.cjs');
 var utils = require('../utils.cjs');
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
-var SeenMessage = require('../models/SeenMessage.cjs');
-var DeliveredMessage = require('../models/DeliveredMessage.cjs');
 
 exports.CloseReason = void 0;
 (function (CloseReason) {
@@ -360,9 +360,9 @@ class Listener extends EventEmitter {
                     }
                 }
                 if (version == 1 && cmd == 3000 && subCmd == 0) {
-                    console.log();
+                    utils.logger(this.ctx).error();
                     utils.logger(this.ctx).error("Another connection is opened, closing this one");
-                    console.log();
+                    utils.logger(this.ctx).error();
                     if (ws.readyState !== WebSocket.CLOSED)
                         ws.close(exports.CloseReason.DuplicateConnection);
                 }

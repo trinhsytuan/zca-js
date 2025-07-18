@@ -6,7 +6,6 @@ export const getPinConversationsFactory = apiFactory()((api, ctx, utils) => {
      * Get pin conversations
      *
      * @throws ZaloApiError
-     *
      */
     return async function getPinConversations() {
         const params = {

@@ -1,6 +1,6 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { ThreadType } from "../models/index.js";
-import { apiFactory, hexToNegativeColor } from "../utils.js";
+import { apiFactory } from "../utils.js";
 export const editReminderFactory = apiFactory()((api, ctx, utils) => {
     const serviceURL = {
         [ThreadType.User]: utils.makeURL(`${api.zpwServiceMap.group_board[0]}/api/board/oneone/update`),
@@ -16,37 +16,36 @@ export const editReminderFactory = apiFactory()((api, ctx, utils) => {
      * @throws ZaloApiError
      */
     return async function editReminder(options, threadId, type = ThreadType.User) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _a, _b, _c, _d, _e, _f;
         const requestParams = type === ThreadType.User
             ? {
-                creatorUid: options.creatorUid,
-                toUid: threadId,
-                type: 0,
-                color: options.color && options.color.trim() ? hexToNegativeColor(options.color) : -16777216,
-                emoji: (_a = options.emoji) !== null && _a !== void 0 ? _a : "",
-                startTime: (_b = options.startTime) !== null && _b !== void 0 ? _b : Date.now(),
-                duration: (_c = options.duration) !== null && _c !== void 0 ? _c : -1,
-                params: JSON.stringify({
-                    title: options.title,
+                objectData: JSON.stringify({
+                    toUid: threadId,
+                    type: 0,
+                    color: -16777216,
+                    emoji: (_a = options.emoji) !== null && _a !== void 0 ? _a : "",
+                    startTime: (_b = options.startTime) !== null && _b !== void 0 ? _b : Date.now(),
+                    duration: -1,
+                    params: { title: options.title },
+                    needPin: false,
+                    reminderId: options.topicId,
+                    repeat: (_c = options.repeat) !== null && _c !== void 0 ? _c : 0,
                 }),
-                needPin: options.pinAct ? true : false,
-                reminderId: options.topicId,
-                repeat: (_d = options.repeat) !== null && _d !== void 0 ? _d : 0,
             }
             : {
                 grid: threadId,
                 type: 0,
-                color: options.color && options.color.trim() ? hexToNegativeColor(options.color) : -16777216,
-                emoji: (_e = options.emoji) !== null && _e !== void 0 ? _e : "",
-                startTime: (_f = options.startTime) !== null && _f !== void 0 ? _f : Date.now(),
-                duration: (_g = options.duration) !== null && _g !== void 0 ? _g : -1,
+                color: -16777216,
+                emoji: (_d = options.emoji) !== null && _d !== void 0 ? _d : "",
+                startTime: (_e = options.startTime) !== null && _e !== void 0 ? _e : Date.now(),
+                duration: -1,
                 params: JSON.stringify({
                     title: options.title,
                 }),
                 topicId: options.topicId,
-                repeat: (_h = options.repeat) !== null && _h !== void 0 ? _h : 0,
+                repeat: (_f = options.repeat) !== null && _f !== void 0 ? _f : 0,
                 imei: ctx.imei,
-                pinAct: options.pinAct ? 1 : 2,
+                pinAct: 2,
             };
         const encryptedParams = utils.encodeAES(JSON.stringify(requestParams));
         if (!encryptedParams)

@@ -17,7 +17,7 @@ export const createPollFactory = apiFactory()((api, ctx, utils) => {
             question: options.question,
             options: options.options,
             expired_time: (_a = options.expiredTime) !== null && _a !== void 0 ? _a : 0,
-            pinAct: !!options.pinAct,
+            pinAct: false,
             allow_multi_choices: !!options.allowMultiChoices,
             allow_add_new_option: !!options.allowAddNewOption,
             is_hide_vote_preview: !!options.hideVotePreview,

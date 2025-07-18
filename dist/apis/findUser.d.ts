@@ -1,8 +1,9 @@
+import { Gender } from "../models/Enum.js";
 export type FindUserResponse = {
     avatar: string;
     cover: string;
     status: string;
-    gender: number;
+    gender: Gender;
     dob: number;
     sdob: string;
     globalId: string;

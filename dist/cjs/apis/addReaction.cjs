@@ -288,7 +288,14 @@ const addReactionFactory = utils.apiFactory()((api, ctx, utils) => {
                 params: encryptedParams,
             }),
         });
-        return utils.resolve(response);
+        return utils.resolve(response, (result) => {
+            if (typeof result.data.msgIds === "string") {
+                return {
+                    msgIds: JSON.parse(result.data.msgIds),
+                };
+            }
+            return result.data;
+        });
     };
 });
 

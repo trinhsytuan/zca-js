@@ -11,6 +11,8 @@ const removeUserFromGroupFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param memberId User ID or list of user IDs to remove
      * @param groupId Group ID
      *
+     * @note Zalo might throw an error with code 165 if the user is not in the group, 166 if you don't have enough permissions or is not in the group
+     *
      * @throws ZaloApiError
      */
     return async function removeUserFromGroup(memberId, groupId) {

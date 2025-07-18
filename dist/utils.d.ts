@@ -125,7 +125,7 @@ export declare function generateZaloUUID(userAgent: string): string;
  * @param pin 4-digit PIN number
  * @returns 32-character hex string
  */
-export declare function encryptPin(pin: number): string;
+export declare function encryptPin(pin: string): string;
 /**
  * Decrypts a 32-character hex string back to 4-digit PIN
  * Note: This is a one-way hash, so we can only verify if a PIN matches the hash
@@ -134,12 +134,12 @@ export declare function encryptPin(pin: number): string;
  * @returns true if the PIN matches the hash
  *
  * @example
- * const encryptedPin = api.getHiddenConversPin().pin;
+ * const encryptedPin = (await api.getHiddenConversations()).pin;
  * checking pin created..
- * const isValid = decryptPin(encryptedPin, 1234); // true if pin created is 1234
- * const isInvalid = decryptPin(encryptedPin, 5678); // false if not pin created is 5678
+ * const isValid = validatePin(encryptedPin, "1234"); // true if pin created is 1234
+ * const isInvalid = validatePin(encryptedPin, "5678"); // false if not pin created is 5678
  */
-export declare function decryptPin(encryptedPin: string, pin?: number): boolean;
+export declare function validatePin(encryptedPin: string, pin: string): boolean;
 /**
  * Converts a hex color code to a negative color number used by Zalo API
  * @param hex Hex color code (e.g. '#00FF00' or '00FF00')

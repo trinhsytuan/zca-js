@@ -9,9 +9,9 @@ export const undoFriendRequestFactory = apiFactory()((api, _ctx, utils) => {
      *
      * @throws ZaloApiError
      */
-    return async function undoFriendRequest(options) {
+    return async function undoFriendRequest(friendId) {
         const params = {
-            fid: options.fid,
+            fid: friendId,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)

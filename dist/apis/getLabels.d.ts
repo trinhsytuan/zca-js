@@ -12,8 +12,4 @@ export type GetLabelsResponse = {
     version: number;
     lastUpdateTime: number;
 };
-export declare const getLabelsFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => () => Promise<{
-    labelData: any;
-    version: number;
-    lastUpdateTime: number;
-}>;
+export declare const getLabelsFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => () => Promise<GetLabelsResponse>;

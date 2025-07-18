@@ -1,18 +1,10 @@
-export type Message = {
-    title: string;
-    params: string | null;
-};
-export type QuickMessage = {
-    id: number;
+import type { QuickMessage } from "../models/QuickMessage.js";
+export type AddQuickMessagePayload = {
     keyword: string;
-    type: number;
-    createdTime: number;
-    lastModified: number;
-    message: Message;
-    media: null;
+    title: string;
 };
 export type AddQuickMessageResponse = {
     items: QuickMessage[];
     version: number;
 };
-export declare const addQuickMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (keyword: string, title: string) => Promise<AddQuickMessageResponse>;
+export declare const addQuickMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (addPayload: AddQuickMessagePayload) => Promise<AddQuickMessageResponse>;

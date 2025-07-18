@@ -5,7 +5,7 @@ export const getQRFactory = apiFactory()((api, _, utils) => {
     /**
      * Get QR code for users
      *
-     * @param userId User ID or list of user IDs (string[]). If userId is a string, it will be wrapped in an array.
+     * @param userId User ID or list of user IDs
      *
      * @throws ZaloApiError
      */

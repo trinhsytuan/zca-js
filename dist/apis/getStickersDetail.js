@@ -1,7 +1,7 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory, resolveResponse } from "../utils.js";
 export const getStickersDetailFactory = apiFactory()((api, ctx, utils) => {
-    const serviceURL = utils.makeURL(`${api.zpwServiceMap.sticker}/api/message/sticker`);
+    const serviceURL = utils.makeURL(`${api.zpwServiceMap.sticker}/api/message/sticker/sticker_detail`);
     /**
      * Get stickers detail by sticker IDs
      *
@@ -32,9 +32,7 @@ export const getStickersDetailFactory = apiFactory()((api, ctx, utils) => {
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)
             throw new ZaloApiError("Failed to encrypt message");
-        const finalServiceUrl = new URL(serviceURL);
-        finalServiceUrl.pathname = finalServiceUrl.pathname + "/sticker_detail";
-        const response = await utils.request(utils.makeURL(finalServiceUrl.toString(), {
+        const response = await utils.request(utils.makeURL(serviceURL, {
             params: encryptedParams,
         }));
         return resolveResponse(ctx, response);

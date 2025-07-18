@@ -12,7 +12,7 @@ class CallbacksMap extends Map {
         return super.set(key, value);
     }
 }
-const createContext = (apiType = 30, apiVersion = 661) => ({
+const createContext = (apiType = 30, apiVersion = 663) => ({
     API_TYPE: apiType,
     API_VERSION: apiVersion,
     uploadCallbacks: new CallbacksMap(),

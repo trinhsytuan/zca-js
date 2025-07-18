@@ -18,12 +18,15 @@ const getLabelsFactory = utils.apiFactory()((api, ctx, utils) => {
         if (!encryptedParams)
             throw new ZaloApiError.ZaloApiError("Failed to encrypt message");
         const response = await utils.request(utils.makeURL(serviceURL, { params: encryptedParams }));
-        const unFormatted = (await utils.resolve(response));
-        return {
-            labelData: JSON.parse(unFormatted.labelData),
-            version: unFormatted.version,
-            lastUpdateTime: unFormatted.lastUpdateTime,
-        };
+        return utils.resolve(response, (result) => {
+            const data = result.data;
+            const formattedData = {
+                labelData: JSON.parse(data.labelData),
+                version: data.version,
+                lastUpdateTime: data.lastUpdateTime,
+            };
+            return formattedData;
+        });
     };
 });
 

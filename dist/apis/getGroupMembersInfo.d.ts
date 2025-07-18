@@ -1,4 +1,4 @@
-export type MemberProfile = {
+export type GroupMemberProfile = {
     displayName: string;
     zaloName: string;
     avatar: string;
@@ -10,7 +10,7 @@ export type MemberProfile = {
 };
 export type GetGroupMembersInfoResponse = {
     profiles: {
-        [memberId: string]: MemberProfile;
+        [memberId: string]: GroupMemberProfile;
     };
     unchangeds_profile: any[];
 };

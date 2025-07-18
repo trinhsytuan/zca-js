@@ -11,17 +11,16 @@ const changeAccountAvatarFactory = utils.apiFactory()((api, ctx, utils$1) => {
      * Change account avatar
      *
      * @param avatarSource Attachment source, can be a file path or an Attachment object
-     * @param userId User ID
      *
      * @throws ZaloApiError
      */
-    return async function changeAccountAvatar(avatarSource, userId) {
+    return async function changeAccountAvatar(avatarSource) {
         const isSourceFilePath = typeof avatarSource == "string";
         const imageMetaData = isSourceFilePath ? await utils.getImageMetaData(avatarSource) : avatarSource.metadata;
         const fileSize = imageMetaData.totalSize || 0;
         const params = {
             avatarSize: 120,
-            clientId: String(userId + utils.formatTime("%H:%M %d/%m/%Y")),
+            clientId: String(ctx.uid + utils.formatTime("%H:%M %d/%m/%Y")),
             language: ctx.language,
             metaData: JSON.stringify({
                 origin: {

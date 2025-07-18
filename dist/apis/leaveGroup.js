@@ -8,6 +8,8 @@ export const leaveGroupFactory = apiFactory()((api, ctx, utils) => {
      * @param groupId - The ID of the group(s) to leave
      * @param silent - Turn on/off silent leave group
      *
+     * @note Zalo might throw an error with code 166 if you are not a member of the group
+     *
      * @throws ZaloApiError
      */
     return async function leaveGroup(groupId, silent = false) {

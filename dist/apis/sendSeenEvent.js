@@ -14,26 +14,26 @@ export const sendSeenEventFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Send message seen event
      *
-     * @param type Messages type (User or Group)
-     * @param targetId User ID or Group ID
      * @param messages List of messages to send seen event
+     * @param type Messages type (User or Group), defaults to User
      *
      * @throws ZaloApiError
      */
-    return async function sendSeenEvent(type, targetId, messages) {
-        if (!type && type !== 0)
-            throw new ZaloApiError("Missing type");
-        if (!targetId)
-            throw new ZaloApiError("Missing targetId");
-        if (!messages || !Array.isArray(messages))
-            throw new ZaloApiError("Messages are missing or not in a valid array format.");
+    return async function sendSeenEvent(messages, type = ThreadType.User) {
+        if (!messages)
+            throw new ZaloApiError("messages are missing or not in a valid array format.");
+        if (!Array.isArray(messages))
+            messages = [messages];
         if (messages.length === 0 || messages.length > MAX_MESSAGES_PER_SEND)
-            throw new ZaloApiError("Message array must contain between 1 and 50 messages.");
+            throw new ZaloApiError("messages must contain between 1 and 50 messages.");
+        const isGroup = type === ThreadType.Group;
+        const threadId = isGroup ? messages[0].idTo : messages[0].uidFrom;
         const msgInfos = {
             data: messages.map((msg) => {
-                if ((type === ThreadType.User && msg.uidFrom !== targetId) ||
-                    (type === ThreadType.Group && msg.idTo !== targetId))
-                    throw new ZaloApiError("TargetId mismatch");
+                const curThreadId = isGroup ? msg.idTo : msg.uidFrom;
+                if (curThreadId !== threadId) {
+                    throw new ZaloApiError("All messages must belong to the same thread.");
+                }
                 return {
                     cmi: msg.cliMsgId,
                     gmi: msg.msgId,
@@ -46,9 +46,9 @@ export const sendSeenEventFactory = apiFactory()((api, ctx, utils) => {
                     ts: parseInt(`${msg.ts}`) || 0 === parseInt(`${msg.ts}`) ? 0 : -1,
                 };
             }),
-            [type === ThreadType.User ? "senderId" : "grid"]: targetId,
+            [isGroup ? "grid" : "senderId"]: threadId,
         };
-        const params = Object.assign({ msgInfos: JSON.stringify(msgInfos) }, (type === ThreadType.User ? {} : { imei: ctx.imei }));
+        const params = Object.assign({ msgInfos: JSON.stringify(msgInfos) }, (isGroup ? { imei: ctx.imei } : {}));
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)
             throw new ZaloApiError("Failed to encrypt params");

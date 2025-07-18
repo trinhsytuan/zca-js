@@ -16,19 +16,19 @@ const sendDeliveredEventFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Send message delivered event
      *
-     * @param type Messages type (User or Group)
+     * @param isSeen Whether the message is seen or not
      * @param messages List of messages to send delivered event
-     * @param isSeen Whether the message is seen or not (default: false)
+     * @param type Messages type (User or Group), defaults to User
      *
      * @throws ZaloApiError
      */
-    return async function sendDeliveredEvent(type, messages, isSeen = false) {
-        if (!type && type !== 0)
-            throw new ZaloApiError.ZaloApiError("Missing type");
-        if (!messages || !Array.isArray(messages))
-            throw new ZaloApiError.ZaloApiError("Messages are missing or not in a valid array format.");
+    return async function sendDeliveredEvent(isSeen, messages, type = Enum.ThreadType.User) {
+        if (!messages)
+            throw new ZaloApiError.ZaloApiError("messages are missing or not in a valid array format.");
+        if (!Array.isArray(messages))
+            messages = [messages];
         if (messages.length === 0 || messages.length > context.MAX_MESSAGES_PER_SEND)
-            throw new ZaloApiError.ZaloApiError("Message array must contain between 1 and 50 messages.");
+            throw new ZaloApiError.ZaloApiError("messages must contain between 1 and 50 messages.");
         // 27/02/2025
         // This can send messages from multiple groups, but to prevent potential issues,
         // we will restrict it to sending messages only within the same group.
