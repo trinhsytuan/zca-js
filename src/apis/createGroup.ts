@@ -1,5 +1,5 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import type { AttachmentSource } from "../models/Attachment.js";
+import type { AttachmentSource } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 
 export type CreateGroupResponse = {
@@ -70,7 +70,7 @@ export const createGroupFactory = apiFactory<CreateGroupResponse>()((api, ctx, u
 
         const data = await utils.resolve(response);
         options.avatarSource = options.avatarSource || options.avatarPath;
-        if (options.avatarSource) await api.changeGroupAvatar(options.avatarSource, data.groupId).catch(console.error);
+        if (options.avatarSource) await api.changeGroupAvatar(options.avatarSource, data.groupId).catch(utils.logger.error);
 
         return data;
     };
