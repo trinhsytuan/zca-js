@@ -2,7 +2,6 @@ import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
 export const removeFriendFactory = apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.friend[0]}/api/friend/remove`);
-    ;
     /**
      * Remove friend
      *

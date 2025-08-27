@@ -9,84 +9,83 @@ export const forwardMessageFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Forward message to multiple threads
      *
-     * @param params Forward message parameters
+     * @param payload Forward message payload
+     * @param threadId Thread ID(s)
      * @param type Thread type (User/Group)
      *
      * @throws ZaloApiError
      */
-    return async function forwardMessage(params, type = ThreadType.User) {
+    return async function forwardMessage(payload, type = ThreadType.User) {
         var _a, _b;
-        if (!params.message)
+        if (!payload.message)
             throw new ZaloApiError("Missing message content");
-        if (!params.threadIds || params.threadIds.length === 0)
+        if (!payload.threadIds || payload.threadIds.length === 0)
             throw new ZaloApiError("Missing thread IDs");
         const timestamp = Date.now();
         const clientId = timestamp.toString();
         const msgInfo = {
-            message: params.message,
-            reference: params.reference
+            message: payload.message,
+            reference: payload.reference
                 ? JSON.stringify({
                     type: 3,
-                    data: JSON.stringify(params.reference),
+                    data: JSON.stringify(payload.reference),
                 })
                 : undefined,
         };
-        const decorLog = params.reference
+        const decorLog = payload.reference
             ? {
                 fw: {
                     pmsg: {
                         st: 1,
-                        ts: params.reference.ts,
-                        id: params.reference.id,
+                        ts: payload.reference.ts,
+                        id: payload.reference.id,
                     },
                     rmsg: {
                         st: 1,
-                        ts: params.reference.ts,
-                        id: params.reference.id,
+                        ts: payload.reference.ts,
+                        id: payload.reference.id,
                     },
-                    fwLvl: params.reference.fwLvl,
+                    fwLvl: payload.reference.fwLvl,
                 },
             }
             : null;
-        let requestParams;
+        let params;
         if (type === ThreadType.User) {
-            // Structure for User type
-            requestParams = {
-                toIds: params.threadIds.map((threadId) => {
+            params = {
+                toIds: payload.threadIds.map((threadId) => {
                     var _a;
                     return ({
                         clientId,
                         toUid: threadId,
-                        ttl: (_a = params.ttl) !== null && _a !== void 0 ? _a : 0,
+                        ttl: (_a = payload.ttl) !== null && _a !== void 0 ? _a : 0,
                     });
                 }),
                 imei: ctx.imei,
-                ttl: (_a = params.ttl) !== null && _a !== void 0 ? _a : 0,
+                ttl: (_a = payload.ttl) !== null && _a !== void 0 ? _a : 0,
                 msgType: "1",
-                totalIds: params.threadIds.length,
+                totalIds: payload.threadIds.length,
                 msgInfo: JSON.stringify(msgInfo),
                 decorLog: JSON.stringify(decorLog),
             };
         }
         else {
-            // Structure for Group type
-            requestParams = {
-                grids: params.threadIds.map((threadId) => {
+            params = {
+                grids: payload.threadIds.map((threadId) => {
                     var _a;
                     return ({
                         clientId,
                         grid: threadId,
-                        ttl: (_a = params.ttl) !== null && _a !== void 0 ? _a : 0,
+                        ttl: (_a = payload.ttl) !== null && _a !== void 0 ? _a : 0,
                     });
                 }),
-                ttl: (_b = params.ttl) !== null && _b !== void 0 ? _b : 0,
+                ttl: (_b = payload.ttl) !== null && _b !== void 0 ? _b : 0,
                 msgType: "1",
-                totalIds: params.threadIds.length,
+                totalIds: payload.threadIds.length,
                 msgInfo: JSON.stringify(msgInfo),
                 decorLog: JSON.stringify(decorLog),
             };
         }
-        const encryptedParams = utils.encodeAES(JSON.stringify(requestParams));
+        const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)
             throw new ZaloApiError("Failed to encrypt params");
         const response = await utils.request(serviceURL[type], {

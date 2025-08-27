@@ -1,5 +1,4 @@
-import { NoteDetail, PinnedMessageDetail, PollDetail } from "../models/Board.js";
-import { BoardType } from "../models/Enum.js";
+import { NoteDetail, PinnedMessageDetail, PollDetail, BoardType } from "../models/index.js";
 export type ListBoardOptions = {
     page?: number;
     count?: number;

@@ -1,5 +1,4 @@
-import { ThreadType, type TMessage } from "../models/index.js";
-import type { AttachmentSource } from "../models/Attachment.js";
+import { ThreadType, type TMessage, type AttachmentSource } from "../models/index.js";
 export type SendMessageResult = {
     msgId: number;
 };

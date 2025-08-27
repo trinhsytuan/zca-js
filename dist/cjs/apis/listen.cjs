@@ -2,8 +2,8 @@
 
 var EventEmitter = require('events');
 var WebSocket = require('ws');
-var GroupEvent = require('../models/GroupEvent.cjs');
 var FriendEvent = require('../models/FriendEvent.cjs');
+var GroupEvent = require('../models/GroupEvent.cjs');
 var DeliveredMessage = require('../models/DeliveredMessage.cjs');
 var Enum = require('../models/Enum.cjs');
 var Message = require('../models/Message.cjs');

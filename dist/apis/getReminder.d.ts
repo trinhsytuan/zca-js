@@ -1,4 +1,4 @@
-import { ReminderGroup } from "../models/Reminder.js";
+import { ReminderGroup } from "../models/index.js";
 export type GetReminderResponse = ReminderGroup & {
     groupId: string;
     eventType: number;

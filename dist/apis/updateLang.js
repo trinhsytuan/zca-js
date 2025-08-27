@@ -4,13 +4,14 @@ export var UpdateLangAvailableLanguages;
 (function (UpdateLangAvailableLanguages) {
     UpdateLangAvailableLanguages["VI"] = "VI";
     UpdateLangAvailableLanguages["EN"] = "EN";
+    UpdateLangAvailableLanguages["MY"] = "MY";
 })(UpdateLangAvailableLanguages || (UpdateLangAvailableLanguages = {}));
 export const updateLangFactory = apiFactory()((api, _, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.profile[0]}/api/social/profile/updatelang`);
     /**
      * Update language?
      *
-     * @param language language to update (VI, EN)
+     * @param language language to update (VI, EN, MY)
      *
      * @note Calling this API alone will not update the user's language.
      *

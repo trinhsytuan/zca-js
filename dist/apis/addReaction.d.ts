@@ -1,5 +1,4 @@
-import { ThreadType } from "../models/index.js";
-import { Reactions } from "../models/Reaction.js";
+import { ThreadType, Reactions } from "../models/index.js";
 export type AddReactionResponse = {
     msgIds: number[];
 };

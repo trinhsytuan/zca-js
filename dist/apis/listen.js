@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import WebSocket from "ws";
-import { initializeGroupEvent } from "../models/GroupEvent.js";
 import { initializeFriendEvent } from "../models/FriendEvent.js";
+import { initializeGroupEvent } from "../models/GroupEvent.js";
 import { GroupMessage, UserMessage, Reaction, Undo, ThreadType, GroupTyping, UserTyping, } from "../models/index.js";
 import { decodeEventData, getFriendEventType, getGroupEventType, logger, makeURL } from "../utils.js";
 import { ZaloApiError } from "../Errors/ZaloApiError.js";

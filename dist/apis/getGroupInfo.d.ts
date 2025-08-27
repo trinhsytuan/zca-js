@@ -1,4 +1,4 @@
-import type { GroupSetting } from "../models/GroupEvent.js";
+import type { GroupSetting } from "../models/index.js";
 export type GroupInfoResponse = {
     removedsGroup: string[];
     unchangedsGroup: string[];

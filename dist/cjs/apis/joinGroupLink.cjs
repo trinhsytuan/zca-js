@@ -1,6 +1,9 @@
-import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import { apiFactory } from "../utils.js";
-export const joinGroupFactory = apiFactory()((api, ctx, utils) => {
+'use strict';
+
+var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+var utils = require('../utils.cjs');
+
+const joinGroupLinkFactory = utils.apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group[0]}/api/group/link/join`);
     /**
      * Join group via invite link
@@ -11,17 +14,19 @@ export const joinGroupFactory = apiFactory()((api, ctx, utils) => {
      *
      * @throws ZaloApiError
      */
-    return async function joinGroup(link) {
+    return async function joinGroupLink(link) {
         const params = {
             link: link,
             clientLang: ctx.language,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)
-            throw new ZaloApiError("Failed to encrypt params");
+            throw new ZaloApiError.ZaloApiError("Failed to encrypt params");
         const response = await utils.request(utils.makeURL(serviceURL, { params: encryptedParams }), {
             method: "GET",
         });
         return utils.resolve(response);
     };
 });
+
+exports.joinGroupLinkFactory = joinGroupLinkFactory;

@@ -1,5 +1,4 @@
-import { ThreadType } from "../models/index.js";
-import { ReminderGroup, ReminderUser } from "../models/Reminder.js";
+import { ReminderGroup, ReminderUser, ThreadType } from "../models/index.js";
 export type ListReminderOptions = {
     page?: number;
     count?: number;

@@ -8,8 +8,8 @@ import SparkMD5 from "spark-md5";
 import toughCookie from "tough-cookie";
 import { isContextSession } from "./context.js";
 import { ZaloApiError } from "./Errors/ZaloApiError.js";
-import { GroupEventType } from "./models/GroupEvent.js";
 import { FriendEventType } from "./models/FriendEvent.js";
+import { GroupEventType } from "./models/GroupEvent.js";
 export const isBun = typeof Bun !== "undefined";
 /**
  * Get signed key for API requests.

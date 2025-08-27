@@ -1,6 +1,6 @@
 import EventEmitter from "events";
-import { type GroupEvent } from "../models/GroupEvent.js";
 import { type FriendEvent } from "../models/FriendEvent.js";
+import { type GroupEvent } from "../models/GroupEvent.js";
 import { Message, Reaction, Undo, ThreadType, Typing } from "../models/index.js";
 import type { ContextSession } from "../context.js";
 import { type SeenMessage } from "../models/SeenMessage.js";

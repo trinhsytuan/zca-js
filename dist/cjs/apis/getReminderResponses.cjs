@@ -14,7 +14,7 @@ const getReminderResponsesFactory = utils.apiFactory()((api, _ctx, utils) => {
      */
     return async function getReminderResponses(reminderId) {
         const params = {
-            eventId: reminderId
+            eventId: reminderId,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)

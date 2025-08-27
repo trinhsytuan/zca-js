@@ -1,4 +1,4 @@
-import { Gender } from "../models/Enum.js";
+import type { Gender, ZBusinessPackage } from "../models/index.js";
 export type CollapseMsgListConfig = {
     collapseId: number;
     collapseXItem: number;
@@ -21,9 +21,7 @@ export type ReceivedFriendRequestsDataInfo = {
         source: number;
         message: string;
     };
-    bizPkg: {
-        pkgId: number;
-    };
+    bizPkg: ZBusinessPackage;
     isSeenFriendReq: boolean;
 };
 export type GetReceivedFriendRequestsResponse = {

@@ -1,6 +1,6 @@
+import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { ThreadType } from "../models/index.js";
 import { apiFactory, removeUndefinedKeys } from "../utils.js";
-import { ZaloApiError } from "../Errors/ZaloApiError.js";
 export const sendStickerFactory = apiFactory()((api, ctx, utils) => {
     const serviceURL = {
         [ThreadType.User]: utils.makeURL(`${api.zpwServiceMap.chat[0]}/api/message/sticker`, {

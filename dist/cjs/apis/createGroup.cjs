@@ -40,7 +40,7 @@ const createGroupFactory = utils.apiFactory()((api, ctx, utils) => {
         const data = await utils.resolve(response);
         options.avatarSource = options.avatarSource || options.avatarPath;
         if (options.avatarSource)
-            await api.changeGroupAvatar(options.avatarSource, data.groupId).catch(console.error);
+            await api.changeGroupAvatar(options.avatarSource, data.groupId).catch(utils.logger.error);
         return data;
     };
 });

@@ -1,4 +1,8 @@
-import type { GroupSetting } from "../models/GroupEvent.js";
+import type { GroupSetting } from "../models/index.js";
+export type GetGroupLinkInfoPayload = {
+    link: string;
+    memberPage?: number;
+};
 export type GetGroupLinkInfoResponse = {
     groupId: string;
     name: string;
@@ -24,4 +28,4 @@ export type GetGroupLinkInfoResponse = {
     setting: GroupSetting;
     globalId: string;
 };
-export declare const getGroupLinkInfoFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (link: string) => Promise<GetGroupLinkInfoResponse>;
+export declare const getGroupLinkInfoFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (payload: GetGroupLinkInfoPayload) => Promise<GetGroupLinkInfoResponse>;

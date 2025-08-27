@@ -1,4 +1,4 @@
-import { NoteDetail } from "../models/Board.js";
+import { NoteDetail } from "../models/index.js";
 export type CreateNoteGroupOptions = {
     title: string;
     pinAct?: boolean;

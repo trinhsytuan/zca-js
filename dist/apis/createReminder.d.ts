@@ -1,5 +1,4 @@
-import { ReminderRepeatMode, ThreadType } from "../models/index.js";
-import { ReminderGroup, ReminderUser } from "../models/Reminder.js";
+import { ReminderRepeatMode, ReminderGroup, ReminderUser, ThreadType } from "../models/index.js";
 export type CreateReminderOptions = {
     title: string;
     emoji?: string;

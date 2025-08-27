@@ -1,4 +1,4 @@
-import { Gender } from "../models/Enum.js";
+import type { Gender, ZBusinessPackage } from "../models/index.js";
 export type GetAllFriendsResponse = {
     userId: string;
     username: string;
@@ -27,10 +27,7 @@ export type GetAllFriendsResponse = {
     oaInfo: any;
     user_mode: number;
     globalId: string;
-    bizPkg: {
-        label: any;
-        pkgId: number;
-    };
+    bizPkg: ZBusinessPackage;
     createdTs: number;
     oa_status: any;
 }[];

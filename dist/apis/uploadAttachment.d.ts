@@ -1,5 +1,4 @@
-import { ThreadType } from "../models/index.js";
-import type { AttachmentSource } from "../models/Attachment.js";
+import { ThreadType, type AttachmentSource } from "../models/index.js";
 type ImageResponse = {
     normalUrl: string;
     photoId: string;

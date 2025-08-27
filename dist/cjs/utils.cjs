@@ -10,8 +10,8 @@ var SparkMD5 = require('spark-md5');
 var toughCookie = require('tough-cookie');
 var context = require('./context.cjs');
 var ZaloApiError = require('./Errors/ZaloApiError.cjs');
-var GroupEvent = require('./models/GroupEvent.cjs');
 var FriendEvent = require('./models/FriendEvent.cjs');
+var GroupEvent = require('./models/GroupEvent.cjs');
 
 const isBun = typeof Bun !== "undefined";
 /**

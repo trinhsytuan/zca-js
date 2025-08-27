@@ -1,4 +1,4 @@
-import type { AttachmentSource } from "../models/Attachment.js";
+import type { AttachmentSource } from "../models/index.js";
 export type CreateGroupResponse = {
     groupType: number;
     sucessMembers: string[];

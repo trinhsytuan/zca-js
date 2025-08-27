@@ -1,5 +1,5 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import { BoardType } from "../models/Enum.js";
+import { BoardType } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 export const getListBoardFactory = apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group_board[0]}/api/board/list`);

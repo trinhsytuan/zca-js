@@ -23,6 +23,10 @@ var updateLang = require('./apis/updateLang.cjs');
 exports.ZaloApiError = ZaloApiError.ZaloApiError;
 exports.GroupDeliveredMessage = DeliveredMessage.GroupDeliveredMessage;
 exports.UserDeliveredMessage = DeliveredMessage.UserDeliveredMessage;
+Object.defineProperty(exports, "BinBankCard", {
+	enumerable: true,
+	get: function () { return Enum.BinBankCard; }
+});
 Object.defineProperty(exports, "BoardType", {
 	enumerable: true,
 	get: function () { return Enum.BoardType; }

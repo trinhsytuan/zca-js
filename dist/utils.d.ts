@@ -1,7 +1,7 @@
 import cryptojs from "crypto-js";
 import { type ContextSession, type ContextBase } from "./context.js";
-import { GroupEventType } from "./models/GroupEvent.js";
 import { FriendEventType } from "./models/FriendEvent.js";
+import { GroupEventType } from "./models/GroupEvent.js";
 import type { API } from "./zalo.js";
 import type { AttachmentSource } from "./models/Attachment.js";
 export declare const isBun: boolean;

@@ -1,4 +1,4 @@
-import { Gender } from "../models/Enum.js";
+import type { Gender, ZBusinessPackage } from "../models/index.js";
 export type FindUserResponse = {
     avatar: string;
     cover: string;
@@ -7,9 +7,7 @@ export type FindUserResponse = {
     dob: number;
     sdob: string;
     globalId: string;
-    bizPkg: {
-        pkgId: number;
-    };
+    bizPkg: ZBusinessPackage;
     uid: string;
     zalo_name: string;
     display_name: string;

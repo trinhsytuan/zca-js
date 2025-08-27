@@ -1,6 +1,5 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import { ThreadType } from "../models/index.js";
-import { Reactions } from "../models/Reaction.js";
+import { ThreadType, Reactions } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 export const addReactionFactory = apiFactory()((api, ctx, utils) => {
     const serviceURLs = {

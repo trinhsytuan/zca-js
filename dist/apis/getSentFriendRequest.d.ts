@@ -1,3 +1,4 @@
+import type { ZBusinessPackage } from "../models/ZBusiness.js";
 export type GetSentFriendRequestResponse = {
     [userId: string]: {
         userId: string;
@@ -5,9 +6,7 @@ export type GetSentFriendRequestResponse = {
         displayName: string;
         avatar: string;
         globalId: string;
-        bizPkg: {
-            pkgId: number;
-        };
+        bizPkg: ZBusinessPackage;
         fReqInfo: {
             message: string;
             src: number;

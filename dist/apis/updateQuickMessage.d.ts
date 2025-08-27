@@ -1,4 +1,4 @@
-import type { QuickMessage } from "../models/QuickMessage.js";
+import type { QuickMessage } from "../models/index.js";
 export type UpdateQuickMessagePayload = {
     keyword: string;
     title: string;
