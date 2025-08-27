@@ -51,6 +51,7 @@ import { getContextFactory } from "./apis/getContext.js";
 import { getCookieFactory } from "./apis/getCookie.js";
 import { getFriendBoardListFactory } from "./apis/getFriendBoardList.js";
 import { getGroupBlockedMemberFactory } from "./apis/getGroupBlockedMember.js";
+import { getRecommendRequestFactory } from "./apis/getRecommendRequest.js";
 import { getGroupInfoFactory } from "./apis/getGroupInfo.js";
 import { getGroupLinkDetailFactory } from "./apis/getGroupLinkDetail.js";
 import { getGroupLinkInfoFactory } from "./apis/getGroupLinkInfo.js";
@@ -307,6 +308,7 @@ export class API {
     public getCookie: ReturnType<typeof getCookieFactory>;
     public getFriendBoardList: ReturnType<typeof getFriendBoardListFactory>;
     public getGroupBlockedMember: ReturnType<typeof getGroupBlockedMemberFactory>;
+    public getRecommendRequest: ReturnType<typeof getRecommendRequestFactory>;
     public getGroupInfo: ReturnType<typeof getGroupInfoFactory>;
     public getGroupLinkDetail: ReturnType<typeof getGroupLinkDetailFactory>;
     public getGroupLinkInfo: ReturnType<typeof getGroupLinkInfoFactory>;
@@ -424,6 +426,7 @@ export class API {
         this.getCookie = getCookieFactory(ctx, this);
         this.getFriendBoardList = getFriendBoardListFactory(ctx, this);
         this.getGroupBlockedMember = getGroupBlockedMemberFactory(ctx, this);
+        this.getRecommendRequest = getRecommendRequestFactory(ctx, this);
         this.getGroupInfo = getGroupInfoFactory(ctx, this);
         this.getGroupLinkDetail = getGroupLinkDetailFactory(ctx, this);
         this.getGroupLinkInfo = getGroupLinkInfoFactory(ctx, this);
