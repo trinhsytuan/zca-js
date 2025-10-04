@@ -8,7 +8,7 @@ export const addGroupBlockedMemberFactory = apiFactory()((api, _, utils) => {
      * @param memberId member id(s)
      * @param groupId group id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function addGroupBlockedMember(memberId, groupId) {
         if (!Array.isArray(memberId))

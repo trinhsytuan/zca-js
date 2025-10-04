@@ -1,11 +1,11 @@
 import { ThreadType, type AttachmentSource } from "../models/index.js";
-type ImageResponse = {
+export type UploadAttachmentImageResponse = {
     normalUrl: string;
     photoId: string;
-    finished: number;
+    finished: number | boolean;
     hdUrl: string;
     thumbUrl: string;
-    clientFileId: string;
+    clientFileId: number;
     chunkId: number;
     fileType: "image";
     width: number;
@@ -13,8 +13,8 @@ type ImageResponse = {
     totalSize: number;
     hdSize: number;
 };
-type VideoResponse = {
-    finished: number;
+export type UploadAttachmentVideoResponse = {
+    finished: number | boolean;
     clientFileId: number;
     chunkId: number;
     fileType: "video";
@@ -24,8 +24,8 @@ type VideoResponse = {
     totalSize: number;
     fileName: string;
 };
-type FileResponse = {
-    finished: number;
+export type UploadAttachmentFileResponse = {
+    finished: number | boolean;
     clientFileId: number;
     chunkId: number;
     fileType: "others";
@@ -45,7 +45,6 @@ export type FileData = {
     fileName: string;
     totalSize: number;
 };
-export type UploadAttachmentType = ImageResponse | VideoResponse | FileResponse;
+export type UploadAttachmentType = UploadAttachmentImageResponse | UploadAttachmentVideoResponse | UploadAttachmentFileResponse;
 export type UploadAttachmentResponse = UploadAttachmentType[];
-export declare const uploadAttachmentFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (sources: AttachmentSource | AttachmentSource[], threadId: string, type?: ThreadType) => Promise<UploadAttachmentType[]>;
-export {};
+export declare const uploadAttachmentFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (sources: AttachmentSource | AttachmentSource[], threadId: string, type?: ThreadType) => Promise<UploadAttachmentType[]>;

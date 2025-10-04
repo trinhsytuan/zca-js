@@ -7,7 +7,7 @@ export const getPollDetailFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param pollId Poll ID
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getPollDetail(pollId) {
         if (!pollId)

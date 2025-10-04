@@ -10,7 +10,7 @@ const getReminderResponsesFactory = utils.apiFactory()((api, _ctx, utils) => {
      *
      * @param reminderId reminder id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getReminderResponses(reminderId) {
         const params = {

@@ -10,7 +10,7 @@ const getQRFactory = utils.apiFactory()((api, _, utils) => {
      *
      * @param userId User ID or list of user IDs
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getQR(userId) {
         if (typeof userId == "string")

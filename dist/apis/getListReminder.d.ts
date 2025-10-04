@@ -1,6 +1,13 @@
-import { ReminderGroup, ReminderUser, ThreadType } from "../models/index.js";
+import type { ReminderGroup, ReminderUser } from "../models/index.js";
+import { ThreadType } from "../models/index.js";
 export type ListReminderOptions = {
+    /**
+     * Page number (default: 1)
+     */
     page?: number;
+    /**
+     * Number of items to retrieve (default: 20)
+     */
     count?: number;
 };
 export type ReminderListUser = ReminderUser;
@@ -13,9 +20,9 @@ export type ReminderListGroup = ReminderGroup & {
         acceptMember: number;
     };
     repeatInfo: {
-        list_ts: any[];
+        list_ts: unknown[];
     };
-    repeatData: any[];
+    repeatData: unknown[];
 };
 export type GetListReminderResponse = (ReminderListUser & ReminderListGroup)[];
-export declare const getListReminderFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: ListReminderOptions, threadId: string, type?: ThreadType) => Promise<GetListReminderResponse>;
+export declare const getListReminderFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (options: ListReminderOptions, threadId: string, type?: ThreadType) => Promise<GetListReminderResponse>;

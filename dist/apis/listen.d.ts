@@ -1,7 +1,8 @@
 import EventEmitter from "events";
 import { type FriendEvent } from "../models/FriendEvent.js";
 import { type GroupEvent } from "../models/GroupEvent.js";
-import { Message, Reaction, Undo, ThreadType, Typing } from "../models/index.js";
+import type { Message, Typing } from "../models/index.js";
+import { Reaction, Undo, ThreadType } from "../models/index.js";
 import type { ContextSession } from "../context.js";
 import { type SeenMessage } from "../models/SeenMessage.js";
 import { type DeliveredMessage } from "../models/DeliveredMessage.js";
@@ -15,17 +16,20 @@ export type WsPayload<T = Record<string, unknown>> = {
     subCmd: number;
     data: T;
 };
-export type OnMessageCallback = (message: Message) => any;
+export type OnMessageCallback = (message: Message) => unknown;
+export type OnClosedCallback = (code: CloseReason, reason: string) => unknown;
+export type OnErrorCallback = (error: unknown) => unknown;
 export declare enum CloseReason {
     ManualClosure = 1000,
+    AbnormalClosure = 1006,
     DuplicateConnection = 3000,
     KickConnection = 3003
 }
 interface ListenerEvents {
     connected: [];
-    disconnected: [reason: CloseReason];
-    closed: [reason: CloseReason];
-    error: [error: any];
+    disconnected: [code: CloseReason, reason: string];
+    closed: [code: CloseReason, reason: string];
+    error: [error: unknown];
     typing: [typing: Typing];
     message: [message: Message];
     old_messages: [messages: Message[], type: ThreadType];
@@ -62,15 +66,15 @@ export declare class Listener extends EventEmitter<ListenerEvents> {
     /**
      * @deprecated Use `on` method instead
      */
-    onConnected(cb: Function): void;
+    onConnected(cb: () => unknown): void;
     /**
      * @deprecated Use `on` method instead
      */
-    onClosed(cb: Function): void;
+    onClosed(cb: OnClosedCallback): void;
     /**
      * @deprecated Use `on` method instead
      */
-    onError(cb: Function): void;
+    onError(cb: OnErrorCallback): void;
     /**
      * @deprecated Use `on` method instead
      */

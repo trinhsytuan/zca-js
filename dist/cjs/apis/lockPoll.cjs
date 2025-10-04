@@ -10,7 +10,7 @@ const lockPollFactory = utils.apiFactory()((api, ctx, utils) => {
      *
      * @param pollId Poll id to lock
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function lockPoll(pollId) {
         const params = {

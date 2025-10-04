@@ -4,7 +4,7 @@ type UploadEventData = {
     fileUrl: string;
     fileId: string;
 };
-export type UploadCallback = (data: UploadEventData) => any;
+export type UploadCallback = (data: UploadEventData) => unknown;
 type ShareFileSettings = {
     big_file_domain_list: string[];
     max_size_share_file_v2: number;
@@ -137,23 +137,25 @@ export type AppContextBase = {
     loginInfo: LoginInfo;
     extraVer: ExtraVer;
 };
+export type ImageMetadataGetterResponse = {
+    width: number;
+    height: number;
+    size: number;
+} | null;
+export type ImageMetadataGetter = (filePath: string) => Promise<ImageMetadataGetterResponse>;
 export type Options = {
     selfListen: boolean;
     checkUpdate: boolean;
     logging: boolean;
     apiType: number;
     apiVersion: number;
-    /**
-     * Optional agent configuration.
-     * - When using `Bun`, this should be a string.
-     * - In other environments, this should be an `Agent` instance.
-     */
-    agent?: Agent | string;
+    agent?: Agent;
     /**
      * Optional fetch implementation for polyfills in non-standard environments.
      * If using proxy, `node-fetch` is highly recommended.
      */
     polyfill: typeof fetch;
+    imageMetadataGetter?: ImageMetadataGetter;
 };
 declare class CallbacksMap extends Map<string, UploadCallback> {
     /**

@@ -9,7 +9,7 @@ export const joinGroupLinkFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param link - The link join group
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function joinGroupLink(link) {
         const params = {

@@ -8,13 +8,13 @@ const acceptFriendRequestFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Accept a friend request from a User
      *
-     * @param userId The User ID to friend request is accept
+     * @param friendId The friend ID to user request is accept
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
-    return async function acceptFriendRequest(userId) {
+    return async function acceptFriendRequest(friendId) {
         const params = {
-            fid: userId,
+            fid: friendId,
             language: ctx.language,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));

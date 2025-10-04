@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 var Reaction = require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const addReactionFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -18,7 +23,7 @@ const addReactionFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param icon Reaction icon
      * @param dest Destination data including message IDs and thread information
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function addReaction(icon, dest) {
         const serviceURL = serviceURLs[dest.type];

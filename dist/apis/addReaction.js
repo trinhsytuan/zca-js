@@ -12,7 +12,7 @@ export const addReactionFactory = apiFactory()((api, ctx, utils) => {
      * @param icon Reaction icon
      * @param dest Destination data including message IDs and thread information
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function addReaction(icon, dest) {
         const serviceURL = serviceURLs[dest.type];

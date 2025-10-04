@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
-var Enum = require('../models/Enum.cjs');
+require('../models/AutoReply.cjs');
+var Board = require('../models/Board.cjs');
+require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const getListBoardFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -15,7 +20,7 @@ const getListBoardFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param options - The options for the request
      * @param groupId - The ID of the group
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function getListBoard(options, groupId) {
@@ -38,7 +43,7 @@ const getListBoardFactory = utils.apiFactory()((api, ctx, utils) => {
         return utils.resolve(response, (result) => {
             const data = result.data;
             data.items.forEach((item) => {
-                if (item.boardType != Enum.BoardType.Poll) {
+                if (item.boardType != Board.BoardType.Poll) {
                     const detailData = item.data;
                     if (typeof detailData.params === "string") {
                         detailData.params = JSON.parse(detailData.params);

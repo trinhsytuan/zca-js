@@ -7,7 +7,7 @@ export const disperseGroupFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param groupId Group ID to disperse Group from
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function disperseGroup(groupId) {
         const params = {

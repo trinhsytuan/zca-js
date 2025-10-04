@@ -8,7 +8,7 @@ const getPinConversationsFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Get pin conversations
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getPinConversations() {
         const params = {

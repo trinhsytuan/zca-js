@@ -13,12 +13,12 @@ export const sendVoiceFactory = apiFactory()((api, ctx, utils) => {
      * @param threadId ID of the user or group to send the voice to
      * @param type Type of thread, default user
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendVoice(options, threadId, type = ThreadType.User) {
         var _a, _b;
         let fileSize = null;
-        let clientId = Date.now().toString();
+        const clientId = Date.now().toString();
         try {
             const headResponse = await utils.request(options.voiceUrl, { method: "HEAD" }, true);
             if (headResponse.ok) {
@@ -26,7 +26,7 @@ export const sendVoiceFactory = apiFactory()((api, ctx, utils) => {
             }
         }
         catch (error) {
-            throw new ZaloApiError(`Unable to get voice content: ${(error === null || error === void 0 ? void 0 : error.message) || error}`);
+            throw new ZaloApiError(`Unable to get voice content: ${error instanceof Error ? error.message : String(error)}`);
         }
         const params = type === ThreadType.User
             ? {

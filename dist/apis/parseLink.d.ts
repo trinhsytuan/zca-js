@@ -18,4 +18,4 @@ export type ParseLinkResponse = {
     };
     error_maps: ParseLinkErrorMaps;
 };
-export declare const parseLinkFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (link: string) => Promise<ParseLinkResponse>;
+export declare const parseLinkFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (link: string) => Promise<ParseLinkResponse>;

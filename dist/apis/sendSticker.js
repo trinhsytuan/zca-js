@@ -17,7 +17,7 @@ export const sendStickerFactory = apiFactory()((api, ctx, utils) => {
      * @param threadId group or user id
      * @param type Message type (User or GroupMessage)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendSticker(sticker, threadId, type = ThreadType.User) {
         if (!sticker)

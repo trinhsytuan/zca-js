@@ -25,11 +25,11 @@ export type SendVideoOptions = {
      */
     height?: number;
     /**
-     * Time to live in miliseconds (default: 0)
+     * Time to live in milliseconds (default: 0)
      */
     ttl?: number;
 };
 export type SendVideoResponse = {
     msgId: number;
 };
-export declare const sendVideoFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: SendVideoOptions, threadId: string, type?: ThreadType) => Promise<SendVideoResponse>;
+export declare const sendVideoFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (options: SendVideoOptions, threadId: string, type?: ThreadType) => Promise<SendVideoResponse>;

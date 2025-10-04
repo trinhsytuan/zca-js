@@ -1,7 +1,6 @@
 import { ThreadType } from "../models/index.js";
 export type ForwardMessagePayload = {
     message: string;
-    threadIds: string[];
     ttl?: number;
     reference?: {
         id: string;
@@ -10,17 +9,16 @@ export type ForwardMessagePayload = {
         fwLvl: number;
     };
 };
-export type Success = {
+export type ForwardMessageSuccess = {
     clientId: string;
     msgId: string;
 };
-export type Failed = {
+export type ForwardMessageFail = {
     clientId: string;
-    errorCode: number;
-    errorMessage: string;
+    error_code: string;
 };
 export type ForwardMessageResponse = {
-    success: Success[];
-    failed: Failed[];
+    success: ForwardMessageSuccess[];
+    fail: ForwardMessageFail[];
 };
-export declare const forwardMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (payload: ForwardMessagePayload, type?: ThreadType) => Promise<ForwardMessageResponse>;
+export declare const forwardMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (payload: ForwardMessagePayload, threadIds: string[], type?: ThreadType) => Promise<ForwardMessageResponse>;

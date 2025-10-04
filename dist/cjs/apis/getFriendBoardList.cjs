@@ -10,7 +10,7 @@ const getFriendBoardListFactory = utils.apiFactory()((api, ctx, utils) => {
      *
      * @param conversationId conversation id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getFriendBoardList(conversationId) {
         const params = {

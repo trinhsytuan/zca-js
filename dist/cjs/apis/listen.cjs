@@ -4,19 +4,25 @@ var EventEmitter = require('events');
 var WebSocket = require('ws');
 var FriendEvent = require('../models/FriendEvent.cjs');
 var GroupEvent = require('../models/GroupEvent.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var DeliveredMessage = require('../models/DeliveredMessage.cjs');
 var Enum = require('../models/Enum.cjs');
+require('../models/Group.cjs');
 var Message = require('../models/Message.cjs');
 var Reaction = require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
 var SeenMessage = require('../models/SeenMessage.cjs');
 var Typing = require('../models/Typing.cjs');
 var Undo = require('../models/Undo.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
 
 exports.CloseReason = void 0;
 (function (CloseReason) {
     CloseReason[CloseReason["ManualClosure"] = 1000] = "ManualClosure";
+    CloseReason[CloseReason["AbnormalClosure"] = 1006] = "AbnormalClosure";
     CloseReason[CloseReason["DuplicateConnection"] = 3000] = "DuplicateConnection";
     CloseReason[CloseReason["KickConnection"] = 3003] = "KickConnection";
 })(exports.CloseReason || (exports.CloseReason = {}));
@@ -119,6 +125,7 @@ class Listener extends EventEmitter {
                 "user-agent": this.userAgent,
                 cookie: this.cookie,
             },
+            agent: this.ctx.options.agent
         });
         this.ws = ws;
         ws.onopen = () => {
@@ -127,7 +134,7 @@ class Listener extends EventEmitter {
         };
         ws.onclose = (event) => {
             this.reset();
-            this.emit("disconnected", event.code);
+            this.emit("disconnected", event.code, event.reason);
             const retry = retryOnClose && this.canRetry(event.code);
             if (retry && retryOnClose) {
                 const shouldRotate = this.shouldRotate(event.code);
@@ -139,8 +146,8 @@ class Listener extends EventEmitter {
                 }, retry);
             }
             else {
-                this.onClosedCallback(event.code);
-                this.emit("closed", event.code);
+                this.onClosedCallback(event.code, event.reason);
+                this.emit("closed", event.code, event.reason);
             }
         };
         ws.onerror = (event) => {
@@ -181,7 +188,7 @@ class Listener extends EventEmitter {
                     const parsedData = (await utils.decodeEventData(parsed, this.cipherKey)).data;
                     const { msgs } = parsedData;
                     for (const msg of msgs) {
-                        if (typeof msg.content == "object" && msg.content.hasOwnProperty("deleteMsg")) {
+                        if (typeof msg.content == "object" && utils.hasOwn(msg.content, "deleteMsg")) {
                             const undoObject = new Undo.Undo(this.ctx.uid, msg, false);
                             if (undoObject.isSelf && !this.selfListen)
                                 continue;
@@ -200,7 +207,7 @@ class Listener extends EventEmitter {
                     const parsedData = (await utils.decodeEventData(parsed, this.cipherKey)).data;
                     const { groupMsgs } = parsedData;
                     for (const msg of groupMsgs) {
-                        if (typeof msg.content == "object" && msg.content.hasOwnProperty("deleteMsg")) {
+                        if (typeof msg.content == "object" && utils.hasOwn(msg.content, "deleteMsg")) {
                             const undoObject = new Undo.Undo(this.ctx.uid, msg, true);
                             if (undoObject.isSelf && !this.selfListen)
                                 continue;
@@ -239,7 +246,7 @@ class Listener extends EventEmitter {
                             const groupEventData = typeof control.content.data == "string"
                                 ? JSON.parse(control.content.data)
                                 : control.content.data;
-                            const groupEvent = GroupEvent.initializeGroupEvent(this.ctx.uid, groupEventData, utils.getGroupEventType(control.content.act));
+                            const groupEvent = GroupEvent.initializeGroupEvent(this.ctx.uid, groupEventData, utils.getGroupEventType(control.content.act), control.content.act);
                             if (groupEvent.isSelf && !this.selfListen)
                                 continue;
                             this.emit("group_event", groupEvent);
@@ -300,13 +307,13 @@ class Listener extends EventEmitter {
                 }
                 if (cmd == 510 && subCmd == 1) {
                     const parsedData = (await utils.decodeEventData(parsed, this.cipherKey)).data;
-                    const { msgs } = parsedData;
+                    const msgs = parsedData.msgs;
                     const responseMsgs = msgs.map((msg) => new Message.UserMessage(this.ctx.uid, msg));
                     this.emit("old_messages", responseMsgs, Enum.ThreadType.User);
                 }
                 if (cmd == 511 && subCmd == 1) {
                     const parsedData = (await utils.decodeEventData(parsed, this.cipherKey)).data;
-                    const { groupMsgs } = parsedData;
+                    const groupMsgs = parsedData.groupMsgs;
                     const responseMsgs = groupMsgs.map((msg) => new Message.GroupMessage(this.ctx.uid, msg));
                     this.emit("old_messages", responseMsgs, Enum.ThreadType.Group);
                 }
@@ -335,11 +342,11 @@ class Listener extends EventEmitter {
                     const parsedData = (await utils.decodeEventData(parsed, this.cipherKey)).data;
                     const { delivereds: deliveredMsgs, seens: seenMsgs } = parsedData;
                     if (Array.isArray(deliveredMsgs) && deliveredMsgs.length > 0) {
-                        let deliveredObjects = deliveredMsgs.map((delivered) => new DeliveredMessage.UserDeliveredMessage(delivered));
+                        const deliveredObjects = deliveredMsgs.map((delivered) => new DeliveredMessage.UserDeliveredMessage(delivered));
                         this.emit("delivered_messages", deliveredObjects);
                     }
                     if (Array.isArray(seenMsgs) && seenMsgs.length > 0) {
-                        let seenObjects = seenMsgs.map((seen) => new SeenMessage.UserSeenMessage(seen));
+                        const seenObjects = seenMsgs.map((seen) => new SeenMessage.UserSeenMessage(seen));
                         this.emit("seen_messages", seenObjects);
                     }
                 }

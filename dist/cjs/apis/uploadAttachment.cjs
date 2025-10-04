@@ -3,10 +3,15 @@
 var FormData = require('form-data');
 var fs = require('node:fs');
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const urlType = {
@@ -33,7 +38,7 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
      * @param threadId Group or User ID
      * @param type Message type (User or Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError | ZaloApiMissingImageMetadataGetter}
      */
     return async function uploadAttachment(sources, threadId, type = Enum.ThreadType.User) {
         if (!sources)
@@ -48,8 +53,8 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
             throw new ZaloApiError.ZaloApiError("Missing threadId");
         const chunkSize = ctx.settings.features.sharefile.chunk_size_file;
         const isGroupMessage = type == Enum.ThreadType.Group;
-        let attachmentsData = [];
-        let url = `${serviceURL}/${isGroupMessage ? "group" : "message"}/`;
+        const attachmentsData = [];
+        const url = `${serviceURL}/${isGroupMessage ? "group" : "message"}/`;
         const typeParam = isGroupMessage ? "11" : "2";
         let clientId = Date.now();
         for (const source of sources) {
@@ -61,7 +66,7 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
                 throw new ZaloApiError.ZaloApiError("Missing filename");
             if (isFilePath && !fs.existsSync(source))
                 throw new ZaloApiError.ZaloApiError("File not found");
-            const extFile = utils.getFileExtension(isFilePath ? source : source.filename);
+            const extFile = utils.getFileExtension(isFilePath ? source : source.filename).toLowerCase();
             const fileName = isFilePath ? utils.getFileName(source) : source.filename;
             if (isExtensionValid(extFile) == false)
                 throw new ZaloApiError.ZaloApiError(`File extension "${extFile}" is not allowed`);
@@ -79,8 +84,8 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
                 case "jpg":
                 case "jpeg":
                 case "png":
-                case "webp":
-                    let imageData = isFilePath ? await utils.getImageMetaData(source) : Object.assign(Object.assign({}, source.metadata), { fileName });
+                case "webp": {
+                    const imageData = isFilePath ? await utils.getImageMetaData(ctx, source) : Object.assign(Object.assign({}, source.metadata), { fileName });
                     if (isExceedMaxFileSize(imageData.totalSize))
                         throw new ZaloApiError.ZaloApiError(`File ${fileName} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`);
                     data.fileData = imageData;
@@ -94,8 +99,9 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
                     data.params.jxl = 0;
                     data.params.chunkId = 1;
                     break;
-                case "mp4":
-                    let videoSize = isFilePath ? await utils.getFileSize(source) : source.metadata.totalSize;
+                }
+                case "mp4": {
+                    const videoSize = isFilePath ? await utils.getFileSize(source) : source.metadata.totalSize;
                     if (isExceedMaxFileSize(videoSize))
                         throw new ZaloApiError.ZaloApiError(`File ${fileName} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`);
                     data.fileType = "video";
@@ -112,7 +118,8 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
                     data.params.jxl = 0;
                     data.params.chunkId = 1;
                     break;
-                default:
+                }
+                default: {
                     const fileSize = isFilePath ? await utils.getFileSize(source) : source.metadata.totalSize;
                     if (isExceedMaxFileSize(fileSize))
                         throw new ZaloApiError.ZaloApiError(`File ${fileName} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`);
@@ -130,6 +137,7 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
                     data.params.jxl = 0;
                     data.params.chunkId = 1;
                     break;
+                }
             }
             const fileBuffer = isFilePath ? await fs.promises.readFile(source) : source.data;
             for (let i = 0; i < data.params.totalChunk; i++) {
@@ -160,18 +168,31 @@ const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
                      * @TODO: better type rather than any
                      */
                     const resData = await utils.resolveResponse(ctx, response);
-                    if (resData && resData.fileId != -1 && resData.photoId != -1)
+                    if (resData && resData.fileId != "-1" && resData.photoId != "-1")
                         await new Promise((resolve) => {
                             if (data.fileType == "video" || data.fileType == "others") {
                                 const uploadCallback = async (wsData) => {
-                                    let result = Object.assign(Object.assign(Object.assign({ fileType: data.fileType }, resData), wsData), { totalSize: data.fileData.totalSize, fileName: data.fileData.fileName, checksum: (await utils.getMd5LargeFileObject(data.source, data.fileData.totalSize)).data });
+                                    const result = Object.assign(Object.assign(Object.assign({ fileType: data.fileType }, resData), wsData), { totalSize: data.fileData.totalSize, fileName: data.fileData.fileName, checksum: (await utils.getMd5LargeFileObject(data.source, data.fileData.totalSize)).data });
                                     results.push(result);
                                     resolve();
                                 };
-                                ctx.uploadCallbacks.set(resData.fileId, uploadCallback);
+                                ctx.uploadCallbacks.set(resData.fileId.toString(), uploadCallback);
                             }
                             if (data.fileType == "image") {
-                                let result = Object.assign({ fileType: "image", width: data.fileData.width, height: data.fileData.height, totalSize: data.fileData.totalSize, hdSize: data.fileData.totalSize }, resData);
+                                const result = {
+                                    fileType: "image",
+                                    width: data.fileData.width,
+                                    height: data.fileData.height,
+                                    totalSize: data.fileData.totalSize,
+                                    hdSize: data.fileData.totalSize,
+                                    finished: resData.finished,
+                                    normalUrl: resData.normalUrl,
+                                    hdUrl: resData.hdUrl,
+                                    thumbUrl: resData.thumbUrl,
+                                    chunkId: resData.chunkId,
+                                    photoId: resData.photoId,
+                                    clientFileId: resData.clientFileId,
+                                };
                                 results.push(result);
                                 resolve();
                             }

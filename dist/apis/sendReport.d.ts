@@ -14,4 +14,4 @@ export type SendReportOptions = {
 export type SendReportResponse = {
     reportId: string;
 };
-export declare const sendReportFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: SendReportOptions, threadId: string, type?: ThreadType) => Promise<SendReportResponse>;
+export declare const sendReportFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (options: SendReportOptions, threadId: string, type?: ThreadType) => Promise<SendReportResponse>;

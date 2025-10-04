@@ -6,4 +6,4 @@ export type CustomAPIProps<T, K> = {
     props: K;
 };
 export type CustomAPICallback<T, K> = (props: CustomAPIProps<T, K>) => T | Promise<T>;
-export declare const customFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => <T, K = any>(name: string, callback: CustomAPICallback<T, K>) => void;
+export declare const customFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => <T, K = any>(name: string, callback: CustomAPICallback<T, K>) => void;

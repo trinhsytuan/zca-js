@@ -10,7 +10,7 @@ export const changeGroupAvatarFactory = apiFactory()((api, ctx, utils) => {
      * @param avatarSource Attachment source, can be a file path or an Attachment object
      * @param groupId Group ID
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError | ZaloApiMissingImageMetadataGetter}
      */
     return async function changeGroupAvatar(avatarSource, groupId) {
         const params = {
@@ -20,7 +20,7 @@ export const changeGroupAvatarFactory = apiFactory()((api, ctx, utils) => {
             imei: ctx.imei,
         };
         const isSourceFilePath = typeof avatarSource == "string";
-        const imageMetaData = isSourceFilePath ? await getImageMetaData(avatarSource) : avatarSource.metadata;
+        const imageMetaData = isSourceFilePath ? await getImageMetaData(ctx, avatarSource) : avatarSource.metadata;
         params.originWidth = imageMetaData.width || 1080;
         params.originHeight = imageMetaData.height || 1080;
         const avatarData = isSourceFilePath ? fs.readFileSync(avatarSource) : avatarSource.data;

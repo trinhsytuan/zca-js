@@ -1,2 +1,2 @@
 export type RemoveGroupDeputyResponse = "";
-export declare const removeGroupDeputyFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (memberId: string | string[], groupId: string) => Promise<"">;
+export declare const removeGroupDeputyFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (memberId: string | string[], groupId: string) => Promise<"">;

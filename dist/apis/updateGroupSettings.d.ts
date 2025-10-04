@@ -37,4 +37,4 @@ export type UpdateGroupSettingsOptions = {
     lockViewMember?: boolean;
 };
 export type UpdateGroupSettingsResponse = "";
-export declare const updateGroupSettingsFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: UpdateGroupSettingsOptions, groupId: string) => Promise<"">;
+export declare const updateGroupSettingsFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (options: UpdateGroupSettingsOptions, groupId: string) => Promise<"">;

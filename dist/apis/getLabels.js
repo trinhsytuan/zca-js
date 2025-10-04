@@ -5,7 +5,7 @@ export const getLabelsFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Get all labels
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getLabels() {
         const params = {

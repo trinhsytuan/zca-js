@@ -13,9 +13,10 @@ const updateQuickMessageFactory = utils.apiFactory()((api, _ctx, utils) => {
      *
      * @note Zalo might throw an error with code 212 if the itemId does not exist.
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function updateQuickMessage(updatePayload, itemId) {
+        const isType = !updatePayload.media ? 0 : 1;
         const params = {
             itemId: itemId,
             keyword: updatePayload.keyword,
@@ -23,9 +24,35 @@ const updateQuickMessageFactory = utils.apiFactory()((api, _ctx, utils) => {
                 title: updatePayload.title,
                 params: "",
             },
-            media: null,
-            type: 0,
+            type: isType,
         };
+        if (isType === 1) {
+            if (!updatePayload.media)
+                throw new ZaloApiError.ZaloApiError("Media is required");
+            const uploadMedia = await api.uploadProductPhoto({
+                file: updatePayload.media,
+            });
+            const photoId = uploadMedia.photoId;
+            const thumbUrl = uploadMedia.thumbUrl;
+            const normalUrl = uploadMedia.normalUrl;
+            const hdUrl = uploadMedia.hdUrl;
+            params.media = {
+                items: [
+                    {
+                        type: 0,
+                        photoId: photoId,
+                        title: "",
+                        width: "",
+                        height: "",
+                        previewThumb: thumbUrl,
+                        rawUrl: normalUrl || hdUrl,
+                        thumbUrl: thumbUrl,
+                        normalUrl: normalUrl || hdUrl,
+                        hdUrl: hdUrl || normalUrl,
+                    },
+                ],
+            };
+        }
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)
             throw new ZaloApiError.ZaloApiError("Failed to encrypt params");

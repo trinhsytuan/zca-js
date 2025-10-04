@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 exports.ChatTTL = void 0;
@@ -23,7 +28,7 @@ const updateAutoDeleteChatFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param threadId The thread ID to auto delete chat
      * @param type Type of thread (User or Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function updateAutoDeleteChat(ttl, threadId, type = Enum.ThreadType.User) {
         const params = {

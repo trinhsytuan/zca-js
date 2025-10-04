@@ -5,4 +5,4 @@ export type RemoveUnreadMarkResponse = {
     };
     status: number;
 };
-export declare const removeUnreadMarkFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (threadId: string, type?: ThreadType) => Promise<RemoveUnreadMarkResponse>;
+export declare const removeUnreadMarkFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (threadId: string, type?: ThreadType) => Promise<RemoveUnreadMarkResponse>;

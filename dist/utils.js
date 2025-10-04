@@ -3,14 +3,17 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import pako from "pako";
-import sharp from "sharp";
 import SparkMD5 from "spark-md5";
 import toughCookie from "tough-cookie";
+import JSONBig from "json-bigint";
 import { isContextSession } from "./context.js";
-import { ZaloApiError } from "./Errors/ZaloApiError.js";
+import { ZaloApiError, ZaloApiMissingImageMetadataGetter } from "./Errors/index.js";
 import { FriendEventType } from "./models/FriendEvent.js";
 import { GroupEventType } from "./models/GroupEvent.js";
 export const isBun = typeof Bun !== "undefined";
+export function hasOwn(obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+}
 /**
  * Get signed key for API requests.
  *
@@ -20,9 +23,9 @@ export const isBun = typeof Bun !== "undefined";
  *
  */
 export function getSignKey(type, params) {
-    let n = [];
-    for (let s in params) {
-        if (params.hasOwnProperty(s)) {
+    const n = [];
+    for (const s in params) {
+        if (hasOwn(params, s)) {
             n.push(s);
         }
     }
@@ -30,7 +33,7 @@ export function getSignKey(type, params) {
     let a = "zsecure" + type;
     for (let s = 0; s < n.length; s++)
         a += params[n[s]];
-    return cryptojs.MD5(a);
+    return cryptojs.MD5(a).toString();
 }
 /**
  *
@@ -41,10 +44,10 @@ export function getSignKey(type, params) {
  *
  */
 export function makeURL(ctx, baseURL, params = {}, apiVersion = true) {
-    let url = new URL(baseURL);
-    for (let key in params) {
-        if (params.hasOwnProperty(key)) {
-            url.searchParams.append(key, params[key]);
+    const url = new URL(baseURL);
+    for (const key in params) {
+        if (hasOwn(params, key)) {
+            url.searchParams.append(key, params[key].toString());
         }
     }
     if (apiVersion) {
@@ -88,13 +91,14 @@ export class ParamsEncryptor {
         if (!this.zcid || !this.zcid_ext)
             throw new ZaloApiError("createEncryptKey: zcid or zcid_ext is null");
         try {
-            let n = cryptojs.MD5(this.zcid_ext).toString().toUpperCase();
+            const n = cryptojs.MD5(this.zcid_ext).toString().toUpperCase();
             if (t(n, this.zcid) || !(e < 3))
                 return !1;
             this.createEncryptKey(e + 1);
         }
-        catch (n) {
-            e < 3 && this.createEncryptKey(e + 1);
+        catch (_a) {
+            if (e < 3)
+                this.createEncryptKey(e + 1);
         }
         return !0;
     }
@@ -124,11 +128,12 @@ export class ParamsEncryptor {
         let s = Math.floor(Math.random() * (a - n + 1)) + n;
         if (s > 12) {
             let e = "";
-            for (; s > 0;)
-                (e += Math.random()
+            for (; s > 0;) {
+                e += Math.random()
                     .toString(16)
-                    .substr(2, s > 12 ? 12 : s)),
-                    (s -= 12);
+                    .substr(2, s > 12 ? 12 : s);
+                s -= 12;
+            }
             return e;
         }
         return Math.random().toString(16).substr(2, s);
@@ -152,7 +157,7 @@ export class ParamsEncryptor {
                 return uppercase ? encrypted.toUpperCase() : encrypted;
             }
         }
-        catch (o) {
+        catch (_a) {
             return s < 3 ? ParamsEncryptor.encodeAES(e, message, type, uppercase, s + 1) : null;
         }
     }
@@ -164,7 +169,7 @@ export function decryptResp(key, data) {
         const parsed = JSON.parse(n);
         return parsed;
     }
-    catch (error) {
+    catch (_a) {
         return n;
     }
 }
@@ -190,7 +195,7 @@ export function decodeUnit8Array(data) {
     try {
         return new TextDecoder().decode(data);
     }
-    catch (error) {
+    catch (_a) {
         return null;
     }
 }
@@ -203,14 +208,14 @@ export function encodeAES(secretKey, data, t = 0) {
             padding: cryptojs.pad.Pkcs7,
         }).ciphertext.toString(cryptojs.enc.Base64);
     }
-    catch (n) {
+    catch (_a) {
         return t < 3 ? encodeAES(secretKey, data, t + 1) : null;
     }
 }
 export function decodeAES(secretKey, data, t = 0) {
     try {
         data = decodeURIComponent(data);
-        let key = cryptojs.enc.Base64.parse(secretKey);
+        const key = cryptojs.enc.Base64.parse(secretKey);
         return cryptojs.AES.decrypt({
             ciphertext: cryptojs.enc.Base64.parse(data),
         }, key, {
@@ -219,7 +224,7 @@ export function decodeAES(secretKey, data, t = 0) {
             padding: cryptojs.pad.Pkcs7,
         }).toString(cryptojs.enc.Utf8);
     }
-    catch (n) {
+    catch (_a) {
         return t < 3 ? decodeAES(secretKey, data, t + 1) : null;
     }
 }
@@ -240,6 +245,7 @@ export async function getDefaultHeaders(ctx, origin = "https://chat.zalo.me") {
     };
 }
 export async function request(ctx, url, options, raw = false) {
+    var _a, _b;
     if (!ctx.cookie)
         ctx.cookie = new toughCookie.CookieJar();
     const origin = new URL(url).origin;
@@ -251,7 +257,11 @@ export async function request(ctx, url, options, raw = false) {
         else
             options = { headers: defaultHeaders };
     }
-    const _options = Object.assign(Object.assign({}, (options !== null && options !== void 0 ? options : {})), (isBun ? { proxy: ctx.options.agent } : { agent: ctx.options.agent }));
+    const _options = Object.assign(Object.assign({}, (options !== null && options !== void 0 ? options : {})), (isBun ? {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        proxy: (_b = (_a = ctx.options.agent) === null || _a === void 0 ? void 0 : _a.proxy) === null || _b === void 0 ? void 0 : _b.href
+    } : { agent: ctx.options.agent }));
     const response = await ctx.options.polyfill(url, _options);
     const setCookieRaw = response.headers.get("set-cookie");
     if (setCookieRaw && !raw) {
@@ -260,25 +270,33 @@ export async function request(ctx, url, options, raw = false) {
             const parsed = toughCookie.Cookie.parse(cookie);
             try {
                 if (parsed)
-                    await ctx.cookie.setCookie(parsed, origin);
+                    await ctx.cookie.setCookie(parsed, parsed.domain != "zalo.me" ? `https://${parsed.domain}` : origin);
             }
-            catch (_a) { }
+            catch (error) {
+                logger(ctx).error(error);
+            }
         }
     }
     const redirectURL = response.headers.get("location");
     if (redirectURL) {
         const redirectOptions = Object.assign({}, options);
         redirectOptions.method = "GET";
-        // @ts-ignore
-        if (!raw)
-            redirectOptions.headers["Referer"] = "https://id.zalo.me/";
+        if (!raw) {
+            redirectOptions.headers = new Headers(redirectOptions.headers);
+            redirectOptions.headers.set("Referer", "https://id.zalo.me/");
+        }
         return await request(ctx, redirectURL, redirectOptions);
     }
     return response;
 }
-export async function getImageMetaData(filePath) {
-    const fileData = await fs.promises.readFile(filePath);
-    const imageData = await sharp(fileData).metadata();
+export async function getImageMetaData(ctx, filePath) {
+    if (!ctx.options.imageMetadataGetter) {
+        throw new ZaloApiMissingImageMetadataGetter();
+    }
+    const imageData = await ctx.options.imageMetadataGetter(filePath);
+    if (!imageData) {
+        throw new ZaloApiError("Failed to get image metadata");
+    }
     const fileName = filePath.split("/").pop();
     return {
         fileName,
@@ -290,9 +308,14 @@ export async function getImageMetaData(filePath) {
 export async function getFileSize(filePath) {
     return fs.promises.stat(filePath).then((s) => s.size);
 }
-export async function getGifMetaData(filePath) {
-    const fileData = await fs.promises.readFile(filePath);
-    const gifData = await sharp(fileData).metadata();
+export async function getGifMetaData(ctx, filePath) {
+    if (!ctx.options.imageMetadataGetter) {
+        throw new ZaloApiMissingImageMetadataGetter();
+    }
+    const gifData = await ctx.options.imageMetadataGetter(filePath);
+    if (!gifData) {
+        throw new ZaloApiError("Failed to get gif metadata");
+    }
     const fileName = path.basename(filePath);
     return {
         fileName,
@@ -302,6 +325,12 @@ export async function getGifMetaData(filePath) {
     };
 }
 export async function decodeEventData(parsed, cipherKey) {
+    if (typeof parsed.data !== "string")
+        throw new ZaloApiError(`Invalid data, expected string but got ${typeof parsed.data}`);
+    if (typeof parsed.encrypt !== "number")
+        throw new ZaloApiError(`Invalid encrypt type, expected number but got ${typeof parsed.encrypt}`);
+    if (parsed.encrypt < 0 || parsed.encrypt > 3)
+        throw new ZaloApiError(`Invalid encrypt type, expected 0-3 but got ${parsed.encrypt}`);
     const rawData = parsed.data;
     const encryptType = parsed.encrypt;
     if (encryptType === 0)
@@ -330,16 +359,17 @@ export async function decodeEventData(parsed, cipherKey) {
     const decodedData = decodeUnit8Array(decompressedBuffer);
     if (!decodedData)
         return;
-    return JSON.parse(decodedData);
+    return JSONBig.parse(decodedData);
 }
-export function getMd5LargeFileObject(source, fileSize) {
-    return new Promise(async (resolve, reject) => {
-        let chunkSize = 2097152, // Read in chunks of 2MB
-        chunks = Math.ceil(fileSize / chunkSize), currentChunk = 0, spark = new SparkMD5.ArrayBuffer(), buffer = typeof source == "string" ? await fs.promises.readFile(source) : source.data;
+export async function getMd5LargeFileObject(source, fileSize) {
+    const buffer = typeof source == "string" ? await fs.promises.readFile(source) : source.data;
+    return new Promise((resolve) => {
+        let currentChunk = 0;
+        const chunkSize = 2097152, // Read in chunks of 2MB
+        chunks = Math.ceil(fileSize / chunkSize), spark = new SparkMD5.ArrayBuffer();
         function loadNext() {
-            let start = currentChunk * chunkSize, end = start + chunkSize >= fileSize ? fileSize : start + chunkSize;
-            // @ts-ignore
-            spark.append(buffer.subarray(start, end));
+            const start = currentChunk * chunkSize, end = start + chunkSize >= fileSize ? fileSize : start + chunkSize;
+            spark.append(new Uint8Array(buffer.subarray(start, end)).buffer);
             currentChunk++;
             if (currentChunk < chunks) {
                 loadNext();
@@ -435,7 +465,7 @@ export function formatTime(format, timestamp = Date.now()) {
     return formatted;
 }
 export function getFullTimeFromMillisecond(e) {
-    let t = new Date(e);
+    const t = new Date(e);
     return (strPadLeft(t.getHours(), "0", 2) +
         ":" +
         strPadLeft(t.getMinutes(), "0", 2) +
@@ -453,8 +483,9 @@ export function getFileName(e) {
     return path.basename(e);
 }
 export function removeUndefinedKeys(e) {
-    for (let t in e)
-        e[t] === undefined && delete e[t];
+    for (const t in e)
+        if (e[t] === undefined)
+            delete e[t];
     return e;
 }
 export function getGroupEventType(act) {

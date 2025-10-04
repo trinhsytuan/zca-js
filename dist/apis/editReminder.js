@@ -13,7 +13,7 @@ export const editReminderFactory = apiFactory()((api, ctx, utils) => {
      * @param threadId Thread ID
      * @param type Thread type (User/Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function editReminder(options, threadId, type = ThreadType.User) {
         var _a, _b, _c, _d, _e, _f;

@@ -11,4 +11,4 @@ export type UploadProductPhotoResponse = {
     clientFileId: number;
     chunkId: number;
 };
-export declare const uploadProductPhotoFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (payload: UploadProductPhotoPayload) => Promise<UploadProductPhotoResponse>;
+export declare const uploadProductPhotoFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (payload: UploadProductPhotoPayload) => Promise<UploadProductPhotoResponse>;

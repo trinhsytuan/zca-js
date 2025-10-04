@@ -13,7 +13,7 @@ export const sendVideoFactory = apiFactory()((api, ctx, utils) => {
      * @param threadId ID of the user or group to send the video to
      * @param type Type of thread (USER or GROUP)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      * @examples Example Video Resolutions:
      *   - **Standard Videos**:
@@ -29,7 +29,7 @@ export const sendVideoFactory = apiFactory()((api, ctx, utils) => {
     return async function sendVideo(options, threadId, type = ThreadType.User) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         let fileSize = 0;
-        let clientId = Date.now();
+        const clientId = Date.now();
         try {
             const headResponse = await utils.request(options.videoUrl, { method: "HEAD" }, true);
             if (headResponse.ok) {
@@ -37,7 +37,7 @@ export const sendVideoFactory = apiFactory()((api, ctx, utils) => {
             }
         }
         catch (error) {
-            throw new ZaloApiError(`Unable to get video content: ${(error === null || error === void 0 ? void 0 : error.message) || error}`);
+            throw new ZaloApiError(`Unable to get video content: ${error instanceof Error ? error.message : String(error)}`);
         }
         const params = type === ThreadType.User
             ? {

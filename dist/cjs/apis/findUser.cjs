@@ -10,7 +10,7 @@ const findUserFactory = utils.apiFactory()((api, ctx, utils) => {
      *
      * @param phoneNumber Phone number
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function findUser(phoneNumber) {
         if (!phoneNumber)

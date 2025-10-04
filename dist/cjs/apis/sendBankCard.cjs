@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const sendBankCardFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -14,13 +19,11 @@ const sendBankCardFactory = utils.apiFactory()((api, ctx, utils) => {
      *
      * @param payload The payload containing the bank card information
      * @param threadId The ID of the thread to send the bank card to
-     * @param type REQUIRE The type of thread to send the bank card to
+     * @param type The type of thread to send the bank card to
      *
-     * @note message call key eg: 99867xxxxx vietcombank (key: vietcombank, sacombank, etc,...)
-     *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
-    return async function sendBankCard(payload, threadId, type) {
+    return async function sendBankCard(payload, threadId, type = Enum.ThreadType.User) {
         var _a;
         const params = {
             binBank: payload.binBank,

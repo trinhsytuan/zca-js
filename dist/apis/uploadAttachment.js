@@ -27,7 +27,7 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
      * @param threadId Group or User ID
      * @param type Message type (User or Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError | ZaloApiMissingImageMetadataGetter}
      */
     return async function uploadAttachment(sources, threadId, type = ThreadType.User) {
         if (!sources)
@@ -42,8 +42,8 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
             throw new ZaloApiError("Missing threadId");
         const chunkSize = ctx.settings.features.sharefile.chunk_size_file;
         const isGroupMessage = type == ThreadType.Group;
-        let attachmentsData = [];
-        let url = `${serviceURL}/${isGroupMessage ? "group" : "message"}/`;
+        const attachmentsData = [];
+        const url = `${serviceURL}/${isGroupMessage ? "group" : "message"}/`;
         const typeParam = isGroupMessage ? "11" : "2";
         let clientId = Date.now();
         for (const source of sources) {
@@ -55,7 +55,7 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                 throw new ZaloApiError("Missing filename");
             if (isFilePath && !fs.existsSync(source))
                 throw new ZaloApiError("File not found");
-            const extFile = getFileExtension(isFilePath ? source : source.filename);
+            const extFile = getFileExtension(isFilePath ? source : source.filename).toLowerCase();
             const fileName = isFilePath ? getFileName(source) : source.filename;
             if (isExtensionValid(extFile) == false)
                 throw new ZaloApiError(`File extension "${extFile}" is not allowed`);
@@ -73,8 +73,8 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                 case "jpg":
                 case "jpeg":
                 case "png":
-                case "webp":
-                    let imageData = isFilePath ? await getImageMetaData(source) : Object.assign(Object.assign({}, source.metadata), { fileName });
+                case "webp": {
+                    const imageData = isFilePath ? await getImageMetaData(ctx, source) : Object.assign(Object.assign({}, source.metadata), { fileName });
                     if (isExceedMaxFileSize(imageData.totalSize))
                         throw new ZaloApiError(`File ${fileName} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`);
                     data.fileData = imageData;
@@ -88,8 +88,9 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                     data.params.jxl = 0;
                     data.params.chunkId = 1;
                     break;
-                case "mp4":
-                    let videoSize = isFilePath ? await getFileSize(source) : source.metadata.totalSize;
+                }
+                case "mp4": {
+                    const videoSize = isFilePath ? await getFileSize(source) : source.metadata.totalSize;
                     if (isExceedMaxFileSize(videoSize))
                         throw new ZaloApiError(`File ${fileName} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`);
                     data.fileType = "video";
@@ -106,7 +107,8 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                     data.params.jxl = 0;
                     data.params.chunkId = 1;
                     break;
-                default:
+                }
+                default: {
                     const fileSize = isFilePath ? await getFileSize(source) : source.metadata.totalSize;
                     if (isExceedMaxFileSize(fileSize))
                         throw new ZaloApiError(`File ${fileName} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`);
@@ -124,6 +126,7 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                     data.params.jxl = 0;
                     data.params.chunkId = 1;
                     break;
+                }
             }
             const fileBuffer = isFilePath ? await fs.promises.readFile(source) : source.data;
             for (let i = 0; i < data.params.totalChunk; i++) {
@@ -154,18 +157,31 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                      * @TODO: better type rather than any
                      */
                     const resData = await resolveResponse(ctx, response);
-                    if (resData && resData.fileId != -1 && resData.photoId != -1)
+                    if (resData && resData.fileId != "-1" && resData.photoId != "-1")
                         await new Promise((resolve) => {
                             if (data.fileType == "video" || data.fileType == "others") {
                                 const uploadCallback = async (wsData) => {
-                                    let result = Object.assign(Object.assign(Object.assign({ fileType: data.fileType }, resData), wsData), { totalSize: data.fileData.totalSize, fileName: data.fileData.fileName, checksum: (await getMd5LargeFileObject(data.source, data.fileData.totalSize)).data });
+                                    const result = Object.assign(Object.assign(Object.assign({ fileType: data.fileType }, resData), wsData), { totalSize: data.fileData.totalSize, fileName: data.fileData.fileName, checksum: (await getMd5LargeFileObject(data.source, data.fileData.totalSize)).data });
                                     results.push(result);
                                     resolve();
                                 };
-                                ctx.uploadCallbacks.set(resData.fileId, uploadCallback);
+                                ctx.uploadCallbacks.set(resData.fileId.toString(), uploadCallback);
                             }
                             if (data.fileType == "image") {
-                                let result = Object.assign({ fileType: "image", width: data.fileData.width, height: data.fileData.height, totalSize: data.fileData.totalSize, hdSize: data.fileData.totalSize }, resData);
+                                const result = {
+                                    fileType: "image",
+                                    width: data.fileData.width,
+                                    height: data.fileData.height,
+                                    totalSize: data.fileData.totalSize,
+                                    hdSize: data.fileData.totalSize,
+                                    finished: resData.finished,
+                                    normalUrl: resData.normalUrl,
+                                    hdUrl: resData.hdUrl,
+                                    thumbUrl: resData.thumbUrl,
+                                    chunkId: resData.chunkId,
+                                    photoId: resData.photoId,
+                                    clientFileId: resData.clientFileId,
+                                };
                                 results.push(result);
                                 resolve();
                             }

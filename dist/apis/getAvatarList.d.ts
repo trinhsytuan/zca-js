@@ -9,4 +9,4 @@ export type GetAvatarListResponse = {
         bkUrl: string;
     }[];
 };
-export declare const getAvatarListFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (count?: number, page?: number) => Promise<GetAvatarListResponse>;
+export declare const getAvatarListFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (count?: number, page?: number) => Promise<GetAvatarListResponse>;

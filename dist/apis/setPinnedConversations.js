@@ -10,7 +10,7 @@ export const setPinnedConversationsFactory = apiFactory()((api, _, utils) => {
      * @param threadId The ID(s) of the thread
      * @param type Type of thread, default User
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function setPinnedConversations(pinned, threadId, type = ThreadType.User) {

@@ -1,12 +1,29 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
+exports.MuteDuration = void 0;
+(function (MuteDuration) {
+    MuteDuration[MuteDuration["ONE_HOUR"] = 3600] = "ONE_HOUR";
+    MuteDuration[MuteDuration["FOUR_HOURS"] = 14400] = "FOUR_HOURS";
+    MuteDuration[MuteDuration["FOREVER"] = -1] = "FOREVER";
+    MuteDuration["UNTIL_8AM"] = "until8AM";
+})(exports.MuteDuration || (exports.MuteDuration = {}));
+exports.MuteAction = void 0;
+(function (MuteAction) {
+    MuteAction[MuteAction["MUTE"] = 1] = "MUTE";
+    MuteAction[MuteAction["UNMUTE"] = 3] = "UNMUTE";
+})(exports.MuteAction || (exports.MuteAction = {}));
 const setMuteFactory = utils.apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.profile[0]}/api/social/profile/setmute`);
     /**
@@ -16,18 +33,18 @@ const setMuteFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param threadID - ID of the thread to mute
      * @param type - Type of thread (User or Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function setMute(params = {}, threadID, type = Enum.ThreadType.User) {
-        const { duration = -1 /* MuteDuration.FOREVER */, action = 1 /* MuteAction.MUTE */ } = params;
+        const { duration = exports.MuteDuration.FOREVER, action = exports.MuteAction.MUTE } = params;
         let muteDuration;
-        if (action === 3 /* MuteAction.UNMUTE */) {
+        if (action === exports.MuteAction.UNMUTE) {
             muteDuration = -1;
         }
-        else if (duration === -1 /* MuteDuration.FOREVER */) {
+        else if (duration === exports.MuteDuration.FOREVER) {
             muteDuration = -1;
         }
-        else if (duration === "until8AM" /* MuteDuration.UNTIL_8AM */) {
+        else if (duration === exports.MuteDuration.UNTIL_8AM) {
             const now = new Date();
             const next8AM = new Date(now);
             next8AM.setHours(8, 0, 0, 0);

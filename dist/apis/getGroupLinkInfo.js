@@ -7,7 +7,7 @@ export const getGroupLinkInfoFactory = apiFactory()((api, _ctx, utils) => {
      *
      * @param payload - The payload of the request
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getGroupLinkInfo(payload) {
         var _a;

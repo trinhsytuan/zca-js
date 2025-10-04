@@ -7,7 +7,7 @@ export const blockUserFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param userId The ID of the User to block
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function blockUser(userId) {
         const params = {

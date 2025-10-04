@@ -8,7 +8,7 @@ const getHiddenConversationsFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Get hidden conversations
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function getHiddenConversations() {

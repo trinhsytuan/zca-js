@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const sendTypingEventFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -19,7 +24,7 @@ const sendTypingEventFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param type The type of thread (User or Group)
      * @param destType The destination type (User or Page), for User threads only, defaults to User
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendTypingEvent(threadId, type = Enum.ThreadType.User, destType = Enum.DestType.User) {
         if (!threadId)

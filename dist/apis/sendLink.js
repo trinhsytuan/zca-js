@@ -17,7 +17,7 @@ export const sendLinkFactory = apiFactory()((api, ctx, utils) => {
      * @param threadId Thread ID
      * @param type Thread type
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendLink(options, threadId, type = ThreadType.User) {
         var _a;

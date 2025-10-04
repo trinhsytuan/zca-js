@@ -5,7 +5,7 @@ export const getUnreadMarkFactory = apiFactory()((api, _, utils) => {
     /**
      * Get unread mark
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function getUnreadMark() {

@@ -27,7 +27,7 @@ function prepareQMSGAttach(quote) {
 }
 function prepareQMSG(quote) {
     const quoteData = quote;
-    if (quoteData.msgType == "chat.todo" && typeof quoteData.content != "string") {
+    if (quoteData.msgType == "chat.todo" && typeof quoteData.content == "object" && typeof quoteData.content.params == "string") {
         return JSON.parse(quoteData.content.params).item.content;
     }
     return "";
@@ -96,8 +96,8 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         return await Promise.all(requests);
     }
     async function upthumb(source, url) {
-        let formData = new FormData();
-        let buffer = typeof source == "string" ? await fs.readFile(source) : source.data;
+        const formData = new FormData();
+        const buffer = typeof source == "string" ? await fs.readFile(source) : source.data;
         formData.append("fileContent", buffer, {
             filename: "blob",
             contentType: "image/png",
@@ -343,7 +343,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         }
         for (const gif of gifFiles) {
             const isFilePath = typeof gif == "string";
-            const gifData = isFilePath ? await getGifMetaData(gif) : Object.assign(Object.assign({}, gif.metadata), { fileName: gif.filename });
+            const gifData = isFilePath ? await getGifMetaData(ctx, gif) : Object.assign(Object.assign({}, gif.metadata), { fileName: gif.filename });
             if (isExceedMaxFileSize(gifData.totalSize))
                 throw new ZaloApiError(`File ${isFilePath ? getFileName(gif) : gif.filename} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`);
             const _upthumb = await upthumb(gif, serviceURLs.attachment[ThreadType.User]);
@@ -384,7 +384,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
                 fileType: "gif",
             });
         }
-        let responses = [];
+        const responses = [];
         for (const data of attachmentsData) {
             responses.push({
                 url: utils.makeURL(serviceURLs.attachment[type] + attachmentUrlType[data.fileType], Object.assign({
@@ -404,7 +404,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
      * @param type Message type (User or Group)
      * @param quote Message or GroupMessage instance (optional), used for quoting
      *
-     * @throws {ZaloApiError}
+     * @throws {ZaloApiError | ZaloApiMissingImageMetadataGetter}
      */
     return async function sendMessage(message, threadId, type = ThreadType.User) {
         if (!message)
@@ -413,7 +413,8 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
             throw new ZaloApiError("Missing threadId");
         if (typeof message == "string")
             message = { msg: message };
-        let { msg, quote, attachments, mentions, ttl, styles, urgency } = message;
+        let { msg, attachments, mentions } = message;
+        const { quote, ttl, styles, urgency } = message;
         if (attachments && !Array.isArray(attachments)) {
             attachments = [attachments];
         }

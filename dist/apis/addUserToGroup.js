@@ -8,7 +8,7 @@ export const addUserToGroupFactory = apiFactory()((api, ctx, utils) => {
      * @param memberId User ID or list of user IDs to add
      * @param groupId Group ID
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function addUserToGroup(memberId, groupId) {
         if (!Array.isArray(memberId))
@@ -16,7 +16,7 @@ export const addUserToGroupFactory = apiFactory()((api, ctx, utils) => {
         const params = {
             grid: groupId,
             members: memberId,
-            membersTypes: memberId.map(() => -1),
+            memberTypes: memberId.map(() => -1),
             imei: ctx.imei,
             clientLang: ctx.language,
         };

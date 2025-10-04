@@ -2,10 +2,15 @@
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
 var context = require('../context.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const sendDeliveredEventFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -20,7 +25,7 @@ const sendDeliveredEventFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param messages List of messages to send delivered event
      * @param type Messages type (User or Group), defaults to User
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendDeliveredEvent(isSeen, messages, type = Enum.ThreadType.User) {
         if (!messages)

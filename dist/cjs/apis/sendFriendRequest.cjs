@@ -15,7 +15,7 @@ const sendFriendRequestFactory = utils.apiFactory()((api, ctx, utils) => {
      *          215 if the user might have blocked you,
      *          222 if user has already sent you a friend request, your request will be treated as acceptance instead.
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendFriendRequest(msg, userId) {
         const params = {

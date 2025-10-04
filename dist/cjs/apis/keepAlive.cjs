@@ -6,9 +6,9 @@ var utils = require('../utils.cjs');
 const keepAliveFactory = utils.apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.chat[0]}/keepalive`);
     /**
-     * Keep account active?
+     * Keep Alive?
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function keepAlive() {
         const params = {

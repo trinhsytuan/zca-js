@@ -9,7 +9,7 @@ export const getPendingGroupMembersFactory = apiFactory()((api, ctx, utils) => {
      *
      * @note Only the group leader and deputy group leader can view
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getPendingGroupMembers(groupId) {
         const params = {

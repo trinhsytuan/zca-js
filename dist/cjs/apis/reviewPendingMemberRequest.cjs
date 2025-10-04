@@ -3,6 +3,13 @@
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
 var utils = require('../utils.cjs');
 
+exports.ReviewPendingMemberRequestStatus = void 0;
+(function (ReviewPendingMemberRequestStatus) {
+    ReviewPendingMemberRequestStatus[ReviewPendingMemberRequestStatus["SUCCESS"] = 0] = "SUCCESS";
+    ReviewPendingMemberRequestStatus[ReviewPendingMemberRequestStatus["NOT_IN_PENDING_LIST"] = 170] = "NOT_IN_PENDING_LIST";
+    ReviewPendingMemberRequestStatus[ReviewPendingMemberRequestStatus["ALREADY_IN_GROUP"] = 178] = "ALREADY_IN_GROUP";
+    ReviewPendingMemberRequestStatus[ReviewPendingMemberRequestStatus["INSUFFICIENT_PERMISSION"] = 166] = "INSUFFICIENT_PERMISSION";
+})(exports.ReviewPendingMemberRequestStatus || (exports.ReviewPendingMemberRequestStatus = {}));
 const reviewPendingMemberRequestFactory = utils.apiFactory()((api, _, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group[0]}/api/group/pending-mems/review`);
     /**
@@ -13,7 +20,7 @@ const reviewPendingMemberRequestFactory = utils.apiFactory()((api, _, utils) => 
      *
      * @note Only the group leader and deputy group leader can review
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function reviewPendingMemberRequest(payload, groupId) {
         if (!Array.isArray(payload.members))

@@ -11,7 +11,7 @@ const getAliasListFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param count Page size (default: 100)
      * @param page Page number (default: 1)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getAliasList(count = 100, page = 1) {
         const params = {

@@ -10,4 +10,4 @@ export type GetMuteResponse = {
     chatEntries: MuteEntriesInfo[];
     groupChatEntries: MuteEntriesInfo[];
 };
-export declare const getMuteFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => () => Promise<GetMuteResponse>;
+export declare const getMuteFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => () => Promise<GetMuteResponse>;

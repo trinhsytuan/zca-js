@@ -8,16 +8,16 @@ const leaveGroupFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Leave group
      *
-     * @param groupId - The ID of the group(s) to leave
+     * @param groupId - groupId to leave
      * @param silent - Turn on/off silent leave group
      *
      * @note Zalo might throw an error with code 166 if you are not a member of the group
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function leaveGroup(groupId, silent = false) {
         const requestParams = {
-            grids: Array.isArray(groupId) ? groupId : [groupId],
+            grids: [groupId], // API only supports leaving one group at a time
             imei: ctx.imei,
             silent: silent ? 1 : 0,
             language: ctx.language,

@@ -7,7 +7,7 @@ export const createGroupFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param options Group options
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function createGroup(options) {
         if (options.members.length == 0)

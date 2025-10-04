@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const getListReminderFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -19,7 +24,7 @@ const getListReminderFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param threadId - The ID of the thread
      * @param type - The type of the thread (User or Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getListReminder(options, threadId, type = Enum.ThreadType.User) {
         var _a, _b, _c, _d;

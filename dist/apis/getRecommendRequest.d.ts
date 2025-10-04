@@ -37,4 +37,4 @@ export type getRecommendRequestResponse = {
     recommItems: RecommItem1[];
     isSend?: any;
 };
-export declare const getRecommendRequestFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => () => Promise<getRecommendRequestResponse>;
+export declare const getRecommendRequestFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => () => Promise<getRecommendRequestResponse>;

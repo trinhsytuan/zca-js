@@ -9,6 +9,9 @@ export class UserMessage {
             data.idTo = uid;
         if (data.uidFrom == "0")
             data.uidFrom = uid;
+        if (data.quote) {
+            data.quote.ownerId = String(data.quote.ownerId);
+        }
     }
 }
 export class GroupMessage {
@@ -19,5 +22,8 @@ export class GroupMessage {
         this.isSelf = data.uidFrom == "0";
         if (data.uidFrom == "0")
             data.uidFrom = uid;
+        if (data.quote) {
+            data.quote.ownerId = String(data.quote.ownerId);
+        }
     }
 }

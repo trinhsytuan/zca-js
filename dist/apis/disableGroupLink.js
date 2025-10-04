@@ -7,7 +7,7 @@ export const disableGroupLinkFactory = apiFactory()((api, _ctx, utils) => {
      *
      * @param groupId The group id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function disableGroupLink(groupId) {
         const params = {

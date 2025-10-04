@@ -17,7 +17,7 @@ export const sendSeenEventFactory = apiFactory()((api, ctx, utils) => {
      * @param messages List of messages to send seen event
      * @param type Messages type (User or Group), defaults to User
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendSeenEvent(messages, type = ThreadType.User) {
         if (!messages)

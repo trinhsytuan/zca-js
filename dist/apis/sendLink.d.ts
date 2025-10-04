@@ -7,4 +7,4 @@ export type SendLinkOptions = {
 export type SendLinkResponse = {
     msgId: string;
 };
-export declare const sendLinkFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: SendLinkOptions, threadId: string, type?: ThreadType) => Promise<SendLinkResponse>;
+export declare const sendLinkFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (options: SendLinkOptions, threadId: string, type?: ThreadType) => Promise<SendLinkResponse>;

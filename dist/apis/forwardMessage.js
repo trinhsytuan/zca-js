@@ -13,13 +13,13 @@ export const forwardMessageFactory = apiFactory()((api, ctx, utils) => {
      * @param threadId Thread ID(s)
      * @param type Thread type (User/Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
-    return async function forwardMessage(payload, type = ThreadType.User) {
+    return async function forwardMessage(payload, threadIds, type = ThreadType.User) {
         var _a, _b;
         if (!payload.message)
             throw new ZaloApiError("Missing message content");
-        if (!payload.threadIds || payload.threadIds.length === 0)
+        if (!threadIds || threadIds.length === 0)
             throw new ZaloApiError("Missing thread IDs");
         const timestamp = Date.now();
         const clientId = timestamp.toString();
@@ -52,7 +52,7 @@ export const forwardMessageFactory = apiFactory()((api, ctx, utils) => {
         let params;
         if (type === ThreadType.User) {
             params = {
-                toIds: payload.threadIds.map((threadId) => {
+                toIds: threadIds.map((threadId) => {
                     var _a;
                     return ({
                         clientId,
@@ -63,14 +63,14 @@ export const forwardMessageFactory = apiFactory()((api, ctx, utils) => {
                 imei: ctx.imei,
                 ttl: (_a = payload.ttl) !== null && _a !== void 0 ? _a : 0,
                 msgType: "1",
-                totalIds: payload.threadIds.length,
+                totalIds: threadIds.length,
                 msgInfo: JSON.stringify(msgInfo),
                 decorLog: JSON.stringify(decorLog),
             };
         }
         else {
             params = {
-                grids: payload.threadIds.map((threadId) => {
+                grids: threadIds.map((threadId) => {
                     var _a;
                     return ({
                         clientId,
@@ -80,7 +80,7 @@ export const forwardMessageFactory = apiFactory()((api, ctx, utils) => {
                 }),
                 ttl: (_b = payload.ttl) !== null && _b !== void 0 ? _b : 0,
                 msgType: "1",
-                totalIds: payload.threadIds.length,
+                totalIds: threadIds.length,
                 msgInfo: JSON.stringify(msgInfo),
                 decorLog: JSON.stringify(decorLog),
             };

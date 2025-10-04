@@ -13,4 +13,4 @@ export type SendDeliveredEventMessageParams = {
     cmd: number;
     ts: string | number;
 };
-export declare const sendDeliveredEventFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (isSeen: boolean, messages: SendDeliveredEventMessageParams | SendDeliveredEventMessageParams[], type?: ThreadType) => Promise<SendDeliveredEventResponse>;
+export declare const sendDeliveredEventFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (isSeen: boolean, messages: SendDeliveredEventMessageParams | SendDeliveredEventMessageParams[], type?: ThreadType) => Promise<SendDeliveredEventResponse>;

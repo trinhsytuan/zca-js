@@ -1,40 +1,41 @@
 export var GroupEventType;
 (function (GroupEventType) {
-    GroupEventType[GroupEventType["JOIN_REQUEST"] = 0] = "JOIN_REQUEST";
-    GroupEventType[GroupEventType["JOIN"] = 1] = "JOIN";
-    GroupEventType[GroupEventType["LEAVE"] = 2] = "LEAVE";
-    GroupEventType[GroupEventType["REMOVE_MEMBER"] = 3] = "REMOVE_MEMBER";
-    GroupEventType[GroupEventType["BLOCK_MEMBER"] = 4] = "BLOCK_MEMBER";
-    GroupEventType[GroupEventType["UPDATE_SETTING"] = 5] = "UPDATE_SETTING";
-    GroupEventType[GroupEventType["UPDATE"] = 6] = "UPDATE";
-    GroupEventType[GroupEventType["NEW_LINK"] = 7] = "NEW_LINK";
-    GroupEventType[GroupEventType["ADD_ADMIN"] = 8] = "ADD_ADMIN";
-    GroupEventType[GroupEventType["REMOVE_ADMIN"] = 9] = "REMOVE_ADMIN";
-    GroupEventType[GroupEventType["NEW_PIN_TOPIC"] = 10] = "NEW_PIN_TOPIC";
-    GroupEventType[GroupEventType["UPDATE_PIN_TOPIC"] = 11] = "UPDATE_PIN_TOPIC";
-    GroupEventType[GroupEventType["REORDER_PIN_TOPIC"] = 12] = "REORDER_PIN_TOPIC";
-    GroupEventType[GroupEventType["UPDATE_BOARD"] = 13] = "UPDATE_BOARD";
-    GroupEventType[GroupEventType["REMOVE_BOARD"] = 14] = "REMOVE_BOARD";
-    GroupEventType[GroupEventType["UPDATE_TOPIC"] = 15] = "UPDATE_TOPIC";
-    GroupEventType[GroupEventType["UNPIN_TOPIC"] = 16] = "UNPIN_TOPIC";
-    GroupEventType[GroupEventType["REMOVE_TOPIC"] = 17] = "REMOVE_TOPIC";
-    GroupEventType[GroupEventType["ACCEPT_REMIND"] = 18] = "ACCEPT_REMIND";
-    GroupEventType[GroupEventType["REJECT_REMIND"] = 19] = "REJECT_REMIND";
-    GroupEventType[GroupEventType["REMIND_TOPIC"] = 20] = "REMIND_TOPIC";
-    GroupEventType[GroupEventType["UPDATE_AVATAR"] = 21] = "UPDATE_AVATAR";
-    GroupEventType[GroupEventType["UNKNOWN"] = 22] = "UNKNOWN";
+    GroupEventType["JOIN_REQUEST"] = "join_request";
+    GroupEventType["JOIN"] = "join";
+    GroupEventType["LEAVE"] = "leave";
+    GroupEventType["REMOVE_MEMBER"] = "remove_member";
+    GroupEventType["BLOCK_MEMBER"] = "block_member";
+    GroupEventType["UPDATE_SETTING"] = "update_setting";
+    GroupEventType["UPDATE"] = "update";
+    GroupEventType["NEW_LINK"] = "new_link";
+    GroupEventType["ADD_ADMIN"] = "add_admin";
+    GroupEventType["REMOVE_ADMIN"] = "remove_admin";
+    GroupEventType["NEW_PIN_TOPIC"] = "new_pin_topic";
+    GroupEventType["UPDATE_PIN_TOPIC"] = "update_pin_topic";
+    GroupEventType["REORDER_PIN_TOPIC"] = "reorder_pin_topic";
+    GroupEventType["UPDATE_BOARD"] = "update_board";
+    GroupEventType["REMOVE_BOARD"] = "remove_board";
+    GroupEventType["UPDATE_TOPIC"] = "update_topic";
+    GroupEventType["UNPIN_TOPIC"] = "unpin_topic";
+    GroupEventType["REMOVE_TOPIC"] = "remove_topic";
+    GroupEventType["ACCEPT_REMIND"] = "accept_remind";
+    GroupEventType["REJECT_REMIND"] = "reject_remind";
+    GroupEventType["REMIND_TOPIC"] = "remind_topic";
+    GroupEventType["UPDATE_AVATAR"] = "update_avatar";
+    GroupEventType["UNKNOWN"] = "unknown";
 })(GroupEventType || (GroupEventType = {}));
-export function initializeGroupEvent(uid, data, type) {
+export function initializeGroupEvent(uid, data, type, act) {
     var _a;
     const threadId = "group_id" in data ? data.group_id : data.groupId;
     if (type == GroupEventType.JOIN_REQUEST) {
-        return { type, data: data, threadId, isSelf: false };
+        return { type, act, data: data, threadId, isSelf: false };
     }
     else if (type == GroupEventType.NEW_PIN_TOPIC ||
         type == GroupEventType.UNPIN_TOPIC ||
         type == GroupEventType.UPDATE_PIN_TOPIC) {
         return {
             type,
+            act,
             data: data,
             threadId,
             isSelf: data.actorId == uid,
@@ -43,6 +44,7 @@ export function initializeGroupEvent(uid, data, type) {
     else if (type == GroupEventType.REORDER_PIN_TOPIC) {
         return {
             type,
+            act,
             data: data,
             threadId,
             isSelf: data.actorId == uid,
@@ -51,6 +53,7 @@ export function initializeGroupEvent(uid, data, type) {
     else if (type == GroupEventType.UPDATE_BOARD || type == GroupEventType.REMOVE_BOARD) {
         return {
             type,
+            act,
             data: data,
             threadId,
             isSelf: data.sourceId == uid,
@@ -59,6 +62,7 @@ export function initializeGroupEvent(uid, data, type) {
     else if (type == GroupEventType.ACCEPT_REMIND || type == GroupEventType.REJECT_REMIND) {
         return {
             type,
+            act,
             data: data,
             threadId,
             isSelf: data.updateMembers.some((memberId) => memberId == uid),
@@ -67,6 +71,7 @@ export function initializeGroupEvent(uid, data, type) {
     else if (type == GroupEventType.REMIND_TOPIC) {
         return {
             type,
+            act,
             data: data,
             threadId,
             isSelf: data.creatorId == uid,
@@ -76,6 +81,7 @@ export function initializeGroupEvent(uid, data, type) {
         const baseData = data;
         return {
             type,
+            act,
             data: baseData,
             threadId,
             isSelf: ((_a = baseData.updateMembers) === null || _a === void 0 ? void 0 : _a.some((member) => member.id == uid)) || baseData.sourceId == uid,

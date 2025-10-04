@@ -9,7 +9,7 @@ export const removeQuickMessageFactory = apiFactory()((api, _ctx, utils) => {
      *
      * @note Zalo might throw an error with code 212 if the item does not exist
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function removeQuickMessage(itemIds) {
         const idsArray = Array.isArray(itemIds) ? itemIds : [itemIds];

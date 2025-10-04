@@ -7,18 +7,17 @@ export const getGroupInfoFactory = apiFactory()((api, _, utils) => {
      *
      * @param groupId Group ID or list of group IDs
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getGroupInfo(groupId) {
         if (!Array.isArray(groupId))
             groupId = [groupId];
-        let params = {
-            gridVerMap: {},
+        const params = {
+            gridVerMap: JSON.stringify(groupId.reduce((acc, id) => {
+                acc[id] = 0;
+                return acc;
+            }, {})),
         };
-        for (const id of groupId) {
-            params.gridVerMap[id] = 0;
-        }
-        params.gridVerMap = JSON.stringify(params.gridVerMap);
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)
             throw new ZaloApiError("Failed to encrypt message");

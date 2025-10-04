@@ -8,20 +8,28 @@ const updateProfileFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Change account setting information
      *
-     * @param name Profile name wants to change
-     * @param dob Date of birth wants to change (format: year-month-day)
-     * @param gender Gender wants to change (0 = Male, 1 = Female)
+     * @param payload payload
      *
-     * @throws ZaloApiError
+     * @note If your account is a Business Account, include the biz.cate field; otherwise the category will be removed.
+     * You may leave the other biz fields empty if you don’t want to change them.
+     *
+     * @throws {ZaloApiError}
      */
-    return async function updateProfile(name, dob, gender) {
+    return async function updateProfile(payload) {
+        var _a, _b, _c, _d, _e;
         const params = {
             profile: JSON.stringify({
-                name: name,
-                dob: dob,
-                gender: gender,
+                name: payload.profile.name,
+                dob: payload.profile.dob,
+                gender: payload.profile.gender,
             }),
-            biz: JSON.stringify({}),
+            biz: JSON.stringify({
+                desc: (_a = payload.biz) === null || _a === void 0 ? void 0 : _a.description,
+                cate: (_b = payload.biz) === null || _b === void 0 ? void 0 : _b.cate,
+                addr: (_c = payload.biz) === null || _c === void 0 ? void 0 : _c.address,
+                website: (_d = payload.biz) === null || _d === void 0 ? void 0 : _d.website,
+                email: (_e = payload.biz) === null || _e === void 0 ? void 0 : _e.email,
+            }),
             language: ctx.language,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));

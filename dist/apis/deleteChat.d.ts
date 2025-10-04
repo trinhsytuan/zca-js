@@ -16,4 +16,4 @@ export type DeleteChatLastMessage = {
      */
     globalMsgId: string;
 };
-export declare const deleteChatFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (lastMessage: DeleteChatLastMessage, threadId: string, type?: ThreadType) => Promise<DeleteChatResponse>;
+export declare const deleteChatFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (lastMessage: DeleteChatLastMessage, threadId: string, type?: ThreadType) => Promise<DeleteChatResponse>;

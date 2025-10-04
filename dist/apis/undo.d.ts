@@ -6,4 +6,4 @@ export type UndoPayload = {
 export type UndoResponse = {
     status: number;
 };
-export declare const undoFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (payload: UndoPayload, threadId: string, type?: ThreadType) => Promise<UndoResponse>;
+export declare const undoFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (payload: UndoPayload, threadId: string, type?: ThreadType) => Promise<UndoResponse>;

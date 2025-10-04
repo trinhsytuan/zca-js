@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const sendVoiceFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -19,12 +24,12 @@ const sendVoiceFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param threadId ID of the user or group to send the voice to
      * @param type Type of thread, default user
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendVoice(options, threadId, type = Enum.ThreadType.User) {
         var _a, _b;
         let fileSize = null;
-        let clientId = Date.now().toString();
+        const clientId = Date.now().toString();
         try {
             const headResponse = await utils.request(options.voiceUrl, { method: "HEAD" }, true);
             if (headResponse.ok) {
@@ -32,7 +37,7 @@ const sendVoiceFactory = utils.apiFactory()((api, ctx, utils) => {
             }
         }
         catch (error) {
-            throw new ZaloApiError.ZaloApiError(`Unable to get voice content: ${(error === null || error === void 0 ? void 0 : error.message) || error}`);
+            throw new ZaloApiError.ZaloApiError(`Unable to get voice content: ${error instanceof Error ? error.message : String(error)}`);
         }
         const params = type === Enum.ThreadType.User
             ? {

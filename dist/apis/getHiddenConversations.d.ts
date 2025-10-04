@@ -8,4 +8,4 @@ export type GetHiddenConversationsResponse = {
         thread_id: string;
     }[];
 };
-export declare const getHiddenConversationsFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => () => Promise<GetHiddenConversationsResponse>;
+export declare const getHiddenConversationsFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => () => Promise<GetHiddenConversationsResponse>;
