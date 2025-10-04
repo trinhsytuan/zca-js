@@ -1,15 +1,15 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import type { QuickMessage } from "../models/index.js";
+import type { QuickMessage, AttachmentSource } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 
 export type UpdateQuickMessagePayload = {
     keyword: string;
     title: string;
-    // media?: null; @TODO: implement media handling
+    media?: AttachmentSource;
 };
 
 export type UpdateQuickMessageResponse = {
-    items: QuickMessage[];
+    item: QuickMessage;
     version: number;
 };
 
@@ -24,19 +24,49 @@ export const updateQuickMessageFactory = apiFactory<UpdateQuickMessageResponse>(
      *
      * @note Zalo might throw an error with code 212 if the itemId does not exist.
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function updateQuickMessage(updatePayload: UpdateQuickMessagePayload, itemId: number) {
-        const params = {
+        const isType = !updatePayload.media ? 0 : 1;
+
+        const params: Record<string, unknown> = {
             itemId: itemId,
             keyword: updatePayload.keyword,
             message: {
                 title: updatePayload.title,
                 params: "",
             },
-            media: null,
-            type: 0,
+            type: isType,
         };
+
+        if (isType === 1) {
+            if (!updatePayload.media) throw new ZaloApiError("Media is required");
+            const uploadMedia = await api.uploadProductPhoto({
+                file: updatePayload.media,
+            });
+            
+            const photoId = uploadMedia.photoId;
+            const thumbUrl = uploadMedia.thumbUrl;
+            const normalUrl = uploadMedia.normalUrl;
+            const hdUrl = uploadMedia.hdUrl;
+
+            params.media = {
+                items: [
+                    {
+                        type: 0,
+                        photoId: photoId,
+                        title: "",
+                        width: "",
+                        height: "",
+                        previewThumb: thumbUrl,
+                        rawUrl: normalUrl || hdUrl,
+                        thumbUrl: thumbUrl,
+                        normalUrl: normalUrl || hdUrl,
+                        hdUrl: hdUrl || normalUrl,
+                    },
+                ],
+            };
+        }
 
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams) throw new ZaloApiError("Failed to encrypt params");

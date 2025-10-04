@@ -14,11 +14,11 @@ export type CustomReaction = {
 
 export type AddReactionDestination = {
     data: {
-        msgId: string; // Global message ID
-        cliMsgId: string; // Client message ID
+        msgId: string;
+        cliMsgId: string;
     };
-    threadId: string; // Thread ID
-    type: ThreadType; // Thread type (User or Group)
+    threadId: string;
+    type: ThreadType;
 };
 
 export const addReactionFactory = apiFactory<AddReactionResponse>()((api, ctx, utils) => {
@@ -33,7 +33,7 @@ export const addReactionFactory = apiFactory<AddReactionResponse>()((api, ctx, u
      * @param icon Reaction icon
      * @param dest Destination data including message IDs and thread information
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function addReaction(icon: Reactions | CustomReaction, dest: AddReactionDestination) {
         const serviceURL = serviceURLs[dest.type];
@@ -271,7 +271,7 @@ export const addReactionFactory = apiFactory<AddReactionResponse>()((api, ctx, u
             throw new ZaloApiError("Invalid reaction");
         }
 
-        const params: Record<string, any> = {
+        const params: Record<string, unknown> = {
             react_list: [
                 {
                     message: JSON.stringify({

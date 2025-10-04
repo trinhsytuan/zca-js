@@ -1,14 +1,16 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
 
+export type GetPendingGroupMembersUserInfo = {
+    uid: string;
+    dpn: string;
+    avatar: string;
+    user_submit: null;
+};
+
 export type GetPendingGroupMembersResponse = {
     time: number;
-    users: {
-        uid: string;
-        dpn: string;
-        avatar: string;
-        user_submit: null;
-    }[];
+    users: GetPendingGroupMembersUserInfo[];
 };
 
 export const getPendingGroupMembersFactory = apiFactory<GetPendingGroupMembersResponse>()((api, ctx, utils) => {
@@ -21,7 +23,7 @@ export const getPendingGroupMembersFactory = apiFactory<GetPendingGroupMembersRe
      *
      * @note Only the group leader and deputy group leader can view
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getPendingGroupMembers(groupId: string) {
         const params = {

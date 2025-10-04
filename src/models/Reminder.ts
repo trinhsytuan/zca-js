@@ -1,4 +1,9 @@
-import { ReminderRepeatMode } from "./Enum.js";
+export enum ReminderRepeatMode {
+    None = 0,
+    Daily = 1,
+    Weekly = 2,
+    Monthly = 3,
+}
 
 export type ReminderUser = {
     creatorUid: string;
@@ -19,19 +24,30 @@ export type ReminderUser = {
 };
 
 export type ReminderGroup = {
-    id: string;
-    type: number;
-    color: number;
+    editorId: string;
     emoji: string;
-    startTime: number;
-    duration: number;
+    color: number;
+    groupId: string;
+    creatorId: string;
+    editTime: number;
+    eventType: number;
+    responseMem: {
+        rejectMember: number;
+        myResp: number;
+        acceptMember: number;
+    };
     params: {
         title: string;
         setTitle?: boolean;
     };
-    creatorId: string;
-    editorId: string;
+    type: number;
+    duration: number;
+    repeatInfo: {
+        list_ts: unknown[];
+    } | null;
+    repeatData: unknown[];
     createTime: number;
-    editTime: number;
     repeat: ReminderRepeatMode;
+    startTime: number;
+    id: string;
 };

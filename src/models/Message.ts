@@ -12,7 +12,7 @@ export type TAttachmentContent = {
 };
 
 export type TOtherContent = {
-    [key: string]: any;
+    [key: string]: unknown;
 };
 
 export type TMessage = {
@@ -59,7 +59,7 @@ export type TGroupMessage = TMessage & {
 };
 
 export type TQuote = {
-    ownerId: number;
+    ownerId: string;
     cliMsgId: number;
     globalMsgId: number;
     cliMsgType: number;
@@ -94,6 +94,9 @@ export class UserMessage {
 
         if (data.idTo == "0") data.idTo = uid;
         if (data.uidFrom == "0") data.uidFrom = uid;
+        if (data.quote) {
+            data.quote.ownerId = String(data.quote.ownerId);
+        }
     }
 }
 
@@ -113,6 +116,9 @@ export class GroupMessage {
         this.isSelf = data.uidFrom == "0";
 
         if (data.uidFrom == "0") data.uidFrom = uid;
+        if (data.quote) {
+            data.quote.ownerId = String(data.quote.ownerId);
+        }
     }
 }
 

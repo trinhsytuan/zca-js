@@ -1,5 +1,6 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import { ThreadType, BinBankCard } from "../models/index.js";
+import type { BinBankCard } from "../models/index.js";
+import { ThreadType } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 
 export type SendBankCardPayload = {
@@ -18,13 +19,11 @@ export const sendBankCardFactory = apiFactory<SendBankCardResponse>()((api, ctx,
      *
      * @param payload The payload containing the bank card information
      * @param threadId The ID of the thread to send the bank card to
-     * @param type REQUIRE The type of thread to send the bank card to
+     * @param type The type of thread to send the bank card to
      *
-     * @note message call key eg: 99867xxxxx vietcombank (key: vietcombank, sacombank, etc,...)
-     *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
-    return async function sendBankCard(payload: SendBankCardPayload, threadId: string, type: ThreadType) {
+    return async function sendBankCard(payload: SendBankCardPayload, threadId: string, type: ThreadType = ThreadType.User) {
         const params = {
             binBank: payload.binBank,
             numAccBank: payload.numAccBank,

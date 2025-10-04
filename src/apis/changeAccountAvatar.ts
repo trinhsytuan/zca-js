@@ -14,11 +14,11 @@ export const changeAccountAvatarFactory = apiFactory<ChangeAccountAvatarResponse
      *
      * @param avatarSource Attachment source, can be a file path or an Attachment object
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError | ZaloApiMissingImageMetadataGetter}
      */
     return async function changeAccountAvatar(avatarSource: AttachmentSource) {
         const isSourceFilePath = typeof avatarSource == "string";
-        const imageMetaData = isSourceFilePath ? await getImageMetaData(avatarSource) : avatarSource.metadata;
+        const imageMetaData = isSourceFilePath ? await getImageMetaData(ctx, avatarSource) : avatarSource.metadata;
 
         const fileSize = imageMetaData.totalSize || 0;
 

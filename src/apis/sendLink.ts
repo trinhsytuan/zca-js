@@ -29,12 +29,12 @@ export const sendLinkFactory = apiFactory<SendLinkResponse>()((api, ctx, utils) 
      * @param threadId Thread ID
      * @param type Thread type
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendLink(options: SendLinkOptions, threadId: string, type: ThreadType = ThreadType.User) {
         const res = await api.parseLink(options.link);
 
-        const params: any = {
+        const params: Record<string, unknown> = {
             msg:
                 options.msg && options.msg.trim()
                     ? options.msg.includes(options.link)

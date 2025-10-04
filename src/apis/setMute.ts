@@ -3,20 +3,23 @@ import { ThreadType } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 
 export type SetMuteParams = {
+    /**
+     * Mute duration in seconds or predefined durations
+     */
     duration?: MuteDuration | number;
     action?: MuteAction;
 };
 
 export type SetMuteResponse = "";
 
-export const enum MuteDuration {
+export enum MuteDuration {
     ONE_HOUR = 3600,
     FOUR_HOURS = 14400,
     FOREVER = -1,
     UNTIL_8AM = "until8AM",
 }
 
-export const enum MuteAction {
+export enum MuteAction {
     MUTE = 1,
     UNMUTE = 3, // khi tat thi duration = -1
 }
@@ -31,7 +34,7 @@ export const setMuteFactory = apiFactory<SetMuteResponse>()((api, ctx, utils) =>
      * @param threadID - ID of the thread to mute
      * @param type - Type of thread (User or Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function setMute(params: SetMuteParams = {}, threadID: string, type: ThreadType = ThreadType.User) {
         const { duration = MuteDuration.FOREVER, action = MuteAction.MUTE } = params;

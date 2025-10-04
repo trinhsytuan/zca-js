@@ -11,6 +11,7 @@
 ## Table of Contents
 
 -   [Installation](#installation)
+    - [Migrate to V2](#migrate-to-v2)
 -   [Documentation](#documentation)
 -   [Basic Usages](#basic-usages)
     -   [Login](#login)
@@ -18,15 +19,45 @@
     -   [Send a message](#send-a-message)
     -   [Get/Send a sticker](#getsend-a-sticker)
 -   [Example](#example)
--   [Projects](#projects)
+-   [Projects & Useful Resources](#projects--useful-resources)
 -   [Contributing](#contributing)
 -   [License](#license)
--   [Support Our Mission](#support-our-mission)
+-   [Support Us](#support-us)
 
 ## Installation
 
 ```bash
-bun install zca-js # or npm install zca-js
+bun add zca-js # or npm install zca-js
+```
+
+### Migrate to V2
+
+Since official version 2.0.0, `zca-js` has removed sharp dependency for image metadata extraction. It now requires users to provide their own `imageMetadataGetter` function when initializing the `Zalo` class if they want to send images/gifs by file path.
+
+Example of custom `imageMetadataGetter` using `sharp`:
+
+```bash
+bun add sharp # or npm install sharp
+```
+
+```javascript
+import { Zalo } from "zca-js";
+import sharp from "sharp";
+import fs from "fs";
+
+async function imageMetadataGetter(filePath) {
+    const data = await fs.promises.readFile(filePath);
+    const metadata = await sharp(data).metadata();
+    return {
+        height: metadata.height,
+        width: metadata.width,
+        size: metadata.size || data.length,
+    };
+}
+
+const zalo = new Zalo({
+    imageMetadataGetter,
+});
 ```
 
 ---
@@ -99,7 +130,7 @@ api.listener.on("message", (message) => {
             api.sendMessage(
                 {
                     msg: "echo: " + message.data.content,
-                    quote: message, // the message object to reply to (optional)
+                    quote: message.data, // the message to reply to (optional)
                 },
                 message.threadId,
                 message.type, // ThreadType.User
@@ -110,7 +141,7 @@ api.listener.on("message", (message) => {
             api.sendMessage(
                 {
                     msg: "echo: " + message.data.content,
-                    quote: message, // the message object to reply to (optional)
+                    quote: message.data, // the message to reply to (optional)
                 },
                 message.threadId,
                 message.type, // ThreadType.Group
@@ -145,15 +176,17 @@ See [examples](examples) folder for more details.
 
 ---
 
-## Projects
+## Projects & Useful Resources
 
 <div align="center">
 
 | Repository | Description |
 |    :---    |    :---     |
-| [**ZaloDataExtractor**](https://github.com/JustKemForFun/ZaloDataExtractor) | **ZaloDataExtractor** - Công cụ trích xuất thông tin cần thiết như IMEI, Cookie và User-Agent từ Zalo Web. |
-| [**MultiZlogin**](https://github.com/ChickenAI/multizlogin) | Hệ thống quản lý đa tài khoản Zalo, hỗ trợ đăng nhập và quản lý nhiều tài khoản Zalo cùng lúc, tích hợp proxy và webhook. |
-| [**n8n-nodes-zalo-tools**](https://github.com/ChickenAI/zalo-node) | N8N node cho Zalo cá nhân. |
+| [**ZaloDataExtractor**](https://github.com/JustKemForFun/ZaloDataExtractor) | A browser `Extension` to extract IMEI, cookies, and user agent from Zalo Web. |
+| [**MultiZlogin**](https://github.com/ChickenAI/multizlogin) | A multi-account Zalo management system that lets you log in to and manage multiple accounts simultaneously, with proxy and webhook integration. |
+| [**n8n-nodes-zalo-tools**](https://github.com/ChickenAI/zalo-node) | N8N node for personal Zalo account. |
+| [**Zalo-F12**](https://github.com/ElectroHeavenVN/Zalo-F12) | A collection of JavaScript code snippets to paste into DevTools to change how Zalo Web/PC works. |
+| [**Zalo-F12-Tools**](https://github.com/JustKemForFun/Zalo-F12-Tools) | Toggle hidden modes for Zalo Web. |
 
 </div>
 
@@ -180,8 +213,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## **Support Our Mission**
+## **Support Us**
 
 - ⭐ **Star our repositories** if you find them useful!  
 - 🔄 **Share** with your network to help us grow  
-- 💡 **Contribute** your ideas and code  
+- 💡 **Contribute** your ideas and code    
+- ☕ **A coffee**:
+    - [Buy Me a Coffee](https://ko-fi.com/grosse)
+    - [Paypal](https://www.paypal.com/paypalme/dungto213)
+    - [VietQR](https://github.com/user-attachments/assets/e1f319d6-9d11-4082-8248-55b55e645caa)
+    - [Momo](https://me.momo.vn/gMIMulsaUqsbf6iAiXt3)

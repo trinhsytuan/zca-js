@@ -65,7 +65,7 @@ function prepareQMSGAttach(quote: SendMessageQuote) {
 
 function prepareQMSG(quote: SendMessageQuote) {
     const quoteData = quote;
-    if (quoteData.msgType == "chat.todo" && typeof quoteData.content != "string") {
+    if (quoteData.msgType == "chat.todo" && typeof quoteData.content == "object" && typeof quoteData.content.params == "string") {
         return JSON.parse(quoteData.content.params).item.content;
     }
 
@@ -90,7 +90,7 @@ type AttachmentData =
           query?: Record<string, string>;
           fileType: "image" | "video" | "others";
           body: URLSearchParams;
-          params: Record<string, any>;
+          params: Record<string, unknown>;
       }
     | {
           query?: Record<string, string>;
@@ -178,7 +178,7 @@ export type MessageContent = {
      */
     attachments?: AttachmentSource | AttachmentSource[];
     /**
-     * Time to live in milisecond
+     * Time to live in milliseconds
      */
     ttl?: number;
 };
@@ -236,8 +236,8 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
     }
 
     async function upthumb(source: AttachmentSource, url: string): Promise<UpthumbType> {
-        let formData = new FormData();
-        let buffer = typeof source == "string" ? await fs.readFile(source) : source.data;
+        const formData = new FormData();
+        const buffer = typeof source == "string" ? await fs.readFile(source) : source.data;
         formData.append("fileContent", buffer, {
             filename: "blob",
             contentType: "image/png",
@@ -292,7 +292,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         };
     }
 
-    function handleStyles(params: Record<any, any>, styles?: Style[]) {
+    function handleStyles(params: Record<string, unknown>, styles?: Style[]) {
         if (styles)
             Object.assign(params, {
                 textProperties: JSON.stringify({
@@ -314,7 +314,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
             });
     }
 
-    function handleUrgency(params: Record<any, any>, urgency?: Urgency) {
+    function handleUrgency(params: Record<string, unknown>, urgency?: Urgency) {
         if (urgency == Urgency.Important || urgency == Urgency.Urgent) {
             Object.assign(params, { metaData: { urgency } });
         }
@@ -529,7 +529,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
 
         for (const gif of gifFiles) {
             const isFilePath = typeof gif == "string";
-            const gifData = isFilePath ? await getGifMetaData(gif) : { ...gif.metadata, fileName: gif.filename };
+            const gifData = isFilePath ? await getGifMetaData(ctx, gif) : { ...gif.metadata, fileName: gif.filename };
             if (isExceedMaxFileSize(gifData.totalSize!))
                 throw new ZaloApiError(
                     `File ${isFilePath ? getFileName(gif) : gif.filename} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`,
@@ -578,7 +578,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
             });
         }
 
-        let responses = [];
+        const responses = [];
 
         for (const data of attachmentsData) {
             responses.push({
@@ -607,7 +607,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
      * @param type Message type (User or Group)
      * @param quote Message or GroupMessage instance (optional), used for quoting
      *
-     * @throws {ZaloApiError}
+     * @throws {ZaloApiError | ZaloApiMissingImageMetadataGetter}
      */
     return async function sendMessage(
         message: MessageContent | string,
@@ -618,7 +618,9 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         if (!threadId) throw new ZaloApiError("Missing threadId");
         if (typeof message == "string") message = { msg: message };
 
-        let { msg, quote, attachments, mentions, ttl, styles, urgency } = message;
+        let { msg, attachments, mentions } = message;
+        const { quote, ttl, styles, urgency } = message;
+
         if (attachments && !Array.isArray(attachments)) {
             attachments = [attachments];
         }
@@ -638,7 +640,9 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         };
 
         if (attachments && attachments.length > 0) {
-            const firstExtFile = getFileExtension(typeof attachments[0] == "string" ? attachments[0] : attachments[0].filename);
+            const firstExtFile = getFileExtension(
+                typeof attachments[0] == "string" ? attachments[0] : attachments[0].filename,
+            );
             const isSingleFile = attachments.length == 1;
 
             const canBeDesc = isSingleFile && ["jpg", "jpeg", "png", "webp"].includes(firstExtFile);

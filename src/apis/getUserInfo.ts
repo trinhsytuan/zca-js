@@ -1,42 +1,12 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import type { Gender, ZBusinessPackage } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 
-export type ProfileInfo = {
-    userId: string;
-    username: string;
-    displayName: string;
-    zaloName: string;
-    avatar: string;
-    bgavatar: string;
-    cover: string;
-    gender: Gender;
-    dob: number;
-    sdob: string;
-    status: string;
-    phoneNumber: string;
-    isFr: number;
-    isBlocked: number;
-    lastActionTime: number;
-    lastUpdateTime: number;
-    isActive: number;
-    key: number;
-    type: number;
-    isActivePC: number;
-    isActiveWeb: number;
-    isValid: number;
-    userKey: string;
-    accountStatus: number;
-    oaInfo: any;
-    user_mode: number;
-    globalId: string;
-    bizPkg: ZBusinessPackage;
-    createdTs: number;
-    oa_status: any;
-};
+import type { User } from "../models/index.js";
+
+export type ProfileInfo = User;
 
 export type UserInfoResponse = {
-    unchanged_profiles: Record<string, any>;
+    unchanged_profiles: Record<string, unknown>;
     phonebook_version: number;
     changed_profiles: Record<string, ProfileInfo>;
 };
@@ -49,7 +19,7 @@ export const getUserInfoFactory = apiFactory<UserInfoResponse>()((api, ctx, util
      *
      * @param userId user id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getUserInfo(userId: string | string[]) {
         if (!userId) throw new ZaloApiError("Missing user id");

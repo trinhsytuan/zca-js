@@ -1,9 +1,16 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import { NoteDetail, PinnedMessageDetail, PollDetail, BoardType } from "../models/index.js";
+import type { NoteDetail, PinnedMessageDetail, PollDetail} from "../models/index.js";
+import { BoardType } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 
 export type ListBoardOptions = {
+    /**
+     * Page number (default: 1)
+     */
     page?: number;
+    /**
+     * Number of items to retrieve (default: 20)
+     */
     count?: number;
 };
 
@@ -34,7 +41,7 @@ export const getListBoardFactory = apiFactory<GetListBoardResponse>()((api, ctx,
      * @param options - The options for the request
      * @param groupId - The ID of the group
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function getListBoard(options: ListBoardOptions, groupId: string) {

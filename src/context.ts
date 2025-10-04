@@ -6,7 +6,7 @@ type UploadEventData = {
     fileId: string;
 };
 
-export type UploadCallback = (data: UploadEventData) => any;
+export type UploadCallback = (data: UploadEventData) => unknown;
 
 type ShareFileSettings = {
     big_file_domain_list: string[];
@@ -58,6 +58,7 @@ type SocketSettings = {
 };
 
 type LoginInfo = {
+    // eslint-disable-next-line
     [key: string]: any;
     haspcclient: number;
     public_ip: string;
@@ -130,8 +131,10 @@ export type AppContextBase = {
     secretKey: string | null;
     zpwServiceMap: ZPWServiceMap;
     settings: {
+        // eslint-disable-next-line
         [key: string]: any;
         features: {
+            // eslint-disable-next-line
             [key: string]: any;
             sharefile: ShareFileSettings;
             socket: SocketSettings;
@@ -146,6 +149,9 @@ export type AppContextBase = {
     extraVer: ExtraVer;
 };
 
+export type ImageMetadataGetterResponse = { width: number; height: number; size: number } | null;
+export type ImageMetadataGetter = (filePath: string) => Promise<ImageMetadataGetterResponse>;
+
 export type Options = {
     selfListen: boolean;
     checkUpdate: boolean;
@@ -154,18 +160,15 @@ export type Options = {
     apiType: number;
     apiVersion: number;
 
-    /**
-     * Optional agent configuration.
-     * - When using `Bun`, this should be a string.
-     * - In other environments, this should be an `Agent` instance.
-     */
-    agent?: Agent | string;
+    agent?: Agent;
 
     /**
      * Optional fetch implementation for polyfills in non-standard environments.
      * If using proxy, `node-fetch` is highly recommended.
      */
     polyfill: typeof fetch;
+
+    imageMetadataGetter?: ImageMetadataGetter;
 };
 
 const _5_MINUTES = 5 * 60 * 1000;
@@ -190,7 +193,7 @@ export type AppContextExtended = {
 
 export type ContextBase = Partial<AppContextBase> & AppContextExtended;
 
-export const createContext = (apiType = 30, apiVersion = 664) =>
+export const createContext = (apiType = 30, apiVersion = 665) =>
     ({
         API_TYPE: apiType,
         API_VERSION: apiVersion,

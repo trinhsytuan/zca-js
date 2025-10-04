@@ -16,7 +16,7 @@ export type GetGroupMembersInfoResponse = {
     profiles: {
         [memberId: string]: GroupMemberProfile;
     };
-    unchangeds_profile: any[];
+    unchangeds_profile: unknown[];
 };
 
 export const getGroupMembersInfoFactory = apiFactory<GetGroupMembersInfoResponse>()((api, _, utils) => {
@@ -27,7 +27,7 @@ export const getGroupMembersInfoFactory = apiFactory<GetGroupMembersInfoResponse
      *
      * @param memberId member id or array of member ids
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getGroupMembersInfo(memberId: string | string[]) {
         if (!Array.isArray(memberId)) memberId = [memberId];

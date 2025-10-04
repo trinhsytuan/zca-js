@@ -1,3 +1,9 @@
+export enum BoardType {
+    Note = 1,
+    PinnedMessage = 2,
+    Poll = 3,
+}
+
 export type PollDetail = {
     creator: string;
     question: string;
@@ -33,6 +39,7 @@ export type NoteDetail = {
     duration: number;
     params: {
         title: string;
+        extra?: string;
     };
     creatorId: string;
     editorId: string;

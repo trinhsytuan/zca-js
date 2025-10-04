@@ -1,29 +1,54 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import { Gender } from "../models/index.js";
+import type { BusinessCategory, Gender } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 
-export type ChangeAccountSettingResponse = "";
+export type UpdateProfilePayload = {
+    profile: {
+        name: string;
+        /**
+         * Date of birth in the format YYYY-MM-DD
+         */
+        dob: `${string}-${string}-${string}`;
+        gender: Gender;
+    };
+    biz?: Partial<{
+        cate: BusinessCategory;
+        description: string;
+        address: string;
+        website: string;
+        email: string;
+    }>;
+};
 
-export const updateProfileFactory = apiFactory<ChangeAccountSettingResponse>()((api, ctx, utils) => {
+export type UpdateProfileResponse = "";
+
+export const updateProfileFactory = apiFactory<UpdateProfileResponse>()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.profile[0]}/api/social/profile/update`);
 
     /**
      * Change account setting information
      *
-     * @param name Profile name wants to change
-     * @param dob Date of birth wants to change (format: year-month-day)
-     * @param gender Gender wants to change (0 = Male, 1 = Female)
+     * @param payload payload
      *
-     * @throws ZaloApiError
+     * @note If your account is a Business Account, include the biz.cate field; otherwise the category will be removed.
+     * You may leave the other biz fields empty if you don’t want to change them.
+     *
+     * @throws {ZaloApiError}
      */
-    return async function updateProfile(name: string, dob: `${string}-${string}-${string}`, gender: Gender) {
+    return async function updateProfile(payload: UpdateProfilePayload) {
         const params = {
             profile: JSON.stringify({
-                name: name,
-                dob: dob,
-                gender: gender,
+                name: payload.profile.name,
+                dob: payload.profile.dob,
+                gender: payload.profile.gender,
             }),
-            biz: JSON.stringify({}),
+            biz: JSON.stringify({
+                desc: payload.biz?.description,
+                cate: payload.biz?.cate,
+                addr: payload.biz?.address,
+                website: payload.biz?.website,
+                email: payload.biz?.email,
+            }),
             language: ctx.language,
         };
 

@@ -2,7 +2,13 @@ import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
 
 export type GetGroupBlockedMemberPayload = {
+    /**
+     * Page number (default: 1)
+     */
     page?: number;
+    /**
+     * Number of items to retrieve (default: 50)
+     */
     count?: number;
 };
 
@@ -28,7 +34,7 @@ export const getGroupBlockedMemberFactory = apiFactory<GetGroupBlockedMemberResp
      * @param payload payload
      * @param groupId group id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getGroupBlockedMember(payload: GetGroupBlockedMemberPayload, groupId: string) {
         const params = {

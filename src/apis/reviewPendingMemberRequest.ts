@@ -6,7 +6,16 @@ export type ReviewPendingMemberRequestPayload = {
     isApprove: boolean;
 };
 
-export type ReviewPendingMemberRequestResponse = Record<string, number>;
+export enum ReviewPendingMemberRequestStatus {
+    SUCCESS = 0,
+    NOT_IN_PENDING_LIST = 170,
+    ALREADY_IN_GROUP = 178,
+    INSUFFICIENT_PERMISSION = 166,
+}
+
+export type ReviewPendingMemberRequestResponse = {
+    [memberId: string]: ReviewPendingMemberRequestStatus;
+};
 
 export const reviewPendingMemberRequestFactory = apiFactory<ReviewPendingMemberRequestResponse>()((api, _, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group[0]}/api/group/pending-mems/review`);
@@ -19,7 +28,7 @@ export const reviewPendingMemberRequestFactory = apiFactory<ReviewPendingMemberR
      *
      * @note Only the group leader and deputy group leader can review
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function reviewPendingMemberRequest(payload: ReviewPendingMemberRequestPayload, groupId: string) {
         if (!Array.isArray(payload.members)) payload.members = [payload.members];

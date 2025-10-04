@@ -2,20 +2,22 @@ import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import type { ZBusinessPackage } from "../models/ZBusiness.js";
 import { apiFactory } from "../utils.js";
 
-export type GetSentFriendRequestResponse = {
-    [userId: string]: {
-        userId: string;
-        zaloName: string;
-        displayName: string;
-        avatar: string;
-        globalId: string;
-        bizPkg: ZBusinessPackage;
-        fReqInfo: {
-            message: string;
-            src: number;
-            time: number;
-        };
+export type SentFriendRequestInfo = {
+    userId: string;
+    zaloName: string;
+    displayName: string;
+    avatar: string;
+    globalId: string;
+    bizPkg: ZBusinessPackage;
+    fReqInfo: {
+        message: string;
+        src: number;
+        time: number;
     };
+};
+
+export type GetSentFriendRequestResponse = {
+    [userId: string]: SentFriendRequestInfo;
 };
 
 export const getSentFriendRequestFactory = apiFactory<GetSentFriendRequestResponse>()((api, ctx, utils) => {
@@ -26,7 +28,7 @@ export const getSentFriendRequestFactory = apiFactory<GetSentFriendRequestRespon
      *
      * @note Zalo might throw an error with code 112 if you have no friend requests.
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getSentFriendRequest() {
         const params = {

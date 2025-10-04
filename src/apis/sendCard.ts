@@ -23,11 +23,11 @@ export const sendCardFactory = apiFactory<SendCardResponse>()((api, ctx, utils) 
      *
      * @param userId Unique ID for Card
      * @param phoneNumber Optional phone number for sending card to a User
-     * @param ttl Time to live in miliseconds (default: 0)
+     * @param ttl Time to live in milliseconds (default: 0)
      * @param threadId ID of the conversation
      * @param type Message type (User or GroupMessage)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function sendCard(options: SendCardOptions, threadId: string, type: ThreadType = ThreadType.User) {
@@ -35,7 +35,7 @@ export const sendCardFactory = apiFactory<SendCardResponse>()((api, ctx, utils) 
         const QRCodeURL = data[options.userId];
         const clientId = Date.now().toString();
 
-        const params: any = {
+        const params: Record<string, unknown> = {
             ttl: options.ttl ?? 0,
             msgType: 6,
             clientId: clientId,
@@ -46,7 +46,7 @@ export const sendCardFactory = apiFactory<SendCardResponse>()((api, ctx, utils) 
         };
 
         if (options.phoneNumber) {
-            params.msgInfo.phone = options.phoneNumber;
+            (params.msgInfo as Record<string, string>).phone = options.phoneNumber;
         }
 
         if (type == ThreadType.Group) {

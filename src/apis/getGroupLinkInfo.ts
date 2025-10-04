@@ -4,6 +4,9 @@ import { apiFactory } from "../utils.js";
 
 export type GetGroupLinkInfoPayload = {
     link: string;
+    /**
+     * Default: 1
+     */
     memberPage?: number;
 };
 
@@ -25,7 +28,7 @@ export type GetGroupLinkInfoResponse = {
         accountStatus: number;
         type: number;
     }[];
-    admins: any[];
+    admins: unknown[];
     hasMoreMember: number;
     subType: number;
     totalMember: number;
@@ -41,7 +44,7 @@ export const getGroupLinkInfoFactory = apiFactory<GetGroupLinkInfoResponse>()((a
      *
      * @param payload - The payload of the request
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getGroupLinkInfo(payload: GetGroupLinkInfoPayload) {
         const params = {

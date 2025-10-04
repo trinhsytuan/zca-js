@@ -1,7 +1,9 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
 
-export type EditNoteGroupOptions = {
+import type { NoteDetail } from "../models/index.js";
+
+export type EditNoteOptions = {
     /**
      * New note title
      */
@@ -16,25 +18,9 @@ export type EditNoteGroupOptions = {
     pinAct?: boolean;
 };
 
-export type EditNoteGroupResponse = {
-    id: string;
-    type: number;
-    color: number;
-    emoji: string;
-    startTime: number;
-    duration: number;
-    params: {
-        title: string;
-        extra: string;
-    };
-    creatorId: string;
-    editorId: string;
-    createTime: number;
-    editTime: number;
-    repeat: number;
-};
+export type EditNoteResponse = NoteDetail;
 
-export const editNoteGroupFactory = apiFactory<EditNoteGroupResponse>()((api, ctx, utils) => {
+export const editNoteFactory = apiFactory<EditNoteResponse>()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group_board[0]}/api/board/topic/updatev2`);
 
     /**
@@ -43,9 +29,9 @@ export const editNoteGroupFactory = apiFactory<EditNoteGroupResponse>()((api, ct
      * @param options Options for editing the note
      * @param groupId Group ID to create note from
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
-    return async function editNoteGroup(options: EditNoteGroupOptions, groupId: string) {
+    return async function editNote(options: EditNoteOptions, groupId: string) {
         const params = {
             grid: groupId,
             type: 0,
@@ -72,6 +58,13 @@ export const editNoteGroupFactory = apiFactory<EditNoteGroupResponse>()((api, ct
             }),
         });
 
-        return utils.resolve(response);
+        return utils.resolve(response, (result) => {
+            const data = result.data as Omit<NoteDetail, "params"> & { params: unknown };
+            if (typeof data.params == "string") {
+                data.params = JSON.parse(data.params);
+            }
+
+            return data as NoteDetail;
+        });
     };
 });

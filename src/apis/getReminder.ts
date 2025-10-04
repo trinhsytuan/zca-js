@@ -1,18 +1,8 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
-import { ReminderGroup } from "../models/index.js";
+import type { ReminderGroup } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 
-export type GetReminderResponse = ReminderGroup & {
-    groupId: string;
-    eventType: number;
-    responseMem: {
-        rejectMember: number;
-        myResp: number;
-        acceptMember: number;
-    };
-    repeatInfo: null;
-    repeatData: any[];
-};
+export type GetReminderResponse = ReminderGroup;
 
 export const getReminderFactory = apiFactory<GetReminderResponse>()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.group_board[0]}/api/board/topic/getReminder`);
@@ -22,7 +12,7 @@ export const getReminderFactory = apiFactory<GetReminderResponse>()((api, ctx, u
      *
      * @param reminderId Reminder ID
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getReminder(reminderId: string) {
         const params = {
