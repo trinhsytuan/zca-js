@@ -71,7 +71,7 @@ export type { PollDetailResponse } from "./apis/getPollDetail.js";
 export type { GetProductCatalogListPayload, GetProductCatalogListResponse } from "./apis/getProductCatalogList.js";
 export type { GetQRResponse } from "./apis/getQR.js";
 export type { GetQuickMessageListResponse } from "./apis/getQuickMessageList.js";
-export type { GetFriendRecommendationsResponse, FriendRecommendationsCollapseMsgListConfig, FriendRecommendationsDataInfo, FriendRecommendationsRecommItem } from "./apis/getFriendRecommendations.js";
+export type { GetFriendRecommendationsResponse, FriendRecommendationsCollapseMsgListConfig, FriendRecommendationsDataInfo, FriendRecommendationsRecommItem, FriendRecommendationsType } from "./apis/getFriendRecommendations.js";
 export type { GetRelatedFriendGroupResponse } from "./apis/getRelatedFriendGroup.js";
 export type { GetReminderResponse } from "./apis/getReminder.js";
 export type { GetReminderResponsesResponse } from "./apis/getReminderResponses.js";
@@ -114,6 +114,7 @@ export type { SendStickerResponse, SendStickerPayload } from "./apis/sendSticker
 export type { SendTypingEventResponse } from "./apis/sendTypingEvent.js";
 export type { SendVideoOptions, SendVideoResponse } from "./apis/sendVideo.js";
 export type { SendVoiceOptions, SendVoiceResponse } from "./apis/sendVoice.js";
+export type { SetArchivedConversationsTarget, SetArchivedConversationsResponse } from "./apis/setArchivedConversations.js";
 export type { SetHiddenConversationsResponse } from "./apis/setHiddenConversations.js";
 export type { SetMuteParams, SetMuteResponse } from "./apis/setMute.js";
 export type { SetPinnedConversationsResponse } from "./apis/setPinnedConversations.js";
