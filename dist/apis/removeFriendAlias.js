@@ -7,7 +7,7 @@ export const removeFriendAliasFactory = apiFactory()((api, _ctx, utils) => {
      *
      * @param friendId friend id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function removeFriendAlias(friendId) {
         const params = {

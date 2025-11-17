@@ -18,16 +18,16 @@ export type LoginQRCallbackEvent = {
         };
     };
     actions: {
-        saveToFile: (qrPath?: string) => Promise<any>;
-        retry: () => any;
-        abort: () => any;
+        saveToFile: (qrPath?: string) => Promise<unknown>;
+        retry: () => unknown;
+        abort: () => unknown;
     };
 } | {
     type: LoginQRCallbackEventType.QRCodeExpired;
     data: null;
     actions: {
-        retry: () => any;
-        abort: () => any;
+        retry: () => unknown;
+        abort: () => unknown;
     };
 } | {
     type: LoginQRCallbackEventType.QRCodeScanned;
@@ -36,8 +36,8 @@ export type LoginQRCallbackEvent = {
         display_name: string;
     };
     actions: {
-        retry: () => any;
-        abort: () => any;
+        retry: () => unknown;
+        abort: () => unknown;
     };
 } | {
     type: LoginQRCallbackEventType.QRCodeDeclined;
@@ -45,8 +45,8 @@ export type LoginQRCallbackEvent = {
         code: string;
     };
     actions: {
-        retry: () => any;
-        abort: () => any;
+        retry: () => unknown;
+        abort: () => unknown;
     };
 } | {
     type: LoginQRCallbackEventType.GotLoginInfo;
@@ -57,7 +57,7 @@ export type LoginQRCallbackEvent = {
     };
     actions: null;
 };
-export type LoginQRCallback = (event: LoginQRCallbackEvent) => any;
+export type LoginQRCallback = (event: LoginQRCallbackEvent) => unknown;
 export declare function loginQR(ctx: ContextBase, options: {
     userAgent: string;
     qrPath?: string;

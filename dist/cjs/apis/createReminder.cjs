@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+var Reminder = require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const createReminderFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -19,7 +24,7 @@ const createReminderFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param threadId Group ID to create note from
      * @param type Thread type (User or Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function createReminder(options, threadId, type = Enum.ThreadType.User) {
         var _a, _b, _c, _d, _e, _f;
@@ -34,7 +39,7 @@ const createReminderFactory = utils.apiFactory()((api, ctx, utils) => {
                     duration: -1,
                     params: { title: options.title },
                     needPin: false,
-                    repeat: (_c = options.repeat) !== null && _c !== void 0 ? _c : Enum.ReminderRepeatMode.None,
+                    repeat: (_c = options.repeat) !== null && _c !== void 0 ? _c : Reminder.ReminderRepeatMode.None,
                     creatorUid: ctx.uid, // Note: for some reason, you can put any valid UID here instead of your own and it still works, atleast for mobile
                     src: 1,
                 }),
@@ -50,7 +55,7 @@ const createReminderFactory = utils.apiFactory()((api, ctx, utils) => {
                 params: JSON.stringify({
                     title: options.title,
                 }),
-                repeat: (_f = options.repeat) !== null && _f !== void 0 ? _f : Enum.ReminderRepeatMode.None,
+                repeat: (_f = options.repeat) !== null && _f !== void 0 ? _f : Reminder.ReminderRepeatMode.None,
                 src: 1,
                 imei: ctx.imei,
                 pinAct: 0,

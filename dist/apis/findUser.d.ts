@@ -12,4 +12,4 @@ export type FindUserResponse = {
     zalo_name: string;
     display_name: string;
 };
-export declare const findUserFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (phoneNumber: string) => Promise<FindUserResponse>;
+export declare const findUserFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (phoneNumber: string) => Promise<FindUserResponse>;

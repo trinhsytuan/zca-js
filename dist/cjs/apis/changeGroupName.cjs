@@ -11,7 +11,7 @@ const changeGroupNameFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param name New group name
      * @param groupId Group ID
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function changeGroupName(name, groupId) {
         if (name.length == 0)

@@ -89,11 +89,11 @@ export type MessageContent = {
      */
     attachments?: AttachmentSource | AttachmentSource[];
     /**
-     * Time to live in milisecond
+     * Time to live in milliseconds
      */
     ttl?: number;
 };
-export declare const sendMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (message: MessageContent | string, threadId: string, type?: ThreadType) => Promise<{
+export declare const sendMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (message: MessageContent | string, threadId: string, type?: ThreadType) => Promise<{
     message: SendMessageResult | null;
     attachment: SendMessageResult[];
 }>;

@@ -10,7 +10,7 @@ const lastOnlineFactory = utils.apiFactory()((api, ctx, utils) => {
      *
      * @param uid User ID
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function lastOnline(uid) {
         const params = {

@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const sendVideoFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -19,7 +24,7 @@ const sendVideoFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param threadId ID of the user or group to send the video to
      * @param type Type of thread (USER or GROUP)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      * @examples Example Video Resolutions:
      *   - **Standard Videos**:
@@ -35,7 +40,7 @@ const sendVideoFactory = utils.apiFactory()((api, ctx, utils) => {
     return async function sendVideo(options, threadId, type = Enum.ThreadType.User) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         let fileSize = 0;
-        let clientId = Date.now();
+        const clientId = Date.now();
         try {
             const headResponse = await utils.request(options.videoUrl, { method: "HEAD" }, true);
             if (headResponse.ok) {
@@ -43,7 +48,7 @@ const sendVideoFactory = utils.apiFactory()((api, ctx, utils) => {
             }
         }
         catch (error) {
-            throw new ZaloApiError.ZaloApiError(`Unable to get video content: ${(error === null || error === void 0 ? void 0 : error.message) || error}`);
+            throw new ZaloApiError.ZaloApiError(`Unable to get video content: ${error instanceof Error ? error.message : String(error)}`);
         }
         const params = type === Enum.ThreadType.User
             ? {

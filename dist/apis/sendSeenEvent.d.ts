@@ -13,4 +13,4 @@ export type SendSeenEventMessageParams = {
     cmd: number;
     ts: string | number;
 };
-export declare const sendSeenEventFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (messages: SendSeenEventMessageParams | SendSeenEventMessageParams[], type?: ThreadType) => Promise<SendSeenEventResponse>;
+export declare const sendSeenEventFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (messages: SendSeenEventMessageParams | SendSeenEventMessageParams[], type?: ThreadType) => Promise<SendSeenEventResponse>;

@@ -7,4 +7,4 @@ export type InviteUserToGroupsResponse = {
         };
     };
 };
-export declare const inviteUserToGroupsFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (memberId: string, groupId: string | string[]) => Promise<InviteUserToGroupsResponse>;
+export declare const inviteUserToGroupsFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (userId: string, groupId: string | string[]) => Promise<InviteUserToGroupsResponse>;

@@ -8,13 +8,11 @@ export const sendBankCardFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param payload The payload containing the bank card information
      * @param threadId The ID of the thread to send the bank card to
-     * @param type REQUIRE The type of thread to send the bank card to
+     * @param type The type of thread to send the bank card to
      *
-     * @note message call key eg: 99867xxxxx vietcombank (key: vietcombank, sacombank, etc,...)
-     *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
-    return async function sendBankCard(payload, threadId, type) {
+    return async function sendBankCard(payload, threadId, type = ThreadType.User) {
         var _a;
         const params = {
             binBank: payload.binBank,

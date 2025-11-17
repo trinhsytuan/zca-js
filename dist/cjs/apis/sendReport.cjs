@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 exports.ReportReason = void 0;
@@ -26,7 +31,7 @@ const sendReportFactory = utils.apiFactory()((api, ctx, utils$1) => {
      * @param threadId The threadID to report
      * @param type Thread type, default direct
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function sendReport(options, threadId, type = Enum.ThreadType.User) {

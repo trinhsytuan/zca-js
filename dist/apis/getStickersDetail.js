@@ -7,7 +7,7 @@ export const getStickersDetailFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param stickerIds Sticker IDs to search for
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getStickersDetail(stickerIds) {
         if (!stickerIds)

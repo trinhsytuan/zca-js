@@ -11,7 +11,7 @@ const createPollFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param options Poll options
      * @param groupId Group ID to create poll from
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function createPoll(options, groupId) {
         var _a;

@@ -8,13 +8,13 @@ export const inviteUserToGroupsFactory = apiFactory()((api, ctx, utils) => {
      * @param groupId group ID(s)
      * @param memberId member ID
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
-    return async function inviteUserToGroups(memberId, groupId) {
+    return async function inviteUserToGroups(userId, groupId) {
         const params = {
             grids: Array.isArray(groupId) ? groupId : [groupId],
-            member: memberId,
+            member: userId,
             memberType: -1,
             srcInteraction: 2,
             clientLang: ctx.language,

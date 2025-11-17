@@ -11,7 +11,7 @@ const getStickersFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param keyword Keyword to search for
      * @returns Sticker IDs
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getStickers(keyword) {
         if (!keyword)

@@ -10,7 +10,7 @@ export type TAttachmentContent = {
     type: string;
 };
 export type TOtherContent = {
-    [key: string]: any;
+    [key: string]: unknown;
 };
 export type TMessage = {
     actionId: string;
@@ -52,7 +52,7 @@ export type TGroupMessage = TMessage & {
     mentions: TMention[] | undefined;
 };
 export type TQuote = {
-    ownerId: number;
+    ownerId: string;
     cliMsgId: number;
     globalMsgId: number;
     cliMsgType: number;

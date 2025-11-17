@@ -4,4 +4,4 @@ export type LastOnlineResponse = {
     };
     lastOnline: number;
 };
-export declare const lastOnlineFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (uid: string) => Promise<LastOnlineResponse>;
+export declare const lastOnlineFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (uid: string) => Promise<LastOnlineResponse>;

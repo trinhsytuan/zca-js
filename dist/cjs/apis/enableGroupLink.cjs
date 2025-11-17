@@ -10,7 +10,7 @@ const enableGroupLinkFactory = utils.apiFactory()((api, ctx, utils) => {
      *
      * @param groupId The group id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function enableGroupLink(groupId) {
         const params = {

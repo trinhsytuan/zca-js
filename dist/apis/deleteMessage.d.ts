@@ -11,4 +11,4 @@ export type DeleteMessageDestination = {
     threadId: string;
     type?: ThreadType;
 };
-export declare const deleteMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (dest: DeleteMessageDestination, onlyMe?: boolean) => Promise<DeleteMessageResponse>;
+export declare const deleteMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (dest: DeleteMessageDestination, onlyMe?: boolean) => Promise<DeleteMessageResponse>;

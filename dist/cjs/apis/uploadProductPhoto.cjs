@@ -8,16 +8,16 @@ var utils = require('../utils.cjs');
 const uploadProductPhotoFactory = utils.apiFactory()((api, ctx, utils$1) => {
     const serviceURL = utils$1.makeURL(`${api.zpwServiceMap.file[0]}/api/product/upload/photo`);
     /**
-     * Upload product photo for api quick message or custom local storage
+     * Upload product photo for api quick message, product catalog or custom local storage
      *
      * @param payload file path or attachment source
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError | ZaloApiMissingImageMetadataGetter}
      */
     return async function uploadProductPhoto(payload) {
         const isSourceFilePath = typeof payload.file == "string";
         const fileMetaData = isSourceFilePath
-            ? await utils.getImageMetaData(payload.file)
+            ? await utils.getImageMetaData(ctx, payload.file)
             : payload.file.metadata;
         const fileSize = fileMetaData.totalSize || 0;
         const fileBuffer = isSourceFilePath

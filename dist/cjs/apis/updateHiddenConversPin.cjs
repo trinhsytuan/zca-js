@@ -11,7 +11,7 @@ const updateHiddenConversPinFactory = utils.apiFactory()((api, ctx, utils$1) => 
      *
      * @param pin The pin to update (must be a 4-digit number between 0000-9999)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function updateHiddenConversPin(pin) {
         if (!pinRegex.test(pin)) {

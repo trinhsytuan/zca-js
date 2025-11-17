@@ -10,7 +10,7 @@ const getSentFriendRequestFactory = utils.apiFactory()((api, ctx, utils) => {
      *
      * @note Zalo might throw an error with code 112 if you have no friend requests.
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getSentFriendRequest() {
         const params = {

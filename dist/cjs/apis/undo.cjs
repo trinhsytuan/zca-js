@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const undoFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -19,7 +24,7 @@ const undoFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param threadId group or user id
      * @param type Message type (User or Group), default is User
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function undo(payload, threadId, type = Enum.ThreadType.User) {
         const params = {

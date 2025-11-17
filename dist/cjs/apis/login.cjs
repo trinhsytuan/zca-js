@@ -23,6 +23,8 @@ async function login(ctx, encryptParams) {
 }
 async function getServerInfo(ctx, encryptParams) {
     const encryptedParams = await getEncryptParam(ctx, encryptParams, "getserverinfo");
+    if (!encryptedParams.params.signkey || typeof encryptedParams.params.signkey !== "string")
+        throw new ZaloApiError.ZaloApiError("Missing signkey");
     const response = await utils.request(ctx, utils.makeURL(ctx, "https://wpa.chat.zalo.me/api/login/getServerInfo", {
         imei: ctx.imei,
         type: ctx.API_TYPE,

@@ -7,7 +7,7 @@ export const getUserInfoFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param userId user id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getUserInfo(userId) {
         if (!userId)

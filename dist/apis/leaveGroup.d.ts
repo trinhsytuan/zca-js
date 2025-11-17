@@ -1,4 +1,4 @@
 export type LeaveGroupResponse = {
-    memberError: string[];
+    memberError: unknown[];
 };
-export declare const leaveGroupFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (groupId: string | string[], silent?: boolean) => Promise<LeaveGroupResponse>;
+export declare const leaveGroupFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (groupId: string, silent?: boolean) => Promise<LeaveGroupResponse>;

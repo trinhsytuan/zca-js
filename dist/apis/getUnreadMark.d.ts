@@ -11,4 +11,4 @@ export type GetUnreadMarkResponse = {
     };
     status: number;
 };
-export declare const getUnreadMarkFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => () => Promise<GetUnreadMarkResponse>;
+export declare const getUnreadMarkFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => () => Promise<GetUnreadMarkResponse>;

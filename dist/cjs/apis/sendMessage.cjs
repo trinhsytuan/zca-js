@@ -3,10 +3,15 @@
 var FormData = require('form-data');
 var fs = require('node:fs/promises');
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const attachmentUrlType = {
@@ -33,7 +38,7 @@ function prepareQMSGAttach(quote) {
 }
 function prepareQMSG(quote) {
     const quoteData = quote;
-    if (quoteData.msgType == "chat.todo" && typeof quoteData.content != "string") {
+    if (quoteData.msgType == "chat.todo" && typeof quoteData.content == "object" && typeof quoteData.content.params == "string") {
         return JSON.parse(quoteData.content.params).item.content;
     }
     return "";
@@ -102,8 +107,8 @@ const sendMessageFactory = utils.apiFactory()((api, ctx, utils$1) => {
         return await Promise.all(requests);
     }
     async function upthumb(source, url) {
-        let formData = new FormData();
-        let buffer = typeof source == "string" ? await fs.readFile(source) : source.data;
+        const formData = new FormData();
+        const buffer = typeof source == "string" ? await fs.readFile(source) : source.data;
         formData.append("fileContent", buffer, {
             filename: "blob",
             contentType: "image/png",
@@ -349,7 +354,7 @@ const sendMessageFactory = utils.apiFactory()((api, ctx, utils$1) => {
         }
         for (const gif of gifFiles) {
             const isFilePath = typeof gif == "string";
-            const gifData = isFilePath ? await utils.getGifMetaData(gif) : Object.assign(Object.assign({}, gif.metadata), { fileName: gif.filename });
+            const gifData = isFilePath ? await utils.getGifMetaData(ctx, gif) : Object.assign(Object.assign({}, gif.metadata), { fileName: gif.filename });
             if (isExceedMaxFileSize(gifData.totalSize))
                 throw new ZaloApiError.ZaloApiError(`File ${isFilePath ? utils.getFileName(gif) : gif.filename} size exceed maximum size of ${sharefile.max_size_share_file_v3}MB`);
             const _upthumb = await upthumb(gif, serviceURLs.attachment[Enum.ThreadType.User]);
@@ -390,7 +395,7 @@ const sendMessageFactory = utils.apiFactory()((api, ctx, utils$1) => {
                 fileType: "gif",
             });
         }
-        let responses = [];
+        const responses = [];
         for (const data of attachmentsData) {
             responses.push({
                 url: utils$1.makeURL(serviceURLs.attachment[type] + attachmentUrlType[data.fileType], Object.assign({
@@ -410,7 +415,7 @@ const sendMessageFactory = utils.apiFactory()((api, ctx, utils$1) => {
      * @param type Message type (User or Group)
      * @param quote Message or GroupMessage instance (optional), used for quoting
      *
-     * @throws {ZaloApiError}
+     * @throws {ZaloApiError | ZaloApiMissingImageMetadataGetter}
      */
     return async function sendMessage(message, threadId, type = Enum.ThreadType.User) {
         if (!message)
@@ -419,7 +424,8 @@ const sendMessageFactory = utils.apiFactory()((api, ctx, utils$1) => {
             throw new ZaloApiError.ZaloApiError("Missing threadId");
         if (typeof message == "string")
             message = { msg: message };
-        let { msg, quote, attachments, mentions, ttl, styles, urgency } = message;
+        let { msg, attachments, mentions } = message;
+        const { quote, ttl, styles, urgency } = message;
         if (attachments && !Array.isArray(attachments)) {
             attachments = [attachments];
         }

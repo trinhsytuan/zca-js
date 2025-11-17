@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const deleteChatFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -23,7 +28,7 @@ const deleteChatFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param threadId Thread ID
      * @param type Thread type
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function deleteChat(lastMessage, threadId, type = Enum.ThreadType.User) {
         const timestampString = Date.now().toString();

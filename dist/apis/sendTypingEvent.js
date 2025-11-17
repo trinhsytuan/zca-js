@@ -13,7 +13,7 @@ export const sendTypingEventFactory = apiFactory()((api, ctx, utils) => {
      * @param type The type of thread (User or Group)
      * @param destType The destination type (User or Page), for User threads only, defaults to User
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendTypingEvent(threadId, type = ThreadType.User, destType = DestType.User) {
         if (!threadId)

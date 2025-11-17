@@ -5,7 +5,7 @@ export const getAutoDeleteChatFactory = apiFactory()((api, _ctx, utils) => {
     /**
      * Get auto delete chat
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function getAutoDeleteChat() {

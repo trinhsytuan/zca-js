@@ -12,7 +12,7 @@ export const deleteMessageFactory = apiFactory()((api, ctx, utils) => {
      * @param dest Delete target
      * @param onlyMe Delete message for only you
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function deleteMessage(dest, onlyMe = false) {
         const { threadId, type = ThreadType.User, data } = dest;

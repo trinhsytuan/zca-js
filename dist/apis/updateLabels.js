@@ -7,12 +7,12 @@ export const updateLabelsFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param label label data
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
-    return async function updateLabels(label) {
+    return async function updateLabels(payload) {
         const params = {
-            labelData: JSON.stringify(label.labelData),
-            version: label.version,
+            labelData: JSON.stringify(payload.labelData),
+            version: payload.version,
             imei: ctx.imei,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));

@@ -5,6 +5,7 @@ import { GroupEventType } from "./models/GroupEvent.js";
 import type { API } from "./zalo.js";
 import type { AttachmentSource } from "./models/Attachment.js";
 export declare const isBun: boolean;
+export declare function hasOwn(obj: Record<string, unknown>, key: string): key is keyof typeof obj;
 /**
  * Get signed key for API requests.
  *
@@ -13,7 +14,7 @@ export declare const isBun: boolean;
  * @returns MD5 hash
  *
  */
-export declare function getSignKey(type: string, params: Record<string, any>): cryptojs.lib.WordArray;
+export declare function getSignKey(type: string, params: Record<string, unknown>): string;
 /**
  *
  * @param baseURL
@@ -22,7 +23,7 @@ export declare function getSignKey(type: string, params: Record<string, any>): c
  * @returns
  *
  */
-export declare function makeURL(ctx: ContextBase, baseURL: string, params?: Record<string, any>, apiVersion?: boolean): string;
+export declare function makeURL(ctx: ContextBase, baseURL: string, params?: Record<string, string | number>, apiVersion?: boolean): string;
 export declare class ParamsEncryptor {
     private zcid;
     private enc_ver;
@@ -51,10 +52,10 @@ export declare class ParamsEncryptor {
     static randomString(e?: number, t?: number): string;
     static encodeAES(e: string, message: string, type: "hex" | "base64", uppercase: boolean, s?: number): string | null;
 }
-export declare function decryptResp(key: string, data: string): Record<string, any> | null | string;
+export declare function decryptResp(key: string, data: string): Record<string, unknown> | null | string;
 export declare function decodeBase64ToBuffer(data: string): Buffer;
 export declare function decodeUnit8Array(data: Uint8Array): string | null;
-export declare function encodeAES(secretKey: string, data: any, t?: number): string | null;
+export declare function encodeAES(secretKey: string, data: cryptojs.lib.WordArray | string, t?: number): string | null;
 export declare function decodeAES(secretKey: string, data: string, t?: number): string | null;
 export declare function getDefaultHeaders(ctx: ContextBase, origin?: string): Promise<{
     Accept: string;
@@ -67,39 +68,43 @@ export declare function getDefaultHeaders(ctx: ContextBase, origin?: string): Pr
     "User-Agent": string;
 }>;
 export declare function request(ctx: ContextBase, url: string, options?: RequestInit, raw?: boolean): Promise<Response>;
-export declare function getImageMetaData(filePath: string): Promise<{
+export declare function getImageMetaData(ctx: ContextBase, filePath: string): Promise<{
     fileName: string;
-    totalSize: number | undefined;
-    width: number | undefined;
-    height: number | undefined;
+    totalSize: number;
+    width: number;
+    height: number;
 }>;
 export declare function getFileSize(filePath: string): Promise<number>;
-export declare function getGifMetaData(filePath: string): Promise<{
+export declare function getGifMetaData(ctx: ContextBase, filePath: string): Promise<{
     fileName: string;
-    totalSize: number | undefined;
-    width: number | undefined;
-    height: number | undefined;
+    totalSize: number;
+    width: number;
+    height: number;
 }>;
-export declare function decodeEventData(parsed: any, cipherKey?: string): Promise<any>;
+export declare function decodeEventData(parsed: Record<string, unknown>, cipherKey?: string): Promise<any>;
 export declare function getMd5LargeFileObject(source: AttachmentSource, fileSize: number): Promise<{
     currentChunk: number;
     data: string;
 }>;
-export declare const logger: (ctx: ContextBase) => {
-    verbose: (...args: any[]) => void;
-    info: (...args: any[]) => void;
-    warn: (...args: any[]) => void;
-    error: (...args: any[]) => void;
-    success: (...args: any[]) => void;
-    timestamp: (...args: any[]) => void;
+export declare const logger: (ctx: {
+    options: {
+        logging?: boolean;
+    };
+}) => {
+    verbose: (...args: unknown[]) => void;
+    info: (...args: unknown[]) => void;
+    warn: (...args: unknown[]) => void;
+    error: (...args: unknown[]) => void;
+    success: (...args: unknown[]) => void;
+    timestamp: (...args: unknown[]) => void;
 };
-export declare function getClientMessageType(msgType: string): 1 | 32 | 31 | 36 | 37 | 38 | 44 | 46 | 49 | 43;
-export declare function strPadLeft(e: any, t: string, n: number): any;
+export declare function getClientMessageType(msgType: string): 1 | 31 | 32 | 44 | 46 | 49 | 36 | 37 | 38 | 43;
+export declare function strPadLeft(e: number | string, t: string, n: number): string;
 export declare function formatTime(format: string, timestamp?: number): string;
 export declare function getFullTimeFromMillisecond(e: number): string;
 export declare function getFileExtension(e: string): string;
 export declare function getFileName(e: string): string;
-export declare function removeUndefinedKeys(e: Record<string, any>): Record<string, any>;
+export declare function removeUndefinedKeys(e: Record<string, unknown>): Record<string, unknown>;
 export declare function getGroupEventType(act: string): GroupEventType;
 export declare function getFriendEventType(act: string): FriendEventType;
 type ZaloResponse<T> = {
@@ -109,16 +114,16 @@ type ZaloResponse<T> = {
         code?: number;
     } | null;
 };
-export declare function handleZaloResponse<T = any>(ctx: ContextSession, response: Response, isEncrypted?: boolean): Promise<ZaloResponse<T>>;
-export declare function resolveResponse<T = any>(ctx: ContextSession, res: Response, cb?: (result: ZaloResponse<unknown>) => T, isEncrypted?: boolean): Promise<T>;
+export declare function handleZaloResponse<T = unknown>(ctx: ContextSession, response: Response, isEncrypted?: boolean): Promise<ZaloResponse<T>>;
+export declare function resolveResponse<T = unknown>(ctx: ContextSession, res: Response, cb?: (result: ZaloResponse<unknown>) => T, isEncrypted?: boolean): Promise<T>;
 export type FactoryUtils<T> = {
-    makeURL: (baseURL: string, params?: Record<string, any>, apiVersion?: boolean) => ReturnType<typeof makeURL>;
-    encodeAES: (data: any, t?: number) => ReturnType<typeof encodeAES>;
+    makeURL: (baseURL: string, params?: Record<string, string | number>, apiVersion?: boolean) => ReturnType<typeof makeURL>;
+    encodeAES: (data: cryptojs.lib.WordArray | string, t?: number) => ReturnType<typeof encodeAES>;
     request: (url: string, options?: RequestInit, raw?: boolean) => ReturnType<typeof request>;
     logger: ReturnType<typeof logger>;
     resolve: (res: Response, cb?: (result: ZaloResponse<unknown>) => T, isEncrypted?: boolean) => ReturnType<typeof resolveResponse<T>>;
 };
-export declare function apiFactory<T>(): <K extends (api: API, ctx: ContextSession, utils: FactoryUtils<T>) => any>(callback: K) => (ctx: ContextBase, api: API) => ReturnType<K>;
+export declare function apiFactory<T>(): <K extends (api: API, ctx: ContextSession, utils: FactoryUtils<T>) => unknown>(callback: K) => (ctx: ContextBase, api: API) => ReturnType<K>;
 export declare function generateZaloUUID(userAgent: string): string;
 /**
  * Encrypts a 4-digit PIN to a 32-character hex string

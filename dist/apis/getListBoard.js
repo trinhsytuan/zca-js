@@ -9,7 +9,7 @@ export const getListBoardFactory = apiFactory()((api, ctx, utils) => {
      * @param options - The options for the request
      * @param groupId - The ID of the group
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function getListBoard(options, groupId) {

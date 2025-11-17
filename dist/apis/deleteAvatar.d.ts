@@ -6,4 +6,4 @@ export type DeleteAvatarResponse = {
         };
     };
 };
-export declare const deleteAvatarFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (photoId: string | string[]) => Promise<DeleteAvatarResponse>;
+export declare const deleteAvatarFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (photoId: string | string[]) => Promise<DeleteAvatarResponse>;

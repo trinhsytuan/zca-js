@@ -15,4 +15,4 @@ export type AddReactionDestination = {
     threadId: string;
     type: ThreadType;
 };
-export declare const addReactionFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (icon: Reactions | CustomReaction, dest: AddReactionDestination) => Promise<AddReactionResponse>;
+export declare const addReactionFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (icon: Reactions | CustomReaction, dest: AddReactionDestination) => Promise<AddReactionResponse>;

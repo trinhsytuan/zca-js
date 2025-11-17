@@ -9,7 +9,7 @@ export const addUnreadMarkFactory = apiFactory()((api, ctx, utils) => {
      * @param threadId Thread ID
      * @param type Thread type (User/Group)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function addUnreadMark(threadId, type = ThreadType.User) {
         const timestamp = Date.now();

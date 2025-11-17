@@ -8,7 +8,7 @@ export const getGroupBlockedMemberFactory = apiFactory()((api, ctx, utils) => {
      * @param payload payload
      * @param groupId group id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getGroupBlockedMember(payload, groupId) {
         var _a, _b;

@@ -6,4 +6,4 @@ export type GetAutoDeleteChatResponse = {
         createdAt: number;
     }[];
 };
-export declare const getAutoDeleteChatFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => () => Promise<GetAutoDeleteChatResponse>;
+export declare const getAutoDeleteChatFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => () => Promise<GetAutoDeleteChatResponse>;

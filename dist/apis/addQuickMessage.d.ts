@@ -1,10 +1,11 @@
-import type { QuickMessage } from "../models/index.js";
+import type { QuickMessage, AttachmentSource } from "../models/index.js";
 export type AddQuickMessagePayload = {
     keyword: string;
     title: string;
+    media?: AttachmentSource;
 };
 export type AddQuickMessageResponse = {
-    items: QuickMessage[];
+    item: QuickMessage;
     version: number;
 };
-export declare const addQuickMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (addPayload: AddQuickMessagePayload) => Promise<AddQuickMessageResponse>;
+export declare const addQuickMessageFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (addPayload: AddQuickMessagePayload) => Promise<AddQuickMessageResponse>;

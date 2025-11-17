@@ -5,7 +5,7 @@ export const getArchivedChatListFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Get arcnived chat list
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getArchivedChatList() {
         const params = {

@@ -5,7 +5,7 @@ export const getMuteFactory = apiFactory()((api, ctx, utils) => {
     /**
      * Get mute
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getMute() {
         const params = {

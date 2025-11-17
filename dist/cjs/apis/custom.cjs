@@ -2,6 +2,7 @@
 
 var utils = require('../utils.cjs');
 
+/* eslint-disable */
 const customFactory = utils.apiFactory()((api, ctx, utils) => {
     return function custom(name, callback) {
         Object.defineProperty(api, name, {

@@ -11,11 +11,11 @@ export const sendCardFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param userId Unique ID for Card
      * @param phoneNumber Optional phone number for sending card to a User
-     * @param ttl Time to live in miliseconds (default: 0)
+     * @param ttl Time to live in milliseconds (default: 0)
      * @param threadId ID of the conversation
      * @param type Message type (User or GroupMessage)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function sendCard(options, threadId, type = ThreadType.User) {

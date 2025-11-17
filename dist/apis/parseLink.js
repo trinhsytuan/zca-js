@@ -7,7 +7,7 @@ export const parseLinkFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param link link to parse
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function parseLink(link) {

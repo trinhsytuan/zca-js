@@ -7,7 +7,7 @@ export const undoFriendRequestFactory = apiFactory()((api, _ctx, utils) => {
      *
      * @param options
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function undoFriendRequest(friendId) {
         const params = {

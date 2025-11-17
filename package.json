@@ -12,16 +12,10 @@
         }
     },
     "scripts": {
-        "prebuild": "bun run scripts/buildAPI.js",
         "build:clean": "rimraf dist",
         "build:esm": "tsc",
         "build:cjs": "rollup -c rollup.config.js",
-        "build": "npm run build:clean && npm run build:esm && npm run build:cjs",
-        "test:feat": "bun run test/feat.ts",
-        "prettier": "prettier --write .",
-        "lint": "eslint .",
-        "lint:fix": "eslint . --fix",
-        "prepare": "husky"
+        "build": "npm run build:clean && npm run build:esm && npm run build:cjs"
     },
     "repository": {
         "type": "git",
@@ -42,6 +36,7 @@
     "author": "RFS-ADRENO, truong9c2208, JustKemForFun",
     "license": "MIT",
     "dependencies": {
+        "bun": "^1.2.23",
         "crypto-js": "^4.2.0",
         "form-data": "^4.0.4",
         "json-bigint": "^1.0.0",

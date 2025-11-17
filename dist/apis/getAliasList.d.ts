@@ -5,4 +5,4 @@ export type GetAliasListResponse = {
     }[];
     updateTime: string;
 };
-export declare const getAliasListFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (count?: number, page?: number) => Promise<GetAliasListResponse>;
+export declare const getAliasListFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (count?: number, page?: number) => Promise<GetAliasListResponse>;

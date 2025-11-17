@@ -2,6 +2,8 @@ import { CookieJar } from "tough-cookie";
 import { writeFile } from "node:fs/promises";
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { logger, request } from "../utils.js";
+import { ZaloApiLoginQRAborted } from "../Errors/ZaloApiLoginQRAborted.js";
+import { ZaloApiLoginQRDeclined } from "../Errors/ZaloApiLoginQRDeclined.js";
 export var LoginQRCallbackEventType;
 (function (LoginQRCallbackEventType) {
     LoginQRCallbackEventType[LoginQRCallbackEventType["QRCodeGenerated"] = 0] = "QRCodeGenerated";
@@ -234,21 +236,35 @@ export async function loginQR(ctx, options, callback) {
     ctx.userAgent = options.userAgent;
     return new Promise(async (resolve, reject) => {
         var _a;
+        const controller = new AbortController();
+        let qrTimeout = null;
+        function cleanUp() {
+            controller.abort();
+            if (qrTimeout) {
+                clearTimeout(qrTimeout);
+                qrTimeout = null;
+            }
+        }
         try {
             function retry() {
+                cleanUp();
                 return resolve(loginQR(ctx, options, callback));
+            }
+            function abort() {
+                cleanUp();
+                return reject(new ZaloApiLoginQRAborted());
             }
             if (ctx.options.logging)
                 console.log();
             const loginVersion = await loadLoginPage(ctx);
             if (!loginVersion)
-                return reject(new ZaloApiError("Cannot get API login version"));
+                throw new ZaloApiError("Cannot get API login version");
             logger(ctx).info("Got login version:", loginVersion);
             await getLoginInfo(ctx, loginVersion);
             await verifyClient(ctx, loginVersion);
             const qrGenResult = await generate(ctx, loginVersion);
             if (!qrGenResult || !qrGenResult.data)
-                return reject(new ZaloApiError(`Unable to generate QRCode\nResponse: ${JSON.stringify(qrGenResult, null, 2)}`));
+                throw new ZaloApiError(`Unable to generate QRCode\nResponse: ${JSON.stringify(qrGenResult, null, 2)}`);
             const qrData = qrGenResult.data;
             if (callback) {
                 callback({
@@ -262,9 +278,7 @@ export async function loginQR(ctx, options, callback) {
                             logger(ctx).info("Scan the QR code at", `'${qrPath}'`, "to proceed with login");
                         },
                         retry,
-                        abort() {
-                            controller.abort();
-                        },
+                        abort,
                     },
                 });
             }
@@ -273,9 +287,8 @@ export async function loginQR(ctx, options, callback) {
                 await saveQRCodeToFile(qrPath, qrData.image.replace(/^data:image\/png;base64,/, ""));
                 logger(ctx).info("Scan the QR code at", `'${qrPath}'`, "to proceed with login");
             }
-            const controller = new AbortController();
-            const timeout = setTimeout(() => {
-                controller.abort();
+            qrTimeout = setTimeout(() => {
+                cleanUp();
                 logger(ctx).info("QR expired!");
                 if (callback) {
                     callback({
@@ -283,41 +296,32 @@ export async function loginQR(ctx, options, callback) {
                         data: null,
                         actions: {
                             retry,
-                            abort() {
-                                resolve(null);
-                            },
+                            abort,
                         },
                     });
                 }
                 else {
-                    resolve(loginQR(ctx, options));
+                    retry();
                 }
             }, 100000);
             const scanResult = await waitingScan(ctx, loginVersion, qrGenResult.data.code, controller.signal);
             if (!scanResult || !scanResult.data)
-                return resolve(null);
+                throw new ZaloApiError("Cannot get scan result");
             if (callback) {
                 callback({
                     type: LoginQRCallbackEventType.QRCodeScanned,
                     data: scanResult.data,
                     actions: {
                         retry,
-                        abort() {
-                            controller.abort();
-                        },
+                        abort,
                     },
                 });
             }
             const confirmResult = await waitingConfirm(ctx, loginVersion, qrGenResult.data.code, controller.signal);
             if (!confirmResult)
-                return resolve(null);
-            const checkSessionResult = await checkSession(ctx);
-            if (!checkSessionResult)
-                return resolve(null);
-            if (confirmResult.error_code == 0) {
-                logger(ctx).info("Successfully logged into the account", scanResult.data.display_name);
-            }
-            else if (confirmResult.error_code == -13) {
+                throw new ZaloApiError("Cannot get confirm result");
+            clearTimeout(qrTimeout);
+            if (confirmResult.error_code == -13) {
                 if (callback) {
                     callback({
                         type: LoginQRCallbackEventType.QRCodeDeclined,
@@ -326,33 +330,35 @@ export async function loginQR(ctx, options, callback) {
                         },
                         actions: {
                             retry,
-                            abort() {
-                                resolve(null);
-                            },
+                            abort,
                         },
                     });
                 }
                 else {
                     logger(ctx).error("QRCode login declined");
-                    resolve(null);
+                    throw new ZaloApiLoginQRDeclined();
                 }
                 return;
             }
-            else {
-                return reject(new ZaloApiError(`An error has occurred.\nResponse: ${JSON.stringify(confirmResult, null, 2)}`));
+            else if (confirmResult.error_code != 0) {
+                throw new ZaloApiError(`An error has occurred.\nResponse: ${JSON.stringify(confirmResult, null, 2)}`);
             }
+            const checkSessionResult = await checkSession(ctx);
+            if (!checkSessionResult)
+                throw new ZaloApiError("Cannot get session, login failed");
+            logger(ctx).info("Successfully logged into the account", scanResult.data.display_name);
             const userInfo = await getUserInfo(ctx);
             if (!userInfo || !userInfo.data)
-                return reject(new ZaloApiError("Can't get account info"));
+                throw new ZaloApiError("Can't get account info");
             if (!userInfo.data.logged)
-                return reject(new ZaloApiError("Can't login"));
-            clearTimeout(timeout);
+                throw new ZaloApiError("Can't login");
             resolve({
                 cookies: ctx.cookie.toJSON().cookies,
                 userInfo: userInfo.data.info,
             });
         }
         catch (error) {
+            cleanUp();
             reject(error);
         }
     });

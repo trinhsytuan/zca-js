@@ -1,6 +1,9 @@
 import type { GroupSetting } from "../models/index.js";
 export type GetGroupLinkInfoPayload = {
     link: string;
+    /**
+     * Default: 1
+     */
     memberPage?: number;
 };
 export type GetGroupLinkInfoResponse = {
@@ -21,11 +24,11 @@ export type GetGroupLinkInfoResponse = {
         accountStatus: number;
         type: number;
     }[];
-    admins: any[];
+    admins: unknown[];
     hasMoreMember: number;
     subType: number;
     totalMember: number;
     setting: GroupSetting;
     globalId: string;
 };
-export declare const getGroupLinkInfoFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (payload: GetGroupLinkInfoPayload) => Promise<GetGroupLinkInfoResponse>;
+export declare const getGroupLinkInfoFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (payload: GetGroupLinkInfoPayload) => Promise<GetGroupLinkInfoResponse>;

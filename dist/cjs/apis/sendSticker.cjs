@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const sendStickerFactory = utils.apiFactory()((api, ctx, utils$1) => {
@@ -23,7 +28,7 @@ const sendStickerFactory = utils.apiFactory()((api, ctx, utils$1) => {
      * @param threadId group or user id
      * @param type Message type (User or GroupMessage)
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function sendSticker(sticker, threadId, type = Enum.ThreadType.User) {
         if (!sticker)

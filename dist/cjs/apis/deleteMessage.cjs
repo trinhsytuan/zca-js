@@ -1,10 +1,15 @@
 'use strict';
 
 var ZaloApiError = require('../Errors/ZaloApiError.cjs');
+require('../models/AutoReply.cjs');
+require('../models/Board.cjs');
 var Enum = require('../models/Enum.cjs');
 require('../models/FriendEvent.cjs');
+require('../models/Group.cjs');
 require('../models/GroupEvent.cjs');
 require('../models/Reaction.cjs');
+require('../models/Reminder.cjs');
+require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const deleteMessageFactory = utils.apiFactory()((api, ctx, utils) => {
@@ -18,7 +23,7 @@ const deleteMessageFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param dest Delete target
      * @param onlyMe Delete message for only you
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function deleteMessage(dest, onlyMe = false) {
         const { threadId, type = Enum.ThreadType.User, data } = dest;

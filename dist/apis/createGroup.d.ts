@@ -4,7 +4,7 @@ export type CreateGroupResponse = {
     sucessMembers: string[];
     groupId: string;
     errorMembers: string[];
-    error_data: Record<string, any>;
+    error_data: Record<string, unknown>;
 };
 export type CreateGroupOptions = {
     /**
@@ -25,4 +25,4 @@ export type CreateGroupOptions = {
      */
     avatarPath?: string;
 };
-export declare const createGroupFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: CreateGroupOptions) => Promise<CreateGroupResponse>;
+export declare const createGroupFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (options: CreateGroupOptions) => Promise<CreateGroupResponse>;

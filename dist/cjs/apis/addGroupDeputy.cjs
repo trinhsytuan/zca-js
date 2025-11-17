@@ -11,7 +11,7 @@ const addGroupDeputyFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param memberId user Id or list of user Ids
      * @param groupId group Id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      *
      */
     return async function addGroupDeputy(memberId, groupId) {

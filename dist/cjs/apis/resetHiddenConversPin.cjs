@@ -8,7 +8,7 @@ const resetHiddenConversPinFactory = utils.apiFactory()((api, _ctx, utils) => {
     /**
      * Reset hidden conversation pin
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function resetHiddenConversPin() {
         const params = {};

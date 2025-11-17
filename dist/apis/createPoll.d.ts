@@ -1,3 +1,4 @@
+import type { PollDetail } from "../models/index.js";
 /**
  * Options for creating a poll.
  */
@@ -31,27 +32,5 @@ export type CreatePollOptions = {
      */
     isAnonymous?: boolean;
 };
-export type CreatePollResponse = {
-    creator: string;
-    question: string;
-    options: {
-        content: string;
-        votes: number;
-        voted: boolean;
-        voters: string[];
-        option_id: number;
-    }[];
-    joined: boolean;
-    closed: boolean;
-    poll_id: string;
-    allow_multi_choices: boolean;
-    allow_add_new_option: boolean;
-    is_anonymous: boolean;
-    poll_type: number;
-    created_time: number;
-    updated_time: number;
-    expired_time: number;
-    is_hide_vote_preview: boolean;
-    num_vote: number;
-};
-export declare const createPollFactory: (ctx: import("../context.js").ContextBase, api: import("../zalo.js").API) => (options: CreatePollOptions, groupId: string) => Promise<CreatePollResponse>;
+export type CreatePollResponse = PollDetail;
+export declare const createPollFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (options: CreatePollOptions, groupId: string) => Promise<PollDetail>;

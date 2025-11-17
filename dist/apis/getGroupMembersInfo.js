@@ -7,7 +7,7 @@ export const getGroupMembersInfoFactory = apiFactory()((api, _, utils) => {
      *
      * @param memberId member id or array of member ids
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function getGroupMembersInfo(memberId) {
         if (!Array.isArray(memberId))

@@ -11,7 +11,7 @@ const changeFriendAliasFactory = utils.apiFactory()((api, ctx, utils) => {
      * @param alias new alias (nickname - bietdanh)
      * @param friendId friend id
      *
-     * @throws ZaloApiError
+     * @throws {ZaloApiError}
      */
     return async function changeFriendAlias(alias, friendId) {
         const params = {
