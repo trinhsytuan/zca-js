@@ -1,4 +1,8 @@
 import type { Gender, ZBusinessPackage } from "../models/index.js";
+export declare enum FriendRecommendationsType {
+    RecommendedFriend = 1,
+    ReceivedFriendRequest = 2
+}
 export type FriendRecommendationsCollapseMsgListConfig = {
     collapseId: number;
     collapseXItem: number;
@@ -14,7 +18,7 @@ export type FriendRecommendationsDataInfo = {
     gender: Gender;
     dob: number;
     type: number;
-    recommType: number;
+    recommType: FriendRecommendationsType;
     recommSrc: number;
     recommTime: number;
     recommInfo: {
