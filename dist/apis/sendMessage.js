@@ -239,7 +239,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         const firstExtFile = getFileExtension(isFilePath ? firstSource : firstSource.filename);
         const isSingleFile = attachments.length == 1;
         const isGroupMessage = type == ThreadType.Group;
-        const canBeDesc = isSingleFile && ["jpg", "jpeg", "png", "webp"].includes(firstExtFile);
+        const canBeDesc = isSingleFile && ["jpg", "heic", "jpeg", "png", "webp"].includes(firstExtFile);
         const gifFiles = attachments.filter((e) => getFileExtension(typeof e == "string" ? e : e.filename) == "gif");
         attachments = attachments.filter((e) => getFileExtension(typeof e == "string" ? e : e.filename) != "gif");
         const uploadAttachment = attachments.length == 0 ? [] : await api.uploadAttachment(attachments, threadId, type);
@@ -429,7 +429,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         if (attachments && attachments.length > 0) {
             const firstExtFile = getFileExtension(typeof attachments[0] == "string" ? attachments[0] : attachments[0].filename);
             const isSingleFile = attachments.length == 1;
-            const canBeDesc = isSingleFile && ["jpg", "jpeg", "png", "webp"].includes(firstExtFile);
+            const canBeDesc = isSingleFile && ["jpg", , "heic", "jpeg", "png", "webp"].includes(firstExtFile);
             if ((!canBeDesc && msg.length > 0) || (msg.length > 0 && quote)) {
                 // send message and attachment separately
                 await handleMessage(message, threadId, type).then(async (data) => {

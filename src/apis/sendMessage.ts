@@ -410,7 +410,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         const isSingleFile = attachments.length == 1;
         const isGroupMessage = type == ThreadType.Group;
 
-        const canBeDesc = isSingleFile && ["jpg", "jpeg", "png", "webp"].includes(firstExtFile);
+        const canBeDesc = isSingleFile && ["jpg", "heic", "jpeg", "png", "webp"].includes(firstExtFile);
 
         const gifFiles = attachments.filter((e) => getFileExtension(typeof e == "string" ? e : e.filename) == "gif");
         attachments = attachments.filter((e) => getFileExtension(typeof e == "string" ? e : e.filename) != "gif");
@@ -645,7 +645,7 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
             );
             const isSingleFile = attachments.length == 1;
 
-            const canBeDesc = isSingleFile && ["jpg", "jpeg", "png", "webp"].includes(firstExtFile);
+            const canBeDesc = isSingleFile && ["jpg", , "heic", "jpeg", "png", "webp"].includes(firstExtFile);
             if ((!canBeDesc && msg.length > 0) || (msg.length > 0 && quote)) {
                 // send message and attachment separately
                 await handleMessage(message, threadId, type).then(async (data) => {

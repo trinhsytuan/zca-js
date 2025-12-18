@@ -37,7 +37,8 @@ const sendStickerFactory = utils.apiFactory()((api, ctx, utils$1) => {
             throw new ZaloApiError.ZaloApiError("Missing threadId");
         if (!sticker.id)
             throw new ZaloApiError.ZaloApiError("Missing sticker id");
-        if (!sticker.cateId)
+        // Sometime sticker.cateId = 0, which is invalid.
+        if (sticker.cateId === undefined || sticker.cateId === null)
             throw new ZaloApiError.ZaloApiError("Missing sticker cateId");
         if (!sticker.type)
             throw new ZaloApiError.ZaloApiError("Missing sticker type");
