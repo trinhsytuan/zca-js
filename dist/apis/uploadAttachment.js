@@ -71,7 +71,6 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                 data.params.toid = threadId;
             switch (extFile) {
                 case "jpg":
-                case "heic":
                 case "jpeg":
                 case "png":
                 case "webp": {
