@@ -15,8 +15,8 @@ require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const urlType = {
-    image: "zcloud-upload/photo",
-    video: "asyncfile/upload",
+    image: "photo_original/upload",
+    video: "video_original/upload",
     others: "asyncfile/upload",
 };
 const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {

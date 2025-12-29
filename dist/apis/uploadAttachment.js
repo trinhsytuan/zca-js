@@ -4,8 +4,8 @@ import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { ThreadType } from "../models/index.js";
 import { apiFactory, getFileExtension, getFileName, getFileSize, getImageMetaData, getMd5LargeFileObject, resolveResponse, } from "../utils.js";
 const urlType = {
-    image: "zcloud-upload/photo",
-    video: "asyncfile/upload",
+    image: "photo_original/upload",
+    video: "video_original/upload",
     others: "asyncfile/upload",
 };
 export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
