@@ -125,7 +125,7 @@ type AttachmentData =
 
 const urlType = {
     image: "photo_original/upload",
-    video: "video_original/upload",
+    video: "asyncfile/upload",
     others: "asyncfile/upload",
 };
 
