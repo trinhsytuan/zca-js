@@ -16,7 +16,7 @@ var utils = require('../utils.cjs');
 
 const urlType = {
     image: "photo_original/upload",
-    video: "video_original/upload",
+    video: "asyncfile/upload",
     others: "asyncfile/upload",
 };
 const uploadAttachmentFactory = utils.apiFactory()((api, ctx, utils$1) => {
