@@ -4,7 +4,7 @@ import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { ThreadType } from "../models/index.js";
 import { apiFactory, getFileExtension, getFileName, getFileSize, getImageMetaData, getMd5LargeFileObject, resolveResponse, } from "../utils.js";
 const urlType = {
-    image: "zcloud-upload/upload",
+    image: "zcloud-upload/image",
     video: "asyncfile/upload",
     others: "asyncfile/upload",
 };
