@@ -15,7 +15,7 @@ require('../models/ZBusiness.cjs');
 var utils = require('../utils.cjs');
 
 const urlType = {
-    image: "photo_original/upload",
+    image: "zcloud-upload/upload",
     video: "asyncfile/upload",
     others: "asyncfile/upload",
 };

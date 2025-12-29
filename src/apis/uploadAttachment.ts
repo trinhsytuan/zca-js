@@ -124,7 +124,7 @@ type AttachmentData =
       };
 
 const urlType = {
-    image: "photo_original/upload",
+    image: "zcloud-upload/upload",
     video: "asyncfile/upload",
     others: "asyncfile/upload",
 };
