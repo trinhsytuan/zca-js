@@ -359,7 +359,7 @@ export class Listener extends EventEmitter<ListenerEvents> {
                             this.emit("alias_friends");
                         } else if (control.content.act_type == "profile" && control.content.act == "update") {
                             this.emit("update_profile");
-                        }
+                        } else this.emit("mute_events", control);
                     }
                 }
 
@@ -472,7 +472,6 @@ export class Listener extends EventEmitter<ListenerEvents> {
                     if (ws.readyState !== WebSocket.CLOSED) ws.close(CloseReason.DuplicateConnection);
                 }
                 const parsedData = (await decodeEventData(parsed, this.cipherKey)).data;
-                this.emit("mute_events", {cmd, subCmd, parsedData})
             } catch (error) {
                 this.onErrorCallback(error);
                 this.emit("error", error);

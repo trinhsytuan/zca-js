@@ -278,6 +278,8 @@ class Listener extends EventEmitter {
                         else if (control.content.act_type == "profile" && control.content.act == "update") {
                             this.emit("update_profile");
                         }
+                        else
+                            this.emit("mute_events", control);
                     }
                 }
                 if (cmd == 612) {
@@ -374,7 +376,6 @@ class Listener extends EventEmitter {
                         ws.close(exports.CloseReason.DuplicateConnection);
                 }
                 const parsedData = (await utils.decodeEventData(parsed, this.cipherKey)).data;
-                this.emit("mute_events", { cmd, subCmd, parsedData });
             }
             catch (error) {
                 this.onErrorCallback(error);
