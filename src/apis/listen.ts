@@ -360,7 +360,7 @@ export class Listener extends EventEmitter<ListenerEvents> {
                         } else if (control.content.act_type == "profile" && control.content.act == "update") {
                             this.emit("update_profile");
                         } else if (control.content.act_type == "mute") {
-                            this.emit("mute_events", control);
+                            this.emit("mute_events", control.content);
                         }
                     }
                 }
