@@ -359,7 +359,9 @@ export class Listener extends EventEmitter<ListenerEvents> {
                             this.emit("alias_friends");
                         } else if (control.content.act_type == "profile" && control.content.act == "update") {
                             this.emit("update_profile");
-                        } else this.emit("mute_events", control);
+                        } else if (control.content.act_type == "mute") {
+                            this.emit("mute_events", control);
+                        }
                     }
                 }
 

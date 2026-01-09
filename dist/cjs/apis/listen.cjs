@@ -278,8 +278,9 @@ class Listener extends EventEmitter {
                         else if (control.content.act_type == "profile" && control.content.act == "update") {
                             this.emit("update_profile");
                         }
-                        else
+                        else if (control.content.act_type == "mute") {
                             this.emit("mute_events", control);
+                        }
                     }
                 }
                 if (cmd == 612) {
