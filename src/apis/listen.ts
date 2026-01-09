@@ -471,7 +471,8 @@ export class Listener extends EventEmitter<ListenerEvents> {
                     logger(this.ctx).error();
                     if (ws.readyState !== WebSocket.CLOSED) ws.close(CloseReason.DuplicateConnection);
                 }
-                this.emit("mute_events", {cmd, subCmd, parsed})
+                const parsedData = (await decodeEventData(parsed, this.cipherKey)).data;
+                this.emit("mute_events", {cmd, subCmd, parsedData})
             } catch (error) {
                 this.onErrorCallback(error);
                 this.emit("error", error);
