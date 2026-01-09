@@ -52,7 +52,7 @@ interface ListenerEvents {
     cipher_key: [key: string];
     alias_friends: [];
     update_profile: [];
-    mute_events: [];
+    mute_events: [data: any];
 }
 
 export class Listener extends EventEmitter<ListenerEvents> {
