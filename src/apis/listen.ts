@@ -52,6 +52,7 @@ interface ListenerEvents {
     cipher_key: [key: string];
     alias_friends: [];
     update_profile: [];
+    mute_events: [];
 }
 
 export class Listener extends EventEmitter<ListenerEvents> {
@@ -470,6 +471,7 @@ export class Listener extends EventEmitter<ListenerEvents> {
                     logger(this.ctx).error();
                     if (ws.readyState !== WebSocket.CLOSED) ws.close(CloseReason.DuplicateConnection);
                 }
+                this.emit("mute_events", {cmd, subCmd, data})
             } catch (error) {
                 this.onErrorCallback(error);
                 this.emit("error", error);
