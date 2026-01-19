@@ -364,7 +364,6 @@ export class Listener extends EventEmitter {
                     if (ws.readyState !== WebSocket.CLOSED)
                         ws.close(CloseReason.DuplicateConnection);
                 }
-                const parsedData = (await decodeEventData(parsed, this.cipherKey)).data;
             }
             catch (error) {
                 this.onErrorCallback(error);
