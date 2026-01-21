@@ -50,6 +50,9 @@ interface ListenerEvents {
     friend_event: [data: FriendEvent];
     group_event: [data: GroupEvent];
     cipher_key: [key: string];
+    alias_friends: [];
+    update_profile: [];
+    mute_events: [data: any];
 }
 
 export class Listener extends EventEmitter<ListenerEvents> {
@@ -233,8 +236,7 @@ export class Listener extends EventEmitter<ListenerEvents> {
                 if (decodedData.length == 0) return;
 
                 const parsed = JSON.parse(decodedData);
-
-                if (version == 1 && cmd == 1 && subCmd == 1 && hasOwn(parsed, "key")) {
+                if (version == 1 && cmd == 1 && subCmd == 1 && parsed.hasOwnProperty("key")) {
                     this.cipherKey = parsed.key;
                     this.emit("cipher_key", parsed.key);
 
@@ -353,6 +355,12 @@ export class Listener extends EventEmitter<ListenerEvents> {
                             );
                             if (friendEvent.isSelf && !this.selfListen) continue;
                             this.emit("friend_event", friendEvent);
+                        } else if (control.content.act_type == "alias") {
+                            this.emit("alias_friends");
+                        } else if (control.content.act_type == "profile" && control.content.act == "update") {
+                            this.emit("update_profile");
+                        } else if (control.content.act_type == "mute") {
+                            this.emit("mute_events", control.content);
                         }
                     }
                 }
@@ -407,6 +415,7 @@ export class Listener extends EventEmitter<ListenerEvents> {
                     const { actions } = parsedData;
 
                     for (const action of actions) {
+                        if (!action.data) continue;
                         const data = JSON.parse(`{${action.data}}`);
                         if (action.act_type == "typing") {
                             if (action.act == "typing") {
