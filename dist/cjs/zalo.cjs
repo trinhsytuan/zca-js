@@ -15,7 +15,6 @@ class Zalo {
         this.enableEncryptParam = true;
     }
     parseCookies(cookie) {
-        var _a;
         const cookieArr = Array.isArray(cookie) ? cookie : cookie.cookies;
         cookieArr.forEach((e, i) => {
             if (typeof e.domain == "string" && e.domain.startsWith("."))
@@ -24,7 +23,12 @@ class Zalo {
         const jar = new toughCookie.CookieJar();
         for (const each of cookieArr) {
             try {
-                jar.setCookieSync((_a = toughCookie.Cookie.fromJSON(Object.assign(Object.assign({}, each), { key: each.key || each.name }))) !== null && _a !== void 0 ? _a : "", "https://chat.zalo.me");
+                const cookieObj = toughCookie.Cookie.fromJSON(Object.assign(Object.assign({}, each), { key: each.key || each.name }));
+                if (cookieObj) {
+                    const domain = cookieObj.domain || "chat.zalo.me";
+                    const url = `https://${domain.startsWith(".") ? domain.slice(1) : domain}`;
+                    jar.setCookieSync(cookieObj, url);
+                }
             }
             catch (error) {
                 utils.logger({

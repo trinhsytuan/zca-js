@@ -8,11 +8,12 @@ const getUserInfoFactory = utils.apiFactory()((api, ctx, utils) => {
     /**
      * Get user info using user id
      *
-     * @param userId user id
+     * @param userId User id(s)
+     * @param isAvatarSizeMax Is avatar size max (default: false)
      *
      * @throws {ZaloApiError}
      */
-    return async function getUserInfo(userId) {
+    return async function getUserInfo(userId, isAvatarSizeMax = false) {
         if (!userId)
             throw new ZaloApiError.ZaloApiError("Missing user id");
         if (!Array.isArray(userId))
@@ -26,7 +27,7 @@ const getUserInfoFactory = utils.apiFactory()((api, ctx, utils) => {
         const params = {
             phonebook_version: ctx.extraVer.phonebook,
             friend_pversion_map: userId,
-            avatar_size: 120,
+            avatar_size: isAvatarSizeMax ? 240 : 120,
             language: ctx.language,
             show_online_status: 1,
             imei: ctx.imei,

@@ -9,10 +9,11 @@ const findUserFactory = utils.apiFactory()((api, ctx, utils) => {
      * Find user by phone number
      *
      * @param phoneNumber Phone number
+     * @param isAvatarSizeMax Is avatar size max (default: true)
      *
      * @throws {ZaloApiError}
      */
-    return async function findUser(phoneNumber) {
+    return async function findUser(phoneNumber, isAvatarSizeMax = true) {
         if (!phoneNumber)
             throw new ZaloApiError.ZaloApiError("Missing phoneNumber");
         if (phoneNumber.startsWith("0")) {
@@ -21,7 +22,7 @@ const findUserFactory = utils.apiFactory()((api, ctx, utils) => {
         }
         const params = {
             phone: phoneNumber,
-            avatar_size: 240,
+            avatar_size: isAvatarSizeMax ? 240 : 120,
             language: ctx.language,
             imei: ctx.imei,
             reqSrc: 40,
