@@ -376,6 +376,7 @@ export class API {
     this.undo = undoFactory(ctx, this);
     this.joinGroupInviteBox = joinGroupInviteBoxFactory(ctx, this);
     this.deleteAutoReply = deleteAutoReplyFactory(ctx, this);
+    this.getMultiUsersByPhones = getMultiUsersByPhonesFactory(ctx, this);
     this.undoFriendRequest = undoFriendRequestFactory(ctx, this);
     this.getPendingGroupMembers = getPendingGroupMembersFactory(ctx, this);
     this.getPinConversations = getPinConversationsFactory(ctx, this);
@@ -427,12 +428,15 @@ export class API {
     this.leaveGroup = leaveGroupFactory(ctx, this);
     this.acceptFriendRequest = acceptFriendRequestFactory(ctx, this);
     this.updateCatalog = updateCatalogFactory(ctx, this);
+    this.searchSticker = searchStickerFactory(ctx, this);
+    this.upgradeGroupToCommunity = upgradeGroupToCommunityFactory(ctx, this);
     this.createGroup = createGroupFactory(ctx, this);
     this.deleteAvatar = deleteAvatarFactory(ctx, this);
     this.createCatalog = createCatalogFactory(ctx, this);
     this.blockViewFeed = blockViewFeedFactory(ctx, this);
     this.updateProductCatalog = updateProductCatalogFactory(ctx, this);
     this.sendVideo = sendVideoFactory(ctx, this);
+    this.updateArchivedChatList = updateArchivedChatListFactory(ctx, this);
     this.sharePoll = sharePollFactory(ctx, this);
     this.removeUnreadMark = removeUnreadMarkFactory(ctx, this);
     this.getFriendBoardList = getFriendBoardListFactory(ctx, this);
@@ -448,6 +452,7 @@ export class API {
     this.removeReminder = removeReminderFactory(ctx, this);
     this.addUnreadMark = addUnreadMarkFactory(ctx, this);
     this.addGroupBlockedMember = addGroupBlockedMemberFactory(ctx, this);
+    this.updateProfileBio = updateProfileBioFactory(ctx, this);
     this.custom = customFactory(ctx, this);
   }
 }
