@@ -1,5 +1,6 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
+import { AvatarSize } from "../models/index.js";
 export const getAllFriendsFactory = apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.profile[0]}/api/social/friend/getfriends`);
     /**
@@ -7,16 +8,16 @@ export const getAllFriendsFactory = apiFactory()((api, ctx, utils) => {
      *
      * @param count Page size (default: 20000)
      * @param page Page number (default: 1)
-     * @param isAvatarSizeMax Is avatar size max (default: false)
+     * @param avatarSize Avatar size (default: AvatarSize.Small)
      *
      * @throws {ZaloApiError}
      */
-    return async function getAllFriends(count = 20000, page = 1, isAvatarSizeMax = false) {
+    return async function getAllFriends(count = 20000, page = 1, avatarSize = AvatarSize.Small) {
         const params = {
             incInvalid: 1,
             page,
             count,
-            avatar_size: isAvatarSizeMax ? 240 : 120,
+            avatar_size: avatarSize,
             actiontime: 0,
             imei: ctx.imei,
         };

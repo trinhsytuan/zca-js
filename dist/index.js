@@ -4,6 +4,7 @@ export * from "./zalo.js";
 // Others (Enum)
 export { CloseReason } from "./apis/listen.js";
 export { LoginQRCallbackEventType } from "./apis/loginQR.js";
+export { FriendRecommendationsType } from "./apis/getFriendRecommendations.js";
 export { ReviewPendingMemberRequestStatus } from "./apis/reviewPendingMemberRequest.js";
 export { TextStyle, Urgency } from "./apis/sendMessage.js";
 export { ReportReason } from "./apis/sendReport.js";

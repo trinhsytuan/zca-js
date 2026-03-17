@@ -312,10 +312,8 @@ export class Listener extends EventEmitter {
                     const parsedData = (await decodeEventData(parsed, this.cipherKey)).data;
                     const { actions } = parsedData;
                     for (const action of actions) {
-                        if (!action.data)
-                            continue;
-                        const data = JSON.parse(`{${action.data}}`);
                         if (action.act_type == "typing") {
+                            const data = JSON.parse(`{${action.data}}`);
                             if (action.act == "typing") {
                                 const typingObject = new UserTyping(data);
                                 this.emit("typing", typingObject);

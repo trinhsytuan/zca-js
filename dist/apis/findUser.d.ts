@@ -1,3 +1,3 @@
-import type { UserBasic } from "../models/index.js";
+import { AvatarSize, type UserBasic } from "../models/index.js";
 export type FindUserResponse = UserBasic;
-export declare const findUserFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (phoneNumber: string, isAvatarSizeMax?: boolean) => Promise<UserBasic>;
+export declare const findUserFactory: (ctx: import("../context.js").ContextBase, api: import("../apis.js").API) => (phoneNumber: string, avatarSize?: AvatarSize) => Promise<UserBasic>;

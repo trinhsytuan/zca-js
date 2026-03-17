@@ -244,8 +244,8 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
         attachments = attachments.filter((e) => getFileExtension(typeof e == "string" ? e : e.filename) != "gif");
         const uploadAttachment = attachments.length == 0 ? [] : await api.uploadAttachment(attachments, threadId, type);
         const attachmentsData = [];
-        let indexInGroupLayout = uploadAttachment.length - 1;
-        const groupLayoutId = getGroupLayoutId();
+        let indexInGroupLayout = 0;
+        const groupLayoutId = getGroupLayoutId().toString();
         const { mentionsFinal, msgFinal } = handleMentions(type, msg, mentions);
         msg = msgFinal;
         const isMentionsValid = mentionsFinal.length > 0 && isGroupMessage && attachments.length == 1;
@@ -276,8 +276,9 @@ export const sendMessageFactory = apiFactory()((api, ctx, utils) => {
                             jcp: '{"convertible":"jxl"}',
                             groupLayoutId: isMultiFile ? groupLayoutId : undefined,
                             isGroupLayout: isMultiFile ? 1 : undefined,
-                            idInGroup: isMultiFile ? indexInGroupLayout-- : undefined,
+                            idInGroup: isMultiFile ? indexInGroupLayout++ : undefined,
                             totalItemInGroup: isMultiFile ? uploadAttachment.length : undefined,
+                            extMsgProp: isMultiFile ? `{"groupMediaMsg":{"groupLayoutId":"${groupLayoutId}"}}` : undefined,
                             mentionInfo: isMentionsValid && canBeDesc && !quote ? JSON.stringify(mentionsFinal) : undefined,
                         },
                         body: new URLSearchParams(),

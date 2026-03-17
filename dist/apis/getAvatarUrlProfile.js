@@ -1,4 +1,5 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
+import { AvatarSize } from "../models/index.js";
 import { apiFactory } from "../utils.js";
 export const getAvatarUrlProfileFactory = apiFactory()((api, _ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.profile[0]}/api/social/profile/avatar-url`);
@@ -6,16 +7,16 @@ export const getAvatarUrlProfileFactory = apiFactory()((api, _ctx, utils) => {
      * Get avatar url profile
      *
      * @param friendId friend id(s)
-     * @param isAvatarSizeMax Is avatar size max (default: true)
+     * @param avatarSize Avatar size (default: AvatarSize.Large)
      *
      * @throws {ZaloApiError}
      */
-    return async function getAvatarUrlProfile(friendIds, isAvatarSizeMax = true) {
+    return async function getAvatarUrlProfile(friendIds, avatarSize = AvatarSize.Large) {
         if (!Array.isArray(friendIds))
             friendIds = [friendIds];
         const params = {
             friend_ids: friendIds,
-            avatar_size: isAvatarSizeMax ? 240 : 120,
+            avatar_size: avatarSize,
             srcReq: -1,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));

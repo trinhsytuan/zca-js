@@ -1,20 +1,21 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
-import { AvatarSize } from "../models/index.js";
-export const findUserByUsernameFactory = apiFactory()((api, _ctx, utils) => {
-    const serviceURL = utils.makeURL(`${api.zpwServiceMap.friend[0]}/api/friend/search/by-user-name`);
+export const searchStickerFactory = apiFactory()((api, ctx, utils) => {
+    const serviceURL = utils.makeURL(`${api.zpwServiceMap.sticker[0]}/api/message/sticker/search`);
     /**
-     * Find user by username
+     * Search stickers
      *
-     * @param username username for find
-     * @param avatarSize Avatar size (default: AvatarSize.Large)
+     * @param keyword Keyword to search stickers
+     * @param limit Limit of stickers to return (default: 50)
      *
      * @throws {ZaloApiError}
      */
-    return async function findUserByUsername(username, avatarSize = AvatarSize.Large) {
+    return async function searchSticker(keyword, limit = 50) {
         const params = {
-            user_name: username,
-            avatar_size: avatarSize,
+            keyword: keyword,
+            limit: limit,
+            srcType: 0,
+            imei: ctx.imei,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)

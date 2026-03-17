@@ -1,16 +1,17 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
+import { AvatarSize } from "../models/index.js";
 export const findUserFactory = apiFactory()((api, ctx, utils) => {
     const serviceURL = utils.makeURL(`${api.zpwServiceMap.friend[0]}/api/friend/profile/get`);
     /**
      * Find user by phone number
      *
      * @param phoneNumber Phone number
-     * @param isAvatarSizeMax Is avatar size max (default: true)
+     * @param avatarSize Avatar size (default: AvatarSize.Large)
      *
      * @throws {ZaloApiError}
      */
-    return async function findUser(phoneNumber, isAvatarSizeMax = true) {
+    return async function findUser(phoneNumber, avatarSize = AvatarSize.Large) {
         if (!phoneNumber)
             throw new ZaloApiError("Missing phoneNumber");
         if (phoneNumber.startsWith("0")) {
@@ -19,7 +20,7 @@ export const findUserFactory = apiFactory()((api, ctx, utils) => {
         }
         const params = {
             phone: phoneNumber,
-            avatar_size: isAvatarSizeMax ? 240 : 120,
+            avatar_size: avatarSize,
             language: ctx.language,
             imei: ctx.imei,
             reqSrc: 40,

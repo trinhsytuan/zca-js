@@ -1,20 +1,20 @@
 import { ZaloApiError } from "../Errors/ZaloApiError.js";
 import { apiFactory } from "../utils.js";
-import { AvatarSize } from "../models/index.js";
-export const findUserByUsernameFactory = apiFactory()((api, _ctx, utils) => {
-    const serviceURL = utils.makeURL(`${api.zpwServiceMap.friend[0]}/api/friend/search/by-user-name`);
+export const upgradeGroupToCommunityFactory = apiFactory()((api, ctx, utils) => {
+    const serviceURL = utils.makeURL(`${api.zpwServiceMap.group[0]}/api/group/upgrade/community`);
     /**
-     * Find user by username
+     * Upgrade group to community
      *
-     * @param username username for find
-     * @param avatarSize Avatar size (default: AvatarSize.Large)
+     * @param groupId Group ID upgrade
      *
+     * @note Zalo account identity must be verified and the account must be over 18 to use
+     * @code 185 The limit on the number of communities that can own has been reached
      * @throws {ZaloApiError}
      */
-    return async function findUserByUsername(username, avatarSize = AvatarSize.Large) {
+    return async function upgradeGroupToCommunity(groupId) {
         const params = {
-            user_name: username,
-            avatar_size: avatarSize,
+            grId: groupId,
+            language: ctx.language,
         };
         const encryptedParams = utils.encodeAES(JSON.stringify(params));
         if (!encryptedParams)

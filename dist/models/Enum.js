@@ -14,6 +14,11 @@ export var Gender;
     Gender[Gender["Male"] = 0] = "Male";
     Gender[Gender["Female"] = 1] = "Female";
 })(Gender || (Gender = {}));
+export var AvatarSize;
+(function (AvatarSize) {
+    AvatarSize[AvatarSize["Small"] = 120] = "Small";
+    AvatarSize[AvatarSize["Large"] = 240] = "Large";
+})(AvatarSize || (AvatarSize = {}));
 /**
  * @note Bank codes list after Mitm on Mobile and Bank's supported by Zalo
  * @documents https://developers.zalo.me/docs/zalo-notification-service/phu-luc/danh-sach-bin-code - docs missing bin code and short_name bank

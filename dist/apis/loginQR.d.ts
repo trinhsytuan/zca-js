@@ -16,6 +16,7 @@ export type LoginQRCallbackEvent = {
             enabledCheckOCR: boolean;
             enabledMultiLayer: boolean;
         };
+        token: string;
     };
     actions: {
         saveToFile: (qrPath?: string) => Promise<unknown>;

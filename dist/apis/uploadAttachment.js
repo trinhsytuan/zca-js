@@ -141,7 +141,8 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
             attachmentsData.push(data);
         }
         const requests = [], results = [];
-        for (const data of attachmentsData) {
+        for (let atmIndex = 0; atmIndex < attachmentsData.length; atmIndex++) {
+            const data = attachmentsData[atmIndex];
             for (let i = 0; i < data.params.totalChunk; i++) {
                 const encryptedParams = utils.encodeAES(JSON.stringify(data.params));
                 if (!encryptedParams)
@@ -162,7 +163,7 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                             if (data.fileType == "video" || data.fileType == "others") {
                                 const uploadCallback = async (wsData) => {
                                     const result = Object.assign(Object.assign(Object.assign({ fileType: data.fileType }, resData), wsData), { totalSize: data.fileData.totalSize, fileName: data.fileData.fileName, checksum: (await getMd5LargeFileObject(data.source, data.fileData.totalSize)).data });
-                                    results.push(result);
+                                    results[atmIndex] = result;
                                     resolve();
                                 };
                                 ctx.uploadCallbacks.set(resData.fileId.toString(), uploadCallback);
@@ -182,7 +183,7 @@ export const uploadAttachmentFactory = apiFactory()((api, ctx, utils) => {
                                     photoId: resData.photoId,
                                     clientFileId: resData.clientFileId,
                                 };
-                                results.push(result);
+                                results[atmIndex] = result;
                                 resolve();
                             }
                         });

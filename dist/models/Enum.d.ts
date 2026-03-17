@@ -11,6 +11,10 @@ export declare enum Gender {
     Male = 0,
     Female = 1
 }
+export declare enum AvatarSize {
+    Small = 120,
+    Large = 240
+}
 /**
  * @note Bank codes list after Mitm on Mobile and Bank's supported by Zalo
  * @documents https://developers.zalo.me/docs/zalo-notification-service/phu-luc/danh-sach-bin-code - docs missing bin code and short_name bank
